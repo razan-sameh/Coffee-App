@@ -1,7 +1,7 @@
 # React Native Coffee Ordering App with Firebase Integration
 
 ## Description:
-- Our React Native Coffee Ordering App is a modern solution designed to streamline the process of ordering coffee for both customers and coffee shop owners. Built using React Native, it offers a native mobile experience for users across iOS and Android platforms. Leveraging Firebase for backend services ensures real-time updates, secure authentication, and seamless data management.
+This is a mobile application developed using React Native and Firebase, designed to facilitate coffee ordering for users. The app provides a seamless experience for browsing coffee options, adding them to cart, managing wish lists, and completing orders securely. It also includes user authentication functionality to ensure privacy and security.
 
 ## Technologies Used:
  - React Native: Front-end framework for building cross-platform mobile applications.
