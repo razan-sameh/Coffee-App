@@ -11,6 +11,7 @@ import WishListIcon from './src/assets/images/WishListIcon';
 import ProfileIcon from './src/assets/images/ProfileIcon';
 import { Shopping } from './src/screens/Shopping';
 import { Header } from './src/Components/Header';
+import ShoppingNavigator from './src/Navigation/ShoppingNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,7 +26,7 @@ const App = () => {
           tabBarStyle: Styles.tabBar,
           header: (navigation) => <Header {...navigation} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         }}
-        initialRouteName='Shopping'
+        initialRouteName='Home'
       >
         <Tab.Screen
           name="Home"
@@ -56,18 +57,19 @@ const App = () => {
           children={() => <View style={{backgroundColor:'lightblue',flex:1}} />}
         />
         <Tab.Screen
-          name="Shopping"
+          name="ShoppingNavigator"
           options={{
+            headerShown:false,
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={Styles.screenContainer}>
                   <ShoppingIcon color={focused ? strPrimaryColor: "#ffffff"} categoryID={undefined}/>
                 </View>
+                
               )
             }
           }}
-          children={(props) => <Shopping {...props} />}
-
+          children={() => <ShoppingNavigator searchQuery={searchQuery}  setSearchQuery={setSearchQuery}/>}
         />
         <Tab.Screen
           name="WishList"

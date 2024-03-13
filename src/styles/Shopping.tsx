@@ -6,9 +6,15 @@ export const Styles = StyleSheet.create({
     wall:{
         backgroundColor:strSecondColor,
     },
+    filterContainer:{
+        width:'100%',
+        alignItems:'flex-end',
+        justifyContent:'center',
+        paddingRight:moderateScale(20),
+    },
     mainContainer:{
         backgroundColor:strSecondColor,
-        height: mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT
+        height: mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT - 32
     },
     productContainer:{
         flexDirection: 'row',

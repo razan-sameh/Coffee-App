@@ -10,9 +10,11 @@ import { strInpitColor } from '../styles/responsive';
 export function Header({ navigation, searchQuery, setSearchQuery} :any) {
 
     const executeSearch = () => {
-        navigation.navigate('Shopping', { strSearch: searchQuery }); 
-    };
-
+        navigation.navigate('ShoppingNavigator', {
+            screen: 'Shopping',
+            params:{ strSearch: searchQuery}
+        })
+        }
     return (
         <View style={Styles.mainContainer}>
             <TouchableOpacity>

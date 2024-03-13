@@ -1,16 +1,19 @@
 import { getProduct } from "./Firebase";
 import { typProduct } from "./Types";
 
-export const getProductByCategory = async (lngCategoryID: number) => {
+export const getProductByCategory = async (lngCategoryID: number[]) => {
   try {
-    const aobjData : typProduct[]= await getProduct();
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.category === lngCategoryID);
+    const aobjData: typProduct[] = await getProduct();
+    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => lngCategoryID.includes(objProduct.category));
+    console.log('aobjFilteredProducts',aobjFilteredProducts);
+    
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);
     return [];
   }
 };
+
 
 export const getTopRatedProduct = async () => {
   try {
@@ -23,3 +26,14 @@ export const getTopRatedProduct = async () => {
   }
 };
 
+export const getProducByRangePrice = async (aobjData : typProduct[] ,intMin:number,intMax:number) => {
+  try {
+    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.price >= intMin && objProduct.price <= intMax);
+    console.log('aobjFilteredProducts',aobjFilteredProducts);
+    return aobjFilteredProducts;
+
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};

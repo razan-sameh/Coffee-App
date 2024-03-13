@@ -1,82 +1,93 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { SafeAreaView, SectionList, View } from 'react-native';
+import { Button, Image, SafeAreaView, SectionList, View } from 'react-native';
 import { Styles } from '../styles/Shopping';
 import { Header } from '../Components/Header';
-import { typProduct } from '../Content/Types';
+import { typCategory, typPriceRange, typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
 import { getProduct } from '../Content/Firebase';
-import { getProductByCategory } from '../Content/Utils';
+import { getProducByRangePrice, getProductByCategory } from '../Content/Utils';
 import { useFocusEffect } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { images } from '../Content/resources';
 
 export function Shopping({ ...props }: any) {
     const [sections, setSections] = useState<{ title: string, data: typProduct[][] }[]>([]);
     const objListRef = useRef<SectionList>(null);
-    const [lngCategoryID, setSelectedCatIndex] = useState<any>(undefined);
-
+    const [alngCategoryID, setSelectedCategoryID] = useState<number[]>([]);
+    const [intMinPrice, setMinPrice] = useState<number>(0);
+    const [intMaxPrice, setMaxPrice] = useState<number>(100);
 
     useFocusEffect(
         useCallback(() => {
             return () => {
-                setSelectedCatIndex(undefined);
+                setSelectedCategoryID([]);
+                setSections([]);
+                setMinPrice(0);
+                setMaxPrice(100);
             };
         }, [])
     );
 
     useEffect(() => {
-        setSelectedCatIndex(undefined);
-        fetchProductsData()
-    }, []);
+        console.log('intMaxPrice', intMaxPrice);
+        console.log('intMinPrice', intMinPrice);
+        console.log('props.route.params',props.route.params.intMinPrice);
+        console.log('props.route.params',props.route.params.intMaxPrice);
+
+    }, [intMinPrice,intMaxPrice]);
 
     useEffect(() => {
-        console.log('route', props.route.params);
+        setMinPrice(props.route.params?.intMinPrice)
+        setMaxPrice(props.route.params?.intMaxPrice)
+    }, [props.route.params?.intMinPrice , props.route.params?.intMaxPrice]);
+
+    useEffect(() => {
         if (props.route.params?.categoryID !== undefined) {
-            setSelectedCatIndex(props.route.params.categoryID);
-        } else {
-            setSelectedCatIndex(undefined);
+            console.log('props.route.params?.categoryID', props.route.params?.categoryID);
+            if (typeof props.route.params?.categoryID == 'object') {
+                props.route.params?.categoryID.map((item: number) => {
+                    setSelectedCategoryID(prevState => [...prevState, item]);
+                })
+            }
+            else {
+                setSelectedCategoryID([props.route.params?.categoryID])
+            }
         }
         return () => {
             setSections([]);
-            setSelectedCatIndex(undefined);
+            setSelectedCategoryID([]);
         };
     }, [props.route.params]);
 
     useEffect(() => {
-        setSelectedCatIndex(undefined);
-        return () => {
-            setSections([]);
-            setSelectedCatIndex(undefined);
-        };
-    }, [props.categoryID]);
-
-    useEffect(() => {
         fetchProductsData(props.route.params?.strSearch);
-    }, [lngCategoryID, props.route.params]);
+    }, [alngCategoryID]);
 
 
-
-    const fetchProductsData = async (strSearch?:string) => {
+    const fetchProductsData = async (strSearch?: string) => {
         let aObjData: typProduct[] = [];
-        if (lngCategoryID !== undefined) {
-            aObjData = await getProductByCategory(lngCategoryID);
+        if (alngCategoryID.length > 0) {
+            console.log(alngCategoryID, 'alngCategoryID');
+            aObjData = await getProductByCategory(alngCategoryID);
         }
-        else if (strSearch !== "" && strSearch !== undefined) {            
-            aObjData = await getProduct();
-            console.log('searchQuery in shopping', strSearch);
-            aObjData = aObjData.filter(product =>
+        else if (strSearch !== "" && strSearch !== undefined) {
+            const aObjProducts = await getProduct();
+            aObjData = aObjProducts.filter((product: typProduct) =>
                 product.title.toLowerCase().includes(strSearch.toLowerCase()) ||
                 product.description.toLowerCase().includes(strSearch.toLowerCase())
             );
             if (aObjData.length === 0) {
-                console.log('not found NoResultSearch');
-                props.navigation.navigate('NoResultSearch'); 
-
+                props.navigation.navigate('ShoppingNavigator', { screen: 'NoResultSearch' });
             }
         }
-        else{
-            console.log('innnnnnnn empty');
+        else if ((strSearch == "" || strSearch == undefined) && alngCategoryID.length === 0) {
             aObjData = await getProduct();
         }
-        // console.log('aObjData', aObjData);
+        if (intMinPrice != 0 || intMaxPrice != 100 ){
+            console.log('in price');
+            
+            aObjData = await getProducByRangePrice(aObjData,intMinPrice,intMaxPrice)
+        }
 
         const sectionData = { title: 'All Products', data: [aObjData] };
         setSections([sectionData]);
@@ -95,6 +106,10 @@ export function Shopping({ ...props }: any) {
 
     return (
         <View style={Styles.wall}>
+            <TouchableOpacity style={Styles.filterContainer}
+                onPress={() => { props.navigation.navigate('ShoppingNavigator', { screen: 'Filter' }); }}>
+                <Image source={images.filter} />
+            </TouchableOpacity>
             <SafeAreaView>
                 <SectionList
                     ref={objListRef}

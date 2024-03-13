@@ -21,7 +21,7 @@ export function Product({ product }: { product: typProduct }) {
                 <View style={Styles.catProductImg}>
                 <Image style={Styles.catProductImg} source={{uri: objProduct?.image[0] || ''}} />
                     <TouchableWithoutFeedback onPress={toggleWishlist}>
-                        <View style={Styles.wishListImg} >
+                        <View style={Styles.wishListImgContainer} >
                             {isWishlistClicked ? <InWishListImg /> : <OutWishListImg />}
                         </View>
                     </TouchableWithoutFeedback>

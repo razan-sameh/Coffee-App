@@ -48,7 +48,10 @@ export function Home({...props}:any) {
               <TouchableWithoutFeedback
                 key={category.ID}
                 onPress={() => {
-                  props.navigation.navigate('Shopping', { categoryID: category.ID })
+                  props.navigation.navigate('ShoppingNavigator', {
+                    screen: 'Shopping',
+                    params: { categoryID: category.ID }
+                  })
                   }}
                 >
                 <View

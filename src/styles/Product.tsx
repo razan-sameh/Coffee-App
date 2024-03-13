@@ -18,7 +18,7 @@ export const Styles = StyleSheet.create({
         height:heightScale(124),
         borderRadius:moderateScale(14)
     },
-    wishListImg:{
+    wishListImgContainer:{
         width:widthScale(18),
         height:heightScale(18),
         position:'absolute',

@@ -3,7 +3,7 @@ export const images = {
     offer1:require('../assets/images/offer1.jpg'),
     offer2:require('../assets/images/offer2.jpg'),
     offer3:require('../assets/images/offer3.jpg'),
-    outWishList:require('../assets/images/outWishList.png'),
-    inWishList:require('../assets/images/inWishList.png'),
-    arrowBack:require('../assets/images/ArrowBack.png'),
+    outWishList:require('../assets/images/OutWishListImg.png'),
+    inWishList:require('../assets/images/InWishListImg.png'),
+    filter:require('../assets/images/filter.png'),
 }
