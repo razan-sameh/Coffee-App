@@ -28,13 +28,6 @@ export function Shopping({ ...props }: any) {
         }, [])
     );
 
-    useEffect(() => {
-        console.log('intMaxPrice', intMaxPrice);
-        console.log('intMinPrice', intMinPrice);
-        console.log('props.route.params',props.route.params.intMinPrice);
-        console.log('props.route.params',props.route.params.intMaxPrice);
-
-    }, [intMinPrice,intMaxPrice]);
 
     useEffect(() => {
         setMinPrice(props.route.params?.intMinPrice)
@@ -43,7 +36,6 @@ export function Shopping({ ...props }: any) {
 
     useEffect(() => {
         if (props.route.params?.categoryID !== undefined) {
-            console.log('props.route.params?.categoryID', props.route.params?.categoryID);
             if (typeof props.route.params?.categoryID == 'object') {
                 props.route.params?.categoryID.map((item: number) => {
                     setSelectedCategoryID(prevState => [...prevState, item]);
@@ -67,7 +59,6 @@ export function Shopping({ ...props }: any) {
     const fetchProductsData = async (strSearch?: string) => {
         let aObjData: typProduct[] = [];
         if (alngCategoryID.length > 0) {
-            console.log(alngCategoryID, 'alngCategoryID');
             aObjData = await getProductByCategory(alngCategoryID);
         }
         else if (strSearch !== "" && strSearch !== undefined) {
@@ -83,9 +74,7 @@ export function Shopping({ ...props }: any) {
         else if ((strSearch == "" || strSearch == undefined) && alngCategoryID.length === 0) {
             aObjData = await getProduct();
         }
-        if (intMinPrice != 0 || intMaxPrice != 100 ){
-            console.log('in price');
-            
+        if (intMinPrice != 0 || intMaxPrice != 100 ){            
             aObjData = await getProducByRangePrice(aObjData,intMinPrice,intMaxPrice)
         }
 
