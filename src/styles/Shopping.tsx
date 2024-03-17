@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { mbdlScreenHeight, mdblBAR_HEIGHT, mdblScreenWidth, moderateScale, strSecondColor, widthScale } from "./responsive";
+import { heightScale, mbdlScreenHeight, mdblBAR_HEIGHT, mdblScreenWidth, moderateScale, strSecondColor, widthScale } from "./responsive";
 import { Styles as styleHeader } from '../styles/Header';
 
 export const Styles = StyleSheet.create({
@@ -10,7 +10,13 @@ export const Styles = StyleSheet.create({
         width:'100%',
         alignItems:'flex-end',
         justifyContent:'center',
-        paddingRight:moderateScale(20),
+        paddingRight:moderateScale(25),
+        paddingTop:moderateScale(10),
+        paddingBottom:moderateScale(10),
+    },
+    filterIcon:{
+        width:widthScale(22),
+        height: heightScale(17)
     },
     mainContainer:{
         backgroundColor:strSecondColor,

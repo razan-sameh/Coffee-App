@@ -10,6 +10,10 @@ export const Styles = StyleSheet.create({
         paddingTop :moderateScale(20),
         backgroundColor:strSecondColor,
     },
+    sideBarImage:{
+        width:widthScale(24),
+        height: heightScale(24)
+    },
     locationContainer:{
         width:widthScale(103.36),
         height: heightScale(24.36),
@@ -27,6 +31,14 @@ export const Styles = StyleSheet.create({
         marginRight:moderateScale(5),
         fontSize:moderateScale(14),
         fontFamily:strINTER_MEDIUM500_Font
+    },
+    arrowDownLocation:{
+        width:widthScale(13),
+        height: heightScale(15)
+    },
+    locationIcon:{
+        width:widthScale(14),
+        height: heightScale(20)
     },
     txtuserName:{
         color:strPrimaryColor,
@@ -53,5 +65,9 @@ export const Styles = StyleSheet.create({
         width:widthScale(260),
         height: heightScale(44),
         marginLeft:moderateScale(10),
+    },
+    srchIcon:{
+        width:widthScale(24),
+        height: heightScale(24),
     }
 });   

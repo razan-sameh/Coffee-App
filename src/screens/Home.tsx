@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
 import { Styles } from '../styles/Home';
-import { Header } from '../Components/Header';
 import { images } from '../Content/resources';
-import { getProductByCategory, getTopRatedProduct } from '../Content/Utils';
-import OffersIcon from '../assets/images/OffersIcon';
+import { getTopRatedProduct } from '../Content/Utils';
 import { getCategory, getProduct } from '../Content/Firebase';
 import { typCategory, typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
+import FastImage from 'react-native-fast-image';
 
 export function Home({...props}:any) {
   const [aobjFilteredProducts, setFilteredProducts] = useState<typProduct[]>([]);
@@ -74,31 +73,31 @@ export function Home({...props}:any) {
         >
           {aobjFilteredProducts.map((product: any, index) => {
             return (
-              <Product key={product.ID} product={product} />
+              <Product key={product.ID} product={product} navigation={props}/>
             );
           })}
         </ScrollView>
         </View>
         <View style={Styles.offerTitleContainer}>
           <Text style={Styles.txtOfferTitle}>Special Offer</Text>
-          <OffersIcon />
+          <FastImage source={images.OffersIcon} resizeMode='contain' style={Styles.OffersIcon}/>
         </View>
         <View style={Styles.offerItemsContainer}>
-          <Image style={Styles.offerItemImg} source={images.offer1} />
+          <FastImage resizeMode='cover' style={Styles.offerItemImg} source={images.offer1} />
           <View>
             <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
             <Text style={Styles.txtofferItemDesc}>It is a long established fact that a reader will be distracted by the readable content</Text>
           </View>
         </View>
         <View style={Styles.offerItemsContainer}>
-          <Image style={Styles.offerItemImg} source={images.offer2} />
+          <FastImage resizeMode='cover' style={Styles.offerItemImg} source={images.offer2} />
           <View>
             <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
             <Text style={Styles.txtofferItemDesc}>It is a long established fact that a reader will be distracted by the readable content</Text>
           </View>
         </View>
         <View style={Styles.offerItemsContainer}>
-          <Image style={Styles.offerItemImg} source={images.offer3} />
+          <FastImage resizeMode='cover' style={Styles.offerItemImg} source={images.offer3} />
           <View>
             <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
             <Text style={Styles.txtofferItemDesc}>It is a long established fact that a reader will be distracted by the readable content</Text>

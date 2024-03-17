@@ -1,11 +1,8 @@
 import { View, Text, TouchableOpacity, TouchableWithoutFeedback, TextInput } from 'react-native';
-import SideBarBtn from '../assets/images/SideBarBtn';
 import { Styles } from '../styles/Header';
-import LocationIcon from '../assets/images/LocationIcon';
-import ArrowDownLocation from '../assets/images/ArrowDownLocation';
-import ExeSrchBtn from '../assets/images/ExeSrchBtn';
-import SrcIcon from '../assets/images/SrcIcon';
 import { strInpitColor } from '../styles/responsive';
+import FastImage from 'react-native-fast-image';
+import { images } from '../Content/resources';
 
 export function Header({ navigation, searchQuery, setSearchQuery} :any) {
 
@@ -18,21 +15,20 @@ export function Header({ navigation, searchQuery, setSearchQuery} :any) {
     return (
         <View style={Styles.mainContainer}>
             <TouchableOpacity>
-                <SideBarBtn />
+                <FastImage resizeMode='contain' style={Styles.sideBarImage} source={images.SideBarBtn} />
             </TouchableOpacity>
             <View style={Styles.locationContainer}>
-                <LocationIcon />
+            <FastImage resizeMode='contain' style={Styles.locationIcon} source={images.LocationIcon} />
                 <View style={Styles.listLocationContainer}>
                     <Text style={Styles.txtlocation}>Egypt</Text>
                     <TouchableWithoutFeedback>
-                        <ArrowDownLocation />
+                    <FastImage resizeMode='contain' style={Styles.arrowDownLocation} source={images.ArrowDownLocation} />
                     </TouchableWithoutFeedback>
                 </View>
             </View>
             <Text style={Styles.txtuserName}>Good Morning, Shrouk</Text>
             <View style={Styles.searchContainer}>
                 <View style={Styles.srchInputContainer}>
-                    <SrcIcon />
                     <TextInput
                         style={Styles.srchInput}
                         placeholder="Search"
@@ -42,7 +38,7 @@ export function Header({ navigation, searchQuery, setSearchQuery} :any) {
                     />
                 </View>
                 <TouchableOpacity onPress={executeSearch}>
-                    <ExeSrchBtn />
+                    <FastImage resizeMode='contain' style={Styles.srchIcon} source={images.SrcIcon}/>
                 </TouchableOpacity >
             </View>
         </View>

@@ -58,4 +58,12 @@ export const Styles = StyleSheet.create({
         fontFamily:strINTER_MEDIUM500_Font,
         fontSize: moderateScale(12)
     },
+    wishListIcon:{
+        width:widthScale(18),
+        height:heightScale(18),
+    },
+    productPlusIcon:{
+        width:widthScale(24),
+        height:heightScale(24),
+    }
 });   

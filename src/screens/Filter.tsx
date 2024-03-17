@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, Text, TouchableWithoutFeedback, View } from 'react-native';
-import NoResultSearchIcon from '../assets/images/NoResultSearchIcon';
 import { Styles } from '../styles/Filter';
-import ArrowBack from '../assets/images/ArrowBack';
 import RangeSlider from 'rn-range-slider';
 import RailSelected from '../Components/RangeSlider/RailSelected';
 import Rail from '../Components/RangeSlider/Rail';
 import Thumb from '../Components/RangeSlider/Thumb';
 import { typCategory, typPriceRange } from '../Content/Types';
 import { getCategory, getMinAndMaxPrice } from '../Content/Firebase';
+import FastImage from 'react-native-fast-image';
+import { images } from '../Content/resources';
 
 export function Filter({navigation}: any) {
     const [rangeDisabled, setRangeDisabled] = useState(false);
@@ -61,7 +61,7 @@ export function Filter({navigation}: any) {
                         params: { categoryID: alngCategoryID, intMinPrice: low,intMaxPrice:high }
                     })
                 }}>
-                    <ArrowBack />
+                    <FastImage style={Styles.arrowBackIcon} resizeMode='contain' source={images.ArrowBack}/>
                 </TouchableWithoutFeedback>
                 <Text style={Styles.txtTitle}>Filter</Text>
             </View>

@@ -80,6 +80,10 @@ export const Styles = StyleSheet.create({
         height:heightScale(95),
         borderRadius:moderateScale(22),
     },
+    OffersIcon:{
+        width:widthScale(14),
+        height:heightScale(18),
+    },
     txtProdPriceofferItemTitle:{
         fontSize:moderateScale(13),
         fontFamily:strINTER_BOLD700_Font,

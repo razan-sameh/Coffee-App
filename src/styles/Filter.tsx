@@ -15,6 +15,10 @@ export const Styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    arrowBackIcon:{
+        width:widthScale(24),
+        height:heightScale(24),
+    },
     txtTitle: {
         fontFamily: strINTER_SEMIBOLD600_Font,
         fontSize: moderateScale(24),

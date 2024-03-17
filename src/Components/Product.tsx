@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
+import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { Styles } from '../styles/Product';
-import ProductPlus from '../assets/images/ProductPlus';
 import { typProduct } from '../Content/Types';
 import { images } from '../Content/resources';
-import InWishListImg from '../assets/images/InWishListImg';
-import OutWishListImg from '../assets/images/OutWishListImg';
+import FastImage from 'react-native-fast-image';
 
-export function Product({ product }: { product: typProduct }) {
+export function Product({ product , navigation }: { product: typProduct } & {navigation:any}) {
     const [objProduct, setObjProduct] = useState<typProduct>(product);
     const [isWishlistClicked, setIsWishlistClicked] = useState<boolean>(false);
 
@@ -16,13 +14,15 @@ export function Product({ product }: { product: typProduct }) {
     };
     
     return (
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={() => {navigation.navigation.navigate('ShoppingNavigator', {screen: 'ProductDetails'})}}>
             <View style={Styles.catProductSubContainer}>
                 <View style={Styles.catProductImg}>
-                <Image style={Styles.catProductImg} source={{uri: objProduct?.image[0] || ''}} />
+                <FastImage resizeMode='cover' style={Styles.catProductImg} source={{uri: objProduct?.image[0] || ''}} />
                     <TouchableWithoutFeedback onPress={toggleWishlist}>
                         <View style={Styles.wishListImgContainer} >
-                            {isWishlistClicked ? <InWishListImg /> : <OutWishListImg />}
+                            {isWishlistClicked ? 
+                            <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.inWishList}/> 
+                            : <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.outWishList}/>}
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
@@ -32,7 +32,7 @@ export function Product({ product }: { product: typProduct }) {
                         <Text style={Styles.txtProdDesc}>{objProduct?.description}</Text>
                         <Text style={Styles.txtProdPrice}>${objProduct?.price}</Text>
                     </View>
-                    <ProductPlus />
+                    <FastImage resizeMode='contain' style={Styles.productPlusIcon} source={images.ProductPlus}/> 
                 </View>
             </View>
         </TouchableWithoutFeedback>

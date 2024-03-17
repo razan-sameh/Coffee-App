@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Image, SafeAreaView, SectionList, View } from 'react-native';
+import { SafeAreaView, SectionList, View } from 'react-native';
 import { Styles } from '../styles/Shopping';
-import { Header } from '../Components/Header';
-import { typCategory, typPriceRange, typProduct } from '../Content/Types';
+import { typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
 import { getProduct } from '../Content/Firebase';
 import { getProducByRangePrice, getProductByCategory } from '../Content/Utils';
 import { useFocusEffect } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { images } from '../Content/resources';
+import FastImage from 'react-native-fast-image';
 
 export function Shopping({ ...props }: any) {
     const [sections, setSections] = useState<{ title: string, data: typProduct[][] }[]>([]);
@@ -86,7 +86,7 @@ export function Shopping({ ...props }: any) {
         ({ item }: { item: typProduct[] }) => (
             <View style={Styles.productContainer}>
                 {item.map((product, index) => (
-                    <Product key={index} product={product} />
+                    <Product key={index} product={product} navigation={props} />
                 ))}
             </View>
         ),
@@ -97,7 +97,7 @@ export function Shopping({ ...props }: any) {
         <View style={Styles.wall}>
             <TouchableOpacity style={Styles.filterContainer}
                 onPress={() => { props.navigation.navigate('ShoppingNavigator', { screen: 'Filter' }); }}>
-                <Image source={images.filter} />
+                <FastImage resizeMode='contain' style={Styles.filterIcon} source={images.FilterIcon}/>
             </TouchableOpacity>
             <SafeAreaView>
                 <SectionList
