@@ -48,7 +48,7 @@ const ShoppingNavigator = ({ searchQuery, setSearchQuery, navigation }: any) => 
             <Stack.Screen
                 name="ProductDetails"
                 options={{ headerShown: false }} 
-                children={() => <ProductDetails />}
+                children={(navigation) => <ProductDetails navigation={navigation} />}
             />
         </Stack.Navigator>
     );

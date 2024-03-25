@@ -32,7 +32,7 @@ export function Shopping({ ...props }: any) {
     useEffect(() => {
         setMinPrice(props.route.params?.intMinPrice)
         setMaxPrice(props.route.params?.intMaxPrice)
-    }, [props.route.params?.intMinPrice , props.route.params?.intMaxPrice]);
+    }, [props.route.params?.intMinPrice, props.route.params?.intMaxPrice]);
 
     useEffect(() => {
         if (props.route.params?.categoryID !== undefined) {
@@ -74,8 +74,8 @@ export function Shopping({ ...props }: any) {
         else if ((strSearch == "" || strSearch == undefined) && alngCategoryID.length === 0) {
             aObjData = await getProduct();
         }
-        if (intMinPrice != 0 || intMaxPrice != 100 ){            
-            aObjData = await getProducByRangePrice(aObjData,intMinPrice,intMaxPrice)
+        if (intMinPrice != 0 || intMaxPrice != 100) {
+            aObjData = await getProducByRangePrice(aObjData, intMinPrice, intMaxPrice)
         }
 
         const sectionData = { title: 'All Products', data: [aObjData] };
@@ -97,7 +97,7 @@ export function Shopping({ ...props }: any) {
         <View style={Styles.wall}>
             <TouchableOpacity style={Styles.filterContainer}
                 onPress={() => { props.navigation.navigate('ShoppingNavigator', { screen: 'Filter' }); }}>
-                <FastImage resizeMode='contain' style={Styles.filterIcon} source={images.FilterIcon}/>
+                <FastImage resizeMode='contain' style={Styles.filterIcon} source={images.FilterIcon} />
             </TouchableOpacity>
             <SafeAreaView>
                 <SectionList

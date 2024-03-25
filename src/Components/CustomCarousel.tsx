@@ -1,12 +1,12 @@
 import React from 'react';
-import {View } from 'react-native';
+import { View } from 'react-native';
 import { images } from '../Content/resources';
 import Carousel from 'react-native-reanimated-carousel';
 import { heightScale, mdblScreenWidth, moderateScale, strPrimaryColor, widthScale } from '../styles/responsive';
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import FastImage from 'react-native-fast-image';
 
-export function CustomCarousel() {
+export function CustomCarousel({ productImages }: { productImages: string[] }) {
     const colors = [
         strPrimaryColor,
         strPrimaryColor,
@@ -14,16 +14,15 @@ export function CustomCarousel() {
     ];
     const progressValue = useSharedValue<number>(0);
 
-    const imageSources = [images.offer1, images.offer2, images.offer3];
+    const imageSources = productImages;
 
     const PaginationItem: React.FC<{
         index: number
-        backgroundColor: string
         length: number
         animValue: Animated.SharedValue<number>
         isRotate?: boolean
     }> = (props) => {
-        const { animValue, index, length, backgroundColor, isRotate } = props;
+        const { animValue, index, length, isRotate } = props;
         const width = 10;
 
         const animStyle = useAnimatedStyle(() => {
@@ -64,7 +63,7 @@ export function CustomCarousel() {
                     style={[
                         {
                             borderRadius: 50,
-                            backgroundColor,
+                            backgroundColor: strPrimaryColor,
                             flex: 1,
                         },
                         animStyle,
@@ -78,7 +77,8 @@ export function CustomCarousel() {
             <Carousel
                 width={mdblScreenWidth}
                 height={heightScale(290)}
-                style={{justifyContent:'space-between'}}
+                style={{ justifyContent: 'space-between' }}
+                loop={productImages.length > 0 ? false : true}
                 autoPlay={false}
                 data={imageSources} // Pass the array of image sources
                 scrollAnimationDuration={1000}
@@ -86,14 +86,14 @@ export function CustomCarousel() {
                 renderItem={({ item, index }) => (
                     <View
                         style={{
-                            height:heightScale(290),
-                            width:widthScale(333),
-                            alignSelf:'center',
+                            height: heightScale(290),
+                            width: widthScale(333),
+                            alignSelf: 'center',
                             borderRadius: moderateScale(30),
-                            
+
                         }}
                     >
-                        <FastImage source={item} style={{ width: '100%', height: '100%', borderRadius: 30 }} />
+                        <FastImage source={{ uri: item }} style={{ width: '100%', height: '100%', borderRadius: 30 }} />
                     </View>
                 )}
                 onProgressChange={(_, absoluteProgress) =>
@@ -111,10 +111,10 @@ export function CustomCarousel() {
                         }
                     }
                 >
-                    {colors.map((backgroundColor, index) => {
+                    {productImages.map((backgroundColor, index) => {
                         return (
                             <PaginationItem
-                                backgroundColor={backgroundColor}
+                                // backgroundColor={backgroundColor}
                                 animValue={progressValue}
                                 index={index}
                                 key={index}
