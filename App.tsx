@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import {  createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Home } from './src/screens/Home';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,12 +10,24 @@ import FastImage from 'react-native-fast-image';
 import { images } from './src/Content/resources';
 
 const Tab = createBottomTabNavigator();
+const ref : any = createNavigationContainerRef();
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [routeName, setRouteName] = useState<string>('');
+  const blnIsTabBarHide = routeName == "ProductDetails"
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+    ref={ref}
+    onReady={() => {
+      setRouteName(ref.getCurrentRoute().name)
+    }}
+    onStateChange={async () => {
+      const previousRouteName = routeName;
+      const currentRouteName = ref.getCurrentRoute().name;
+      setRouteName(currentRouteName);
+    }}>
       <Tab.Navigator
         screenOptions={{
           tabBarShowLabel: false,
@@ -31,72 +43,71 @@ const App = () => {
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={Styles.screenContainer}>
-                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54": "#ffffff"} source={images.HomeIcon}/>
+                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.HomeIcon} />
                 </View>
               )
-            }
+            },
           }}
+
         />
         <Tab.Screen
           name="Cart"
           options={{
-            headerShown:false,
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={Styles.screenContainer}>
-                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54": "#ffffff"} source={images.CartIcon}/>
+                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.CartIcon} />
                 </View>
               )
             }
           }}
-          children={() => <View style={{backgroundColor:'lightblue',flex:1}} />}
+          children={() => <View style={{ backgroundColor: 'lightblue', flex: 1 }} />}
         />
         <Tab.Screen
           name="ShoppingNavigator"
           options={{
-            headerShown:false,
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={Styles.screenContainer}>
-                <View style={[Styles.shoppingIconContainer,focused ?{ backgroundColor:"#C08F54"}: {backgroundColor:"#ffffff"}]}>
-                  <FastImage style={Styles.shoppingIcon} resizeMode='contain'  source={images.ShoppingIcon}/>
-
-                  {/* <ShoppingIcon color={focused ? strPrimaryColor: "#ffffff"} categoryID={undefined}/> */}
+                  <View style={[Styles.shoppingIconContainer, focused ? { backgroundColor: "#C08F54" } : { backgroundColor: "#ffffff" }]}>
+                    <FastImage style={Styles.shoppingIcon} resizeMode='contain' source={images.ShoppingIcon} />
+                  </View>
                 </View>
-                </View>
-                
               )
-            }
+            },
+            tabBarStyle: [Styles.tabBar,{display:  blnIsTabBarHide ? "none" : "flex"}]
           }}
-          children={(navigation) => <ShoppingNavigator searchQuery={searchQuery}   setSearchQuery={setSearchQuery} navigation={navigation}/>}
+          children={(navigation) => <ShoppingNavigator searchQuery={searchQuery} setSearchQuery={setSearchQuery} navigation={navigation} />}
         />
         <Tab.Screen
           name="WishList"
           options={{
-            headerShown:false,
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={Styles.screenContainer}>
-                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54": "#ffffff"} source={images.WishListIcon}/>
+                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.WishListIcon} />
                 </View>
               )
             }
           }}
-          children={() => <View style={{backgroundColor:'lightblue',flex:1}} />}
+          children={() => <View style={{ backgroundColor: 'lightblue', flex: 1 }} />}
         />
         <Tab.Screen
           name="Profile"
           options={{
-            headerShown:false,
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <View style={Styles.screenContainer}>
-                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54": "#ffffff"} source={images.ProfileIcon}/>
+                  <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.ProfileIcon} />
                 </View>
               )
             }
           }}
-          children={() => <View style={{backgroundColor:'lightblue',flex:1}} />}
+          children={() => <View style={{ backgroundColor: 'lightblue', flex: 1 }} />}
         />
       </Tab.Navigator>
     </NavigationContainer>
@@ -107,7 +118,7 @@ export default App;
 
 export const Styles = StyleSheet.create({
   tabBar: {
-    height:heightScale(48),
+    height: heightScale(48),
     borderTopLeftRadius: moderateScale(20),
     borderTopRightRadius: moderateScale(20),
     position: 'absolute',
@@ -119,19 +130,19 @@ export const Styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center"
   },
-  shoppingIconContainer:{
-    width:45,
-    height:45,
-    borderRadius:50,
+  shoppingIconContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 50,
     alignItems: "center",
     justifyContent: "center"
   },
-  shoppingIcon:{
-    width:widthScale(40),
-    height:heightScale(34)
+  shoppingIcon: {
+    width: widthScale(40),
+    height: heightScale(34)
   },
-  tabBarIcons:{
-    width:widthScale(20),
-    height:heightScale(20)
+  tabBarIcons: {
+    width: widthScale(20),
+    height: heightScale(20)
   }
 });

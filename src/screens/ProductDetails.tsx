@@ -89,7 +89,7 @@ export function ProductDetails(navigation: any) {
                         <View style={Styles.productCount}>
                             <Text style={Styles.txtProductCount}>{intProductCount}</Text>
                         </View>
-                        <TouchableWithoutFeedback onPress={() => { intProductCount > 0 ? setProductCount(intProductCount - 1) : null }}>
+                        <TouchableWithoutFeedback onPress={() => { intProductCount > 1 ? setProductCount(intProductCount - 1) : null }}>
                             <Text style={Styles.txtProductCountBtn}>-</Text>
                         </TouchableWithoutFeedback>
                     </View>

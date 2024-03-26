@@ -66,7 +66,7 @@ export const Styles = StyleSheet.create({
         marginBottom: moderateScale(10),
     },
     txtproductDes: {
-        minHeight: heightScale(63),
+        minHeight: heightScale(70),
         fontFamily: strINTER_SEMIBOLD600_Font,
         fontSize: moderateScale(14),
         color: 'white'
@@ -113,15 +113,19 @@ export const Styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginTop:moderateScale(10),
+        marginBottom:moderateScale(10)
     },
     txtProductCountTitle: {
         flexDirection: 'row',
         alignItems: 'center'
     },
     txtProductNameCount: {
+        width: widthScale(150),
+        flexWrap:'wrap',
         fontFamily: strINTER_MEDIUM500_Font,
         fontSize: moderateScale(14),
-        color: '#CEBBAD'
+        color: '#CEBBAD',
     },
     productCountBtnContainer: {
         width: widthScale(69),
@@ -152,6 +156,7 @@ export const Styles = StyleSheet.create({
         height: heightScale(44),
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf:'center',
         backgroundColor: strPrimaryColor,
         borderRadius: moderateScale(150),
         flexDirection: 'row',
