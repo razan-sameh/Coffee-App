@@ -20,7 +20,7 @@ export const Styles = StyleSheet.create({
     },
     mainContainer:{
         backgroundColor:strSecondColor,
-        height: mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT - 32
+        height: mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT 
     },
     productContainer:{
         flexDirection: 'row',

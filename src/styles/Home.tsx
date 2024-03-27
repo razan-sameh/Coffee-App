@@ -10,7 +10,7 @@ export const Styles = StyleSheet.create({
         paddingLeft:moderateScale(16),
         paddingRight:moderateScale(16),
         backgroundColor:strSecondColor,
-        height: mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT
+        height: mbdlScreenHeight - styleHeader.mainContainer.height 
     },
     catTitle:{
         color:strPrimaryColor,

@@ -4,10 +4,10 @@ import { heightScale, mdblBAR_HEIGHT, moderateScale, strINTER_MEDIUM500_Font, st
 export const Styles = StyleSheet.create({
     mainContainer:{
         width:widthScale(375),
-        height: heightScale(220) - mdblBAR_HEIGHT,
+        height: heightScale(240) - mdblBAR_HEIGHT,
         paddingLeft:moderateScale(16),
         paddingRight:moderateScale(16),
-        paddingTop :moderateScale(20),
+        paddingTop :moderateScale(40),
         backgroundColor:strSecondColor,
     },
     sideBarImage:{

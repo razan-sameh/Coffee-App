@@ -22,4 +22,13 @@ export const images = {
     CartIcon:require('../assets/images/CartIcon.png'),
     ShoppingIcon:require('../assets/images/ShoppingIcon.png'),
     WishListButton:require('../assets/images/WishListButton.png'),
+    SplashWall:require('../assets/images/SplashWall.jpg'),
+    SplashWallIcon1:require('../assets/images/SplashWallIcon1.png'),
+    SplashWallIcon2:require('../assets/images/SplashWallIcon2.png'),
+    Logo:require('../assets/images/Logo.png'),
+    Onboarding1:require('../assets/images/Onboarding1.png'),
+    Onboarding2:require('../assets/images/Onboarding2.png'),
+    Onboarding3:require('../assets/images/Onboarding3.png'),
+    OnboardingWallIcon1:require('../assets/images/OnboardingWallIcon1.png'),
+    OnboardingWallIcon2:require('../assets/images/OnboardingWallIcon2.png'),
 }
