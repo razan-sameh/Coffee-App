@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import TapNavigator from './src/Navigation/TapNavigator';
 import  Splash  from './src/screens/Splash';
-import Onboarding from './src/screens/CustomOnboarding';
+import CustomOnboarding from './src/screens/CustomOnboarding';
+import Login from './src/screens/Login';
 
 const ref: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
@@ -23,14 +24,15 @@ const App = () => {
         setRouteName(currentRouteName);
       }}>
       <Stack.Navigator
-        initialRouteName='Splash'
+        initialRouteName='Login'
         screenOptions={{
           animationEnabled: false,
           headerShown:false
         }}
       >
         <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Onboarding" component={Onboarding} />
+        <Stack.Screen name="Onboarding" component={CustomOnboarding} />
+        <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="TapNavigator"
         children={(navigation) => <TapNavigator {...navigation} routeName={routeName} />}
         />

@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, ImageBackground, StyleSheet, Image, TouchableWithoutFeedback, StatusBar } from 'react-native';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
 import { widthScale, heightScale, moderateScale, strSecondColor, strPrimaryColor, strINTER_SEMIBOLD600_Font, strINTER_MEDIUM500_Font } from '../styles/responsive';
 import Onboarding from 'react-native-onboarding-swiper';
-import { transparent } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const CustomOnboarding = ({ navigation }: any) => {
     const Dots = ({ selected }: any) => {
@@ -48,7 +47,7 @@ const CustomOnboarding = ({ navigation }: any) => {
             {...props}
         >
             <View style={Styles.nextBtnContainer}>
-                <Text style={Styles.txtNextButton}>Done</Text>
+                <Text style={Styles.txtNextButton}>Start</Text>
             </View>
         </TouchableWithoutFeedback>
     );
@@ -63,8 +62,8 @@ const CustomOnboarding = ({ navigation }: any) => {
                 NextButtonComponent={Next}
                 DoneButtonComponent={Done}
                 DotComponent={Dots}
-                onSkip={() => navigation.navigate("TapNavigator")}
-                onDone={() => navigation.navigate("TapNavigator")}
+                onSkip={() => navigation.navigate("Login")}
+                onDone={() => navigation.navigate("Login")}
                 bottomBarHeight={100}
                 titleStyles={Styles.title}
                 subTitleStyles={Styles.subTitle}
