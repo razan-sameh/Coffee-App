@@ -37,8 +37,11 @@ export const images = {
     WallWave:require('../assets/images/WallWave.png'),
     LoginWallIcon2:require('../assets/images/LoginWallIcon2.png'),
     LoginWallIcon1:require('../assets/images/LoginWallIcon1.png'),
+    SignUpWallIcon1:require('../assets/images/SignUpWallIcon1.png'),
+    SignUpWallIcon2:require('../assets/images/SignUpWallIcon2.png'),
     EmailIcon:require('../assets/images/EmailIcon.png'),
     PasswordHiddenIcon:require('../assets/images/PasswordHiddenIcon.png'),
     PasswordShowIcon:require('../assets/images/PasswordShowIcon.png'),
     PasswordIcon:require('../assets/images/PasswordIcon.png'),
+    FullNameIcon:require('../assets/images/FullNameIcon.png'),
 }

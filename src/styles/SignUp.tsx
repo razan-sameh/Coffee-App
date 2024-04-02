@@ -5,7 +5,7 @@ export const Styles = StyleSheet.create({
     mainContainer: {
         paddingLeft: moderateScale(16),
         paddingRight: moderateScale(16),
-        paddingTop: mdblBAR_HEIGHT,
+        paddingTop: mdblBAR_HEIGHT ,
         backgroundColor: strSecondColor,
         height: mbdlScreenHeight + mdblBAR_HEIGHT
     },
@@ -33,16 +33,6 @@ export const Styles = StyleSheet.create({
         color: 'red',
         marginBottom: 10,
     },
-    forgetPassContainer: {
-        width: widthScale(343),
-        marginTop: moderateScale(10),
-        alignItems: 'flex-end',
-    },
-    txtForgetPassword: {
-        fontFamily: strINTER_SEMIBOLD600_Font,
-        fontSize: moderateScale(13),
-        color: strPrimaryColor,
-    },
     btnSubmitContainer: {
         width: widthScale(343),
         height: heightScale(44),
@@ -60,7 +50,7 @@ export const Styles = StyleSheet.create({
     lineContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: moderateScale(40),
+        marginTop: moderateScale(20),
     },
     line: {
         flex: 1,
@@ -68,7 +58,7 @@ export const Styles = StyleSheet.create({
         backgroundColor: strPrimaryColor
     },
     txtline: {
-        width: widthScale(90),
+        width: widthScale(120),
         textAlign: 'center',
         fontFamily: strINTER_SEMIBOLD600_Font,
         fontSize: moderateScale(14),
@@ -94,16 +84,16 @@ export const Styles = StyleSheet.create({
         bottom: 0,
         left: 0
     },
-    LoginWallIcon1: {
-        width: widthScale(90),
-        height: heightScale(90),
+    SignUpWallIcon1: {
+        width: widthScale(63),
+        height: heightScale(63),
         position: 'absolute',
-        top: '65%',
-        left: -17
+        top: '7%',
+        right: -17
     },
-    LoginWallIcon2: {
-        width: widthScale(58),
-        height: heightScale(58),
+    SignUpWallIcon2: {
+        width: widthScale(66),
+        height: heightScale(66),
         position: 'absolute',
         top: '80%',
         right: -5

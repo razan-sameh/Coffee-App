@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, ToastAndroid, ActivityIndicator } from 'react-native';
 import { images } from '../Content/resources';
-import { Styles } from '../styles/Login';
+import { Styles } from '../styles/SignUp';
 import { ArrowBack } from '../Components/ArrowBack';
-import { Control, Controller, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { TextInput } from 'react-native-paper';
 import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
-import { typCategory, typLogin } from '../Content/Types';
+import { typSignUp } from '../Content/Types';
 
-const Login = ({ navigation }: any) => {
-    const { control, handleSubmit, formState: { errors }, } = useForm<typLogin>({
+const SignUp = ({ navigation }: any) => {
+    const { control, handleSubmit, formState: { errors }, } = useForm<typSignUp>({
         defaultValues: {
-            strEmail: "",
-            strPassword: ''
+            strEmail: '',
+            strPassword: '',
+            strFullName: '',
         }
     })
     const [blnIsSign, setIsSign] = useState<boolean>(false);
@@ -23,36 +24,67 @@ const Login = ({ navigation }: any) => {
     const PasswordIcon = <TextInput.Icon icon={images.PasswordIcon} color={strPrimaryColor} />
     const PasswordShowIcon = <TextInput.Icon onPress={() => setSecureTextEntry(true)} icon={images.PasswordShowIcon} color={strPrimaryColor} />
     const PasswordHiddenIcon = <TextInput.Icon onPress={() => setSecureTextEntry(false)} icon={images.PasswordHiddenIcon} color={strPrimaryColor} />
+    const FullNameIcon = <TextInput.Icon icon={images.FullNameIcon} color={strPrimaryColor} />
 
-    const onSubmit = (data: typLogin) => {
+    const onSubmit = (data: typSignUp) => {
         console.log('Submitted Data:', data);
         setIsSign(true)
-        auth().signInWithEmailAndPassword(data.strEmail, data.strPassword)
+        auth()
+            .createUserWithEmailAndPassword(data.strEmail, data.strPassword)
             .then((res) => {
-                console.log(res)
-                console.log('User logged-in successfully!')
+                res.user.updateProfile({
+                    displayName: data.strFullName,
+                })
+                console.log('User account created & signed in!');
                 navigation.navigate("TapNavigator")
             })
             .catch(error => {
-                console.log(error.code);
                 setIsSign(false)
-                if (error.code === 'auth/invalid-credential') {
-                    ToastAndroid.showWithGravityAndOffset('That account is not found!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
+                if (error.code === 'auth/email-already-in-use') {
+                    ToastAndroid.showWithGravityAndOffset('That email address is already in use!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
+                }
+                else if (error.code === 'auth/invalid-email') {
+                    ToastAndroid.showWithGravityAndOffset('That email address is invalid!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
                 else{
                     ToastAndroid.showWithGravityAndOffset('Authentication failed.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
-            })
-    }
+
+            });
+    };
 
     return (
         <View style={Styles.mainContainer}>
             <ArrowBack />
             <FastImage style={Styles.wave} resizeMode='contain' source={images.WallWave} />
-            <FastImage style={Styles.LoginWallIcon1} resizeMode='contain' source={images.LoginWallIcon1} />
-            <FastImage style={Styles.LoginWallIcon2} resizeMode='contain' source={images.LoginWallIcon2} />
-            <Text style={Styles.txtTitle}>Welcome Back!</Text>
+            <FastImage style={Styles.SignUpWallIcon1} resizeMode='contain' source={images.SignUpWallIcon1} />
+            <FastImage style={Styles.SignUpWallIcon2} resizeMode='contain' source={images.SignUpWallIcon2} />
+            <Text style={Styles.txtTitle}>Hello! Register Now</Text>
             <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={0}>
+                <Controller
+                    control={control}
+                    name="strFullName"
+                    rules={{
+                        required: true,
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <View>
+                            <Text style={Styles.txtInputTitle}>Full Name</Text>
+                            <TextInput
+                                style={Styles.input}
+                                textContentType='name'
+                                placeholderTextColor={'#A19D9D'}
+                                placeholder="Your name"
+                                onBlur={onBlur}
+                                onChangeText={onChange}
+                                value={value}
+                                left={FullNameIcon}
+                                underlineStyle={{ display: 'none' }}
+                            />
+                        </View>
+                    )}
+                />
+                {errors.strFullName && <Text style={Styles.txtError}>This is required.</Text>}
                 <Controller
                     control={control}
                     name="strEmail"
@@ -81,7 +113,7 @@ const Login = ({ navigation }: any) => {
                     control={control}
                     name="strPassword"
                     rules={{
-                        pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+                        pattern:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
                         required: true,
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -105,19 +137,14 @@ const Login = ({ navigation }: any) => {
                 />
                 {errors.strPassword && errors.strPassword.type === 'pattern' && <Text style={Styles.txtError}>The password must contain digit, lowercase letter, uppercase letter, special character, no space, and it must be 8-16 characters long.</Text>}
                 {errors.strPassword && errors.strPassword.type === 'required' && <Text style={Styles.txtError}>This is required.</Text>}
-                <TouchableWithoutFeedback>
-                    <View style={Styles.forgetPassContainer}>
-                        <Text style={Styles.txtForgetPassword}>Forget password</Text>
-                    </View>
-                </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={handleSubmit(onSubmit)} >
                     <View style={Styles.btnSubmitContainer}>
-                    {
+                        {
                             blnIsSign ?
                             <ActivityIndicator size={20} color={strSecondColor}/>
                         :
                         <Text style={Styles.txtButtonSubmit}>
-                            Login
+                            Sign Up
                         </Text>
                         }
                     </View>
@@ -126,7 +153,7 @@ const Login = ({ navigation }: any) => {
             <View style={Styles.lineContainer}>
                 <View style={Styles.line} />
                 <View>
-                    <Text style={Styles.txtline}>Or log in with</Text>
+                    <Text style={Styles.txtline}>Or sign up with</Text>
                 </View>
                 <View style={Styles.line} />
             </View>
@@ -142,13 +169,13 @@ const Login = ({ navigation }: any) => {
                 </TouchableWithoutFeedback>
             </View>
             <View style={Styles.navigateContainer}>
-                <Text style={Styles.txtAsk}>Don't have an account?</Text>
-                <TouchableWithoutFeedback onPress={() => navigation.navigate("SignUp")}>
-                    <Text style={Styles.txtNavigate}> Sign up</Text>
+                <Text style={Styles.txtAsk}>Already a member?</Text>
+                <TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
+                    <Text style={Styles.txtNavigate}> Login</Text>
                 </TouchableWithoutFeedback>
             </View>
         </View>
     );
 }
-export default Login;
+export default SignUp;
 
