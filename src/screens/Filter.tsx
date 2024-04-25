@@ -6,7 +6,7 @@ import RailSelected from '../Components/RangeSlider/RailSelected';
 import Rail from '../Components/RangeSlider/Rail';
 import Thumb from '../Components/RangeSlider/Thumb';
 import { typCategory, typPriceRange } from '../Content/Types';
-import { getCategory, getMinAndMaxPrice } from '../Content/Firebase';
+import { getCategory, getMinAndMaxPrice } from '../Content/Database';
 import FastImage from 'react-native-fast-image';
 import { images } from '../Content/resources';
 

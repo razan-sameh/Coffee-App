@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, ToastAndroid, ActivityIndicator } from 'react-native';
+import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, ToastAndroid, ActivityIndicator, Alert } from 'react-native';
 import { images } from '../Content/resources';
 import { Styles } from '../styles/Login';
 import { ArrowBack } from '../Components/ArrowBack';
@@ -8,7 +8,8 @@ import { TextInput } from 'react-native-paper';
 import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
-import { typCategory, typLogin } from '../Content/Types';
+import { typLogin } from '../Content/Types';
+import { EmailJSResponseStatus, send } from '@emailjs/react-native';
 
 const Login = ({ navigation }: any) => {
     const { control, handleSubmit, formState: { errors }, } = useForm<typLogin>({
@@ -39,7 +40,7 @@ const Login = ({ navigation }: any) => {
                 if (error.code === 'auth/invalid-credential') {
                     ToastAndroid.showWithGravityAndOffset('That account is not found!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
-                else{
+                else {
                     ToastAndroid.showWithGravityAndOffset('Authentication failed.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
             })
@@ -105,20 +106,20 @@ const Login = ({ navigation }: any) => {
                 />
                 {errors.strPassword && errors.strPassword.type === 'pattern' && <Text style={Styles.txtError}>The password must contain digit, lowercase letter, uppercase letter, special character, no space, and it must be 8-16 characters long.</Text>}
                 {errors.strPassword && errors.strPassword.type === 'required' && <Text style={Styles.txtError}>This is required.</Text>}
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => navigation.navigate("ForgetPassword")}>
                     <View style={Styles.forgetPassContainer}>
                         <Text style={Styles.txtForgetPassword}>Forget password</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={handleSubmit(onSubmit)} >
                     <View style={Styles.btnSubmitContainer}>
-                    {
+                        {
                             blnIsSign ?
-                            <ActivityIndicator size={20} color={strSecondColor}/>
-                        :
-                        <Text style={Styles.txtButtonSubmit}>
-                            Login
-                        </Text>
+                                <ActivityIndicator size={20} color={strSecondColor} />
+                                :
+                                <Text style={Styles.txtButtonSubmit}>
+                                    Login
+                                </Text>
                         }
                     </View>
                 </TouchableWithoutFeedback>

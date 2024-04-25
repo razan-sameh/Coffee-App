@@ -1,4 +1,4 @@
-import { getProduct } from "./Firebase";
+import { getProduct } from "./Database";
 import { typProduct } from "./Types";
 
 export const getProductByCategory = async (lngCategoryID: number[]) => {

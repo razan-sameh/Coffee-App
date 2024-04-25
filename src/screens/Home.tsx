@@ -3,7 +3,7 @@ import { View, Text, ScrollView, Image, TouchableWithoutFeedback } from 'react-n
 import { Styles } from '../styles/Home';
 import { images } from '../Content/resources';
 import { getTopRatedProduct } from '../Content/Utils';
-import { getCategory, getProduct } from '../Content/Firebase';
+import { getCategory, getProduct } from '../Content/Database';
 import { typCategory, typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
 import FastImage from 'react-native-fast-image';

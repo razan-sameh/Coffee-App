@@ -13,6 +13,7 @@ export const Styles = StyleSheet.create({
         fontFamily: strINTER_SEMIBOLD600_Font,
         fontSize: moderateScale(24),
         color: strPrimaryColor,
+        marginTop:moderateScale(30)
     },
     txtInputTitle: {
         fontFamily: strINTER_SEMIBOLD600_Font,

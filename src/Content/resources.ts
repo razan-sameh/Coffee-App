@@ -44,4 +44,6 @@ export const images = {
     PasswordShowIcon:require('../assets/images/PasswordShowIcon.png'),
     PasswordIcon:require('../assets/images/PasswordIcon.png'),
     FullNameIcon:require('../assets/images/FullNameIcon.png'),
+    ForgetPasswordwallIcon2:require('../assets/images/ForgetPasswordwallIcon2.png'),
+    ForgetPasswordwallIcon1:require('../assets/images/ForgetPasswordwallIcon1.png'),
 }

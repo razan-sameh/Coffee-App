@@ -3,7 +3,7 @@ import { Styles } from '../styles/Header';
 import { strInpitColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import { images } from '../Content/resources';
-import auth from '@react-native-firebase/auth';
+import { getUserName, logOut } from '../Content/Authentication';
 
 export function Header({ navigation, searchQuery, setSearchQuery }: any) {
 
@@ -14,14 +14,13 @@ export function Header({ navigation, searchQuery, setSearchQuery }: any) {
         })
     }
 
-    function logOut() {
-        auth()
-            .signOut()
-            .then(() => console.log('User signed out!'));
+    function onLogoutPress() {
+        logOut()
+        navigation.navigate('Login')
     }
     return (
         <View style={Styles.mainContainer}>
-            <TouchableOpacity onPress={() => logOut()}>
+            <TouchableOpacity onPress={() => onLogoutPress()}>
                 <FastImage resizeMode='contain' style={Styles.sideBarImage} source={images.SideBarBtn} />
             </TouchableOpacity>
             <View style={Styles.locationContainer}>
@@ -33,7 +32,7 @@ export function Header({ navigation, searchQuery, setSearchQuery }: any) {
                     </TouchableWithoutFeedback>
                 </View>
             </View>
-            <Text style={Styles.txtuserName}>Good Morning, {auth().currentUser?.displayName}</Text>
+            <Text style={Styles.txtuserName}>Good Morning, {getUserName()}</Text>
             <View style={Styles.searchContainer}>
                 <View style={Styles.srchInputContainer}>
                     <TextInput

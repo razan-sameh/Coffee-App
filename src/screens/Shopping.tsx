@@ -3,7 +3,7 @@ import { SafeAreaView, SectionList, View } from 'react-native';
 import { Styles } from '../styles/Shopping';
 import { typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
-import { getProduct } from '../Content/Firebase';
+import { getProduct } from '../Content/Database';
 import { getProducByRangePrice, getProductByCategory } from '../Content/Utils';
 import { useFocusEffect } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native-gesture-handler';

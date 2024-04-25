@@ -1,17 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, StyleSheet, StatusBar } from 'react-native';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
 import { widthScale, heightScale } from '../styles/responsive';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash = ({ navigation }: any) => {
+    const [blnIsLogin, setIsLogin] = useState(false);
+    const [blnIsFirstLaunch, setFirstLaunch] = useState<boolean>();
+    const checkFirstLaunch = async () => {        
+        const strFirstLanuch = await AsyncStorage.getItem('FIRST_LAUNCH');
+        if (!strFirstLanuch) {
+            AsyncStorage.setItem('FIRST_LAUNCH', "Done");
+            setFirstLaunch(true);
+        } else {
+            setFirstLaunch(false);
+        }
+    }
+    useEffect(() => {
+        checkFirstLaunch()
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigation.navigate('Onboarding');
+            if (blnIsFirstLaunch === true) {                
+                navigation.navigate('Onboarding');
+            }
+            else{
+                auth().onAuthStateChanged(user => {
+                    console.log('user', user);
+                    if (user != null) {
+                        navigation.navigate('TapNavigator');
+                    }
+                    else {
+                        setIsLogin(false)
+                        navigation.navigate('Login');
+                    }
+                })
+            }
         }, 5000);
         return () => clearTimeout(timer);
-    }, [navigation]);
+    }, [navigation,blnIsFirstLaunch]);
 
     return (
         <View style={Styles.container}>

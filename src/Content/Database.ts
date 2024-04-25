@@ -1,6 +1,6 @@
 import database from '@react-native-firebase/database';
-import { typPriceRange } from './Types';
-export const getCategory = async () => {
+import { typCategory, typPriceRange, typProduct } from './Types';
+export const getCategory = async () : Promise<typCategory[]>   => {
     try {
         const data = await database().ref('category').once('value');
         const aobjCategories = data.val();
@@ -11,7 +11,7 @@ export const getCategory = async () => {
     }
 };
 
-export const getProduct = async () => {
+export const getProduct = async () : Promise<typProduct[]>  => {
     try {
         const data = await database().ref('product').once('value');
         const aobjProducts = data.val();
@@ -42,13 +42,4 @@ export const getMinAndMaxPrice = async (): Promise<typPriceRange> => {
     return tpvPriceRange;
 }
 
-// export const getCategoryTitleById = (categoryId : number) => {
-//   database()
-//   .ref(`/category/${categoryId}`)
-//   .once('value')
-//   .then(snapshot => {
-//     const data = snapshot.val();
-//     return  data.title
-//   });
-// };
 

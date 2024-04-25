@@ -16,7 +16,8 @@ export function ArrowBack() {
 
 export const Styles = StyleSheet.create({
     backArrowContainer:{
-        margin:moderateScale(10)
+        margin:moderateScale(10),
+        marginLeft:moderateScale(0),
     },
     arrowBackIcon:{
         width:widthScale(24),

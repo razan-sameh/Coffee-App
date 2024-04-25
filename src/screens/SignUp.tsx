@@ -9,6 +9,7 @@ import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
 import { typSignUp } from '../Content/Types';
+import { signinWithGoogle } from '../Content/Authentication';
 
 const SignUp = ({ navigation }: any) => {
     const { control, handleSubmit, formState: { errors }, } = useForm<typSignUp>({
@@ -32,6 +33,7 @@ const SignUp = ({ navigation }: any) => {
         auth()
             .createUserWithEmailAndPassword(data.strEmail, data.strPassword)
             .then((res) => {
+                console.log(res)
                 res.user.updateProfile({
                     displayName: data.strFullName,
                 })
@@ -46,13 +48,17 @@ const SignUp = ({ navigation }: any) => {
                 else if (error.code === 'auth/invalid-email') {
                     ToastAndroid.showWithGravityAndOffset('That email address is invalid!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
-                else{
+                else {
                     ToastAndroid.showWithGravityAndOffset('Authentication failed.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
 
             });
     };
 
+    function onGoogleButtonPress() {
+        signinWithGoogle(navigation)
+    }
+    
     return (
         <View style={Styles.mainContainer}>
             <ArrowBack />
@@ -113,7 +119,7 @@ const SignUp = ({ navigation }: any) => {
                     control={control}
                     name="strPassword"
                     rules={{
-                        pattern:/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+                        pattern: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
                         required: true,
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -141,11 +147,11 @@ const SignUp = ({ navigation }: any) => {
                     <View style={Styles.btnSubmitContainer}>
                         {
                             blnIsSign ?
-                            <ActivityIndicator size={20} color={strSecondColor}/>
-                        :
-                        <Text style={Styles.txtButtonSubmit}>
-                            Sign Up
-                        </Text>
+                                <ActivityIndicator size={20} color={strSecondColor} />
+                                :
+                                <Text style={Styles.txtButtonSubmit}>
+                                    Sign Up
+                                </Text>
                         }
                     </View>
                 </TouchableWithoutFeedback>
@@ -164,7 +170,7 @@ const SignUp = ({ navigation }: any) => {
                 <TouchableWithoutFeedback>
                     <FastImage style={Styles.icons} source={images.twitterIcon} />
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => onGoogleButtonPress()}>
                     <FastImage style={Styles.icons} source={images.googleIcon} />
                 </TouchableWithoutFeedback>
             </View>
