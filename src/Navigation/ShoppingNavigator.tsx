@@ -9,26 +9,12 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
-const ShoppingNavigator = ({ searchQuery, setSearchQuery, navigation }: any) => {
-
-    useFocusEffect(
-        React.useCallback(() => {
-            const onTabPress = () => {
-                navigation.navigation.navigate('Shopping');
-            };
-            navigation.navigation.addListener('tabPress', onTabPress);
-            return () => {
-                navigation.navigation.removeListener('tabPress', onTabPress);
-            };
-        }, [navigation])
-    );
-
+const ShoppingNavigator = ({ searchQuery, setSearchQuery }: any) => {
     return (
         <Stack.Navigator initialRouteName='Shopping' screenOptions={{
             animationEnabled: false,
             header: (navigation) => <Header {...navigation} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         }}
-
         >
             <Stack.Screen
                 name="Shopping"
@@ -47,7 +33,7 @@ const ShoppingNavigator = ({ searchQuery, setSearchQuery, navigation }: any) => 
             />
             <Stack.Screen
                 name="ProductDetails"
-                options={{ headerShown: false }} 
+                options={{ headerShown: false }}
                 children={(navigation) => <ProductDetails navigation={navigation} />}
             />
         </Stack.Navigator>

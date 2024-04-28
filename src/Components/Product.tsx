@@ -1,16 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { Styles } from '../styles/Product';
 import { typProduct } from '../Content/Types';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
+import { getUserID } from '../Content/Authentication';
+import { isProductInFavouriteList, removeItemFromFavourite, setItemsInFavourite } from '../Content/Database';
 
 export function Product({ product, navigation }: { product: typProduct } & { navigation: any }) {
     const [objProduct, setObjProduct] = useState<typProduct>(product);
-    const [isWishlistClicked, setIsWishlistClicked] = useState<boolean>(false);
+    const [blnSsWishlistClicked, setWishlistClicked] = useState<boolean>(false);
+    const strUserID = getUserID() 
+    
+    useEffect(() => {
+        fetchProductInFavouriteList();
+    }, []);
+
+    const fetchProductInFavouriteList = async () => {
+        if (strUserID) {
+            const blnIsProductInFavouriteList: boolean = await isProductInFavouriteList(strUserID, product.ID);
+            setWishlistClicked(blnIsProductInFavouriteList);
+        }
+    };
+    
 
     const toggleWishlist = () => {
-        setIsWishlistClicked(!isWishlistClicked);
+        setWishlistClicked(!blnSsWishlistClicked);
+        if (!blnSsWishlistClicked && strUserID) {
+            console.log('insert');
+            setItemsInFavourite(strUserID,product.ID)
+        }
+        else if(blnSsWishlistClicked && strUserID){
+            console.log('remove');
+            removeItemFromFavourite(strUserID, product.ID);
+        }
     };
 
     return (
@@ -27,7 +50,7 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
                     <FastImage resizeMode='cover' style={Styles.catProductImg} source={{ uri: objProduct?.image[0] || '' }} />
                     <TouchableWithoutFeedback onPress={toggleWishlist}>
                         <View style={Styles.wishListImgContainer} >
-                            {isWishlistClicked ?
+                            {blnSsWishlistClicked ?
                                 <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.inWishList} />
                                 : <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.outWishList} />}
                         </View>

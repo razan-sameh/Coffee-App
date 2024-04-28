@@ -13,7 +13,11 @@ export function ProductDetails(navigation: any) {
     const tpvProduct: typProduct = navigation.navigation.route.params.objProduct
     const [enmSelectedSize, setSelectedSize] = useState<Size>(Size.small);
     const [intProductCount, setProductCount] = useState<number>(1);
+    const [isWishlistClicked, setIsWishlistClicked] = useState<boolean>(false);
 
+    const toggleWishlist = () => {
+        setIsWishlistClicked(!isWishlistClicked);
+    };
 
     return (
         <View style={Styles.wall}>
@@ -23,8 +27,10 @@ export function ProductDetails(navigation: any) {
                 <TouchableWithoutFeedback>
                     <FastImage style={Styles.arrowBackIcon} resizeMode='contain' source={images.ArrowBack} />
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback>
-                    <FastImage style={Styles.wishListButton} resizeMode='contain' source={images.WishListButton} />
+                <TouchableWithoutFeedback onPress={toggleWishlist}>
+                    {isWishlistClicked ?
+                        <FastImage resizeMode='contain' style={Styles.wishListButton} source={images.inWishList} />
+                        : <FastImage resizeMode='contain' style={Styles.wishListButton} source={images.outWishList} />}
                 </TouchableWithoutFeedback>
             </View>
             <View style={Styles.carouselContainer}>

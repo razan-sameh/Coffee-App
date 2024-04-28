@@ -30,6 +30,9 @@ export async function signinWithGoogle(navigation:any) {
 export function getUserName() {
     return auth().currentUser?.displayName
 }
+export function getUserID() {
+    return auth().currentUser?.uid
+}
 
 export function logOut() {
     auth()

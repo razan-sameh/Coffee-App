@@ -11,14 +11,12 @@ import FastImage from 'react-native-fast-image';
 import { images } from '../Content/resources';
 
 export function Filter({navigation}: any) {
-    const [rangeDisabled, setRangeDisabled] = useState(false);
     const [low, setLow] = useState<number>(0);
     const [high, setHigh] = useState<number>(100);
     const [tpvPriceRange, setPriceRange] = useState<typPriceRange>({
         intMin: low,
         intMax: high
     });
-    const [floatingLabel, setFloatingLabel] = useState(false);
     const renderThumb = useCallback(() => <Thumb />, [],);
     const renderRail = useCallback(() => <Rail />, []);
     const renderRailSelected = useCallback(() => <RailSelected />, []);
@@ -76,8 +74,6 @@ export function Filter({navigation}: any) {
                     min={tpvPriceRange.intMin}
                     max={tpvPriceRange.intMax}
                     step={0.5}
-                    disableRange={rangeDisabled}
-                    floatingLabel={floatingLabel}
                     renderThumb={renderThumb}
                     renderRail={renderRail}
                     renderRailSelected={renderRailSelected}

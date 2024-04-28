@@ -13,6 +13,7 @@ import { images } from '../Content/resources';
 import { Home } from '../screens/Home';
 import ShoppingNavigator from './ShoppingNavigator';
 import { heightScale, moderateScale, strSecondColor, widthScale } from '../styles/responsive';
+import { Favourite } from '../screens/Favourite';
 
 const Tab = createBottomTabNavigator();
 
@@ -73,10 +74,18 @@ const TapNavigator = ({ navigation, routeName }: any) => {
                     },
                     tabBarStyle: [Styles.tabBar, { display: blnIsTabBarHide ? "none" : "flex" }]
                 }}
+                listeners={{
+                    tabPress: () => {
+                        navigation.navigate('ShoppingNavigator', {
+                            screen: 'Shopping',
+                            params: { categoryID: undefined }
+                        });
+                    }
+                }}
                 children={(navigation) => <ShoppingNavigator searchQuery={searchQuery} setSearchQuery={setSearchQuery} navigation={navigation} />}
             />
             <Tab.Screen
-                name="WishList"
+                name="Favourite"
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
@@ -87,7 +96,15 @@ const TapNavigator = ({ navigation, routeName }: any) => {
                         )
                     }
                 }}
-                children={() => <View style={{ backgroundColor: 'lightblue', flex: 1 }} />}
+                listeners={{
+                    tabPress: () => {
+                        navigation.navigate('ShoppingNavigator', {
+                            screen: 'Favourite',
+                            params: { categoryID: undefined }
+                        });
+                    }
+                }}
+                children={(navigation) => <Favourite navigation={navigation} />}
             />
             <Tab.Screen
                 name="Profile"

@@ -27,7 +27,7 @@ const App = () => {
         setRouteName(currentRouteName);
       }}>
       <Stack.Navigator
-        initialRouteName={'ForgetPassword'}
+        initialRouteName={'TapNavigator'}
         screenOptions={{
           animationEnabled: false,
           headerShown:false

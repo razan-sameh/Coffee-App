@@ -12,7 +12,6 @@ export const getProductByCategory = async (lngCategoryID: number[]) => {
   }
 };
 
-
 export const getTopRatedProduct = async () => {
   try {
     const aobjData: typProduct[] = await getProduct();
@@ -28,7 +27,6 @@ export const getProducByRangePrice = async (aobjData: typProduct[], intMin: numb
   try {
     const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.price >= intMin && objProduct.price <= intMax);
     return aobjFilteredProducts;
-
   } catch (error) {
     console.error(error);
     return [];
