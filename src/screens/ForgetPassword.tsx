@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, KeyboardAvoidingView, TouchableWithoutFeedback, ToastAndroid, ActivityIndicator, Alert } from 'react-native';
 import { images } from '../Content/resources';
 import { Styles } from '../styles/ForgetPassword';
@@ -23,52 +23,64 @@ const ForgetPassword = ({ navigation }: any) => {
         let Otp = '';
         const characters =
             '0123456789';
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
             Otp += characters.charAt(Math.floor(Math.random() * characters.length));
         }
         return Otp;
     };
 
-    const sendEmail = async () => {
+    useEffect(() => {
+        if (!blnIsSendEmail) {
+            setOtp(generateOtp())
+        }
+    }, [blnIsSendEmail]);
+
+    const sendEmail = async (email: string | undefined) => {
+        console.log('email', email);
         setSendEmail(true)
-        // const isValidEmail = auth().getUserByEmail(email)
-        //     .then((userRecord) => {
-        //         // See the UserRecord reference doc for the contents of userRecord.
-        //         console.log(`Successfully fetched user data: ${userRecord.toJSON()}`);
-        //     })
-        //     .catch((error) => {
-        //         console.log('Error fetching user data:', error);
-        //     });
-        // console.log('isValidEmail', isValidEmail);
-        // if (isValidEmail) {
+        if (email != undefined || email != '') {
             try {
                 await send(
                     'service_h8e83zf',
                     'template_6b96vxy',
                     {
-                        email: 'razansameh53@gmail.com',
-                        message: ` ${setOtp(generateOtp())}`,
+                        email: `${email}`,
+                        message: ` ${strOtp}`,
                     },
                     {
                         publicKey: 'dHAuW7eHQvNC5nb7_',
                     },
                 );
                 console.log('SUCCESS!');
-                navigation.navigate("TapNavigator")
+                navigation.navigate("OTPVerification", { otp: strOtp, email: email })
             } catch (err) {
+                setSendEmail(false)
                 if (err instanceof EmailJSResponseStatus) {
                     console.log('EmailJS Request Failed...', err);
+                    ToastAndroid.showWithGravityAndOffset(err.text, ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
                 console.log('ERROR', err);
-                setSendEmail(true)
             }
-        // }
-        // else {
-        //     ToastAndroid.showWithGravityAndOffset('There is no account by this mail', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
-        //     setSendEmail(true)
-        // }
+        }
     };
 
+    const forgotPassword = async (email: string) => {
+        setSendEmail(true);
+            await auth().sendPasswordResetEmail(email).then((res) => {
+                console.log(res)
+                ToastAndroid.showWithGravityAndOffset("Check your email", ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
+                navigation.navigate("Login")
+            })
+            .catch(error => {
+                console.log("Error sending password reset:", error);
+                if (error.code == "auth/invalid-email") {
+                    ToastAndroid.showWithGravityAndOffset('Invalid Email", "No user corresponding to that email address.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
+                } else if (error.code == "auth/user-not-found") {
+                    ToastAndroid.showWithGravityAndOffset('User Error", "Email may not be verified, check email.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
+                }
+                setSendEmail(false);
+            })
+    };
 
     return (
         <View style={Styles.mainContainer}>
@@ -106,7 +118,7 @@ const ForgetPassword = ({ navigation }: any) => {
                     )}
                 />
                 {errors.strEmail && errors.strEmail.type === 'required' && <Text style={Styles.txtError}>This is required.</Text>}
-                <TouchableWithoutFeedback onPress={() => sendEmail()} >
+                <TouchableWithoutFeedback onPress={handleSubmit(() => forgotPassword(control._formValues.strEmail))}>
                     <View style={Styles.btnSubmitContainer}>
                         {
                             blnIsSendEmail ?

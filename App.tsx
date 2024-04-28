@@ -7,6 +7,8 @@ import CustomOnboarding from './src/screens/CustomOnboarding';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import ForgetPassword from './src/screens/ForgetPassword';
+import OTPVerification from './src/screens/OTPVerification';
+import ResetPassword from './src/screens/ResetPassword';
 
 const ref: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
@@ -25,7 +27,7 @@ const App = () => {
         setRouteName(currentRouteName);
       }}>
       <Stack.Navigator
-        initialRouteName={'Splash'}
+        initialRouteName={'ForgetPassword'}
         screenOptions={{
           animationEnabled: false,
           headerShown:false
@@ -35,6 +37,8 @@ const App = () => {
         <Stack.Screen name="Onboarding" component={CustomOnboarding} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+        <Stack.Screen name="OTPVerification" component={OTPVerification} />
+        <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="TapNavigator"
         children={(navigation) => <TapNavigator {...navigation} routeName={routeName} />}
