@@ -25,7 +25,7 @@ export const Styles = StyleSheet.create({
         width: widthScale(24),
         height: heightScale(24),
     },
-    wishListButton: {
+    favouriteListButton: {
         width: widthScale(32),
         height: heightScale(32),
     },

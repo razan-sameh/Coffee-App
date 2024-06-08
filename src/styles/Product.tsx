@@ -18,7 +18,7 @@ export const Styles = StyleSheet.create({
         height:heightScale(124),
         borderRadius:moderateScale(14)
     },
-    wishListImgContainer:{
+    favouriteListImgContainer:{
         width:widthScale(18),
         height:heightScale(18),
         position:'absolute',
@@ -58,7 +58,7 @@ export const Styles = StyleSheet.create({
         fontFamily:strINTER_MEDIUM500_Font,
         fontSize: moderateScale(12)
     },
-    wishListIcon:{
+    favouriteListIcon:{
         width:widthScale(18),
         height:heightScale(18),
     },

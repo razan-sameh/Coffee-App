@@ -91,7 +91,7 @@ const TapNavigator = ({ navigation, routeName }: any) => {
                     tabBarIcon: ({ focused }) => {
                         return (
                             <View style={Styles.screenContainer}>
-                                <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.WishListIcon} />
+                                <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.FavouriteListIcon} />
                             </View>
                         )
                     }

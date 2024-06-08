@@ -33,7 +33,7 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
         }
     }, []);
 
-    const toggleWishlist = () => {
+    const toggleFavouritelist = () => {
         if (!blnIsFavouriteClicked && strUserID) {
             setItemsInFavourite(strUserID,product.ID)
             setFavouriteClicked(true);
@@ -56,11 +56,11 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
             <View style={Styles.catProductSubContainer}>
                 <View style={Styles.catProductImg}>
                     <FastImage resizeMode='cover' style={Styles.catProductImg} source={{ uri: product?.image[0] || '' }} />
-                    <TouchableWithoutFeedback onPress={toggleWishlist} hitSlop={{bottom:20,top:20,right:20,left:20}}>
-                        <View style={Styles.wishListImgContainer} >
+                    <TouchableWithoutFeedback onPress={toggleFavouritelist} hitSlop={{bottom:20,top:20,right:20,left:20}}>
+                        <View style={Styles.favouriteListImgContainer} >
                             {blnIsFavouriteClicked ?
-                                <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.inWishList} />
-                                : <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.outWishList} />}
+                                <FastImage resizeMode='contain' style={Styles.favouriteListIcon} source={images.inFavouriteList} />
+                                : <FastImage resizeMode='contain' style={Styles.favouriteListIcon} source={images.outFavouriteList} />}
                         </View>
                     </TouchableWithoutFeedback>
                 </View>

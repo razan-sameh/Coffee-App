@@ -46,7 +46,7 @@ export function ProductDetails(navigation: any) {
         }
     }, []);
     
-    const toggleWishlist = () => {
+    const toggleFavouritelist = () => {
         if (!blnIsFavouriteClicked && strUserID) {
             setItemsInFavourite(strUserID,tpvProduct.ID)
             setFavouriteClicked(true);
@@ -65,10 +65,10 @@ export function ProductDetails(navigation: any) {
                 <TouchableWithoutFeedback>
                     <FastImage style={Styles.arrowBackIcon} resizeMode='contain' source={images.ArrowBack} />
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={toggleWishlist}>
+                <TouchableWithoutFeedback onPress={toggleFavouritelist}>
                     {blnIsFavouriteClicked ?
-                        <FastImage resizeMode='contain' style={Styles.wishListButton} source={images.inWishList} />
-                        : <FastImage resizeMode='contain' style={Styles.wishListButton} source={images.outWishList} />}
+                        <FastImage resizeMode='contain' style={Styles.favouriteListButton} source={images.inFavouriteList} />
+                        : <FastImage resizeMode='contain' style={Styles.favouriteListButton} source={images.outFavouriteList} />}
                 </TouchableWithoutFeedback>
             </View>
             <View style={Styles.carouselContainer}>
