@@ -12,6 +12,17 @@ export const getProductByCategory = async (lngCategoryID: number[]) => {
   }
 };
 
+export const getProductByID = async (ID: number[]) => {
+  try {
+    const aobjData: typProduct[] = await getProduct();
+    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => ID.includes(objProduct.ID));
+    return aobjFilteredProducts;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export const getTopRatedProduct = async () => {
   try {
     const aobjData: typProduct[] = await getProduct();
@@ -26,6 +37,16 @@ export const getTopRatedProduct = async () => {
 export const getProducByRangePrice = async (aobjData: typProduct[], intMin: number, intMax: number) => {
   try {
     const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.price >= intMin && objProduct.price <= intMax);
+    return aobjFilteredProducts;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const getProducByRangeRating = async (aobjData: typProduct[], intMin: number, intMax: number) => {
+  try {
+    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.rate >= intMin && objProduct.rate <= intMax);
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);

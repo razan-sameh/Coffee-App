@@ -8,61 +8,61 @@ export const Styles = StyleSheet.create({
         height: mbdlScreenHeight,
     },
     backArrowContainer: {
-        width: widthScale(100),
-        height: heightScale(40),
         margin: moderateScale(10),
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
     },
-    arrowBackIcon:{
-        width:widthScale(24),
-        height:heightScale(24),
+    headerContainer:{
+        height: heightScale(40),
+        width: '100%',
+        flexDirection:'row',
+        alignItems:'center',
+        alignSelf:'center',
+        paddingLeft:moderateScale(15),
+        paddingRight:moderateScale(15),
     },
     txtTitle: {
         fontFamily: strINTER_SEMIBOLD600_Font,
-        fontSize: moderateScale(24),
+        fontSize: moderateScale(20),
         color: strPrimaryColor,
-        marginLeft: moderateScale(10)
     },
-    priceContainer: {
+    mainContainer:{
+        paddingLeft:moderateScale(15),
+        paddingRight:moderateScale(15),
+        height: mbdlScreenHeight - 40 + 24 //btnback + header
+    },
+    rangeContainer: {
         width: '100%',
         height: heightScale(120),
     },
     slider: {
-        width: '95%',
+        width: '100%',
         height: heightScale(11),
         alignSelf:'center'
     },
-    txtSubTitle: {
+    txtRangeTitle: {
         height: heightScale(40),
-        fontFamily: strINTER_SEMIBOLD600_Font,
-        fontSize: moderateScale(20),
+        fontFamily: strINTER_MEDIUM500_Font,
+        fontSize: moderateScale(14),
         color: strPrimaryColor,
-        marginLeft: moderateScale(10)
+        marginTop:moderateScale(10)
     },
-    priceSubContainer: {
+    dataRangeContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
     },
-    txtPriceNumber: {
+    txtData: {
         fontFamily: strINTER_MEDIUM500_Font,
-        fontSize: moderateScale(16),
+        fontSize: moderateScale(14),
         color: 'white',
-        marginLeft: moderateScale(20),
-        marginRight: moderateScale(20),
         marginBottom: moderateScale(10),
     },
     catContainer: {
-        height: mbdlScreenHeight - heightScale(120 + 40 + 30),
         flexDirection:'row',
         flexWrap:'wrap',
         alignItems:'center',
-        padding: moderateScale(10)
     },
     catItem: {
-        minWidth: widthScale(100),
+        width: widthScale(100),
         height: heightScale(48),
         borderRadius: moderateScale(12),
         marginTop: moderateScale(10),
@@ -84,5 +84,24 @@ export const Styles = StyleSheet.create({
     },
     selectedtextCat:{
         color:strSecondColor
+    },
+    applyBtnContainer:{
+        width:'100%',
+        height:heightScale(70),
+        alignItems:'center',
+        justifyContent:'center'
+    },
+    applyBtn:{
+        width:widthScale(343),
+        height:heightScale(44),
+        backgroundColor:strPrimaryColor,
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:moderateScale(150)
+    },
+    txtApply:{
+        color: strSecondColor,
+        fontFamily: strINTER_MEDIUM500_Font,
+        fontSize: moderateScale(20)
     }
 })

@@ -4,8 +4,7 @@ import { Styles } from '../styles/Shopping';
 import { typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
 import { getProduct } from '../Content/Database';
-import { getProducByRangePrice, getProductByCategory } from '../Content/Utils';
-import { useFocusEffect } from '@react-navigation/native';
+import { getProducByRangePrice, getProducByRangeRating, getProductByCategory } from '../Content/Utils';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
@@ -14,13 +13,17 @@ export function Shopping({ ...props }: any) {
     const [sections, setSections] = useState<{ title: string, data: typProduct[][] }[]>([]);
     const objListRef = useRef<SectionList>(null);
     const [alngCategoryID, setSelectedCategoryID] = useState<number[]>([]);
-    const [intMinPrice, setMinPrice] = useState<number>(1.99);
-    const [intMaxPrice, setMaxPrice] = useState<number>(5.99);
+    const [intMinPrice, setMinPrice] = useState<number>(0);
+    const [intMaxRating, setMaxRating] = useState<number>(0);
+    const [intMinRating, setMinRating] = useState<number>(0);
+    const [intMaxPrice, setMaxPrice] = useState<number>(0);
     const intMinPriceParam = props.route.params?.intMinPrice;
     const intMaxPriceParam = props.route.params?.intMaxPrice;
-    const intcategoryIDParam = props.route.params?.categoryID;
+    const intMinRatingParam = props.route.params?.intMinRating;
+    const intMaxRatingParam = props.route.params?.intMaxRating;
+    const aintcategoryIDParam = props.route.params?.categoryID;
     const strSearchParam = props.route.params?.strSearch;
-
+    
     useEffect(() => {
         if (intMinPriceParam) {
             setMinPrice(intMinPriceParam)
@@ -31,21 +34,30 @@ export function Shopping({ ...props }: any) {
     }, [intMinPriceParam, intMaxPriceParam]);
 
     useEffect(() => {
-        if (intcategoryIDParam !== undefined) {
-            if (typeof intcategoryIDParam == 'object') {
-                intcategoryIDParam.map((item: number) => {
+        if (intMinRatingParam) {
+            setMinRating(intMinRatingParam)
+        }
+        if (intMaxRatingParam) {
+            setMaxRating(intMaxRatingParam)
+        }
+    }, [intMinRatingParam, intMaxRatingParam]);
+
+    useEffect(() => {
+        if (aintcategoryIDParam !== undefined) {
+            if (typeof aintcategoryIDParam == 'object') {
+                aintcategoryIDParam.map((item: number) => {
                     setSelectedCategoryID(prevState => [...prevState, item]);
                 })
             }
             else {
-                setSelectedCategoryID([intcategoryIDParam])
+                setSelectedCategoryID([aintcategoryIDParam])
             }
         }
         return () => {
             setSections([]);
             setSelectedCategoryID([]);
         };
-    }, [intcategoryIDParam]);
+    }, [aintcategoryIDParam]);
 
     useEffect(() => {
         fetchProductsData(strSearchParam);
@@ -70,12 +82,15 @@ export function Shopping({ ...props }: any) {
         else if ((strSearch == "" || strSearch == undefined) && alngCategoryID.length === 0) {
             aObjData = await getProduct();
         }
-        if (intMinPrice != 1.99 || intMaxPrice != 5.99) {
+        if (intMinPrice != 0 || intMaxPrice != 0) {
             aObjData = await getProducByRangePrice(aObjData, intMinPrice, intMaxPrice)
+        }
+        if (intMinRating != 0 || intMaxRating != 0) {
+            aObjData = await getProducByRangeRating(aObjData, intMinRating, intMaxRating)
         }
 
         const sectionData = { title: 'All Products', data: [aObjData] };
-        setSections([sectionData]);
+        setSections([sectionData]);        
     };
 
     const renderRow = useCallback(
@@ -92,7 +107,7 @@ export function Shopping({ ...props }: any) {
     return (
         <View style={Styles.wall}>
             <TouchableOpacity style={Styles.filterContainer}
-                onPress={() => { props.navigation.navigate('ShoppingNavigator', { screen: 'Filter' }); }}>
+                onPress={() => { props.navigation.navigate('ShoppingNavigator', { screen: 'Filter',params:{ screenName:props.route.name} }); }}>
                 <FastImage resizeMode='contain' style={Styles.filterIcon} source={images.FilterIcon} />
             </TouchableOpacity>
             <SafeAreaView>

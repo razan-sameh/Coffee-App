@@ -5,34 +5,42 @@ import { typProduct } from '../Content/Types';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
 import { getUserID } from '../Content/Authentication';
-import { isProductInFavouriteList, removeItemFromFavourite, setItemsInFavourite } from '../Content/Database';
+import { removeItemFromFavourite, setItemsInFavourite } from '../Content/Database';
+import database from '@react-native-firebase/database';
 
 export function Product({ product, navigation }: { product: typProduct } & { navigation: any }) {
-    const [objProduct, setObjProduct] = useState<typProduct>(product);
-    const [blnSsWishlistClicked, setWishlistClicked] = useState<boolean>(false);
+    const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(false);
     const strUserID = getUserID() 
     
     useEffect(() => {
-        fetchProductInFavouriteList();
+        if (strUserID) {
+            database().ref(`favourite/${strUserID}`).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const aintProductsID = snapshot.val().Products;   
+                    if (aintProductsID != undefined ) {
+                        if (aintProductsID.includes(product.ID)) {
+                            setFavouriteClicked(true);
+                        }
+                        else{
+                            setFavouriteClicked(false);
+                        }
+                    }
+                    else{
+                        setFavouriteClicked(false);
+                    }
+                }
+            });
+        }
     }, []);
 
-    const fetchProductInFavouriteList = async () => {
-        if (strUserID) {
-            const blnIsProductInFavouriteList: boolean = await isProductInFavouriteList(strUserID, product.ID);
-            setWishlistClicked(blnIsProductInFavouriteList);
-        }
-    };
-    
-
     const toggleWishlist = () => {
-        setWishlistClicked(!blnSsWishlistClicked);
-        if (!blnSsWishlistClicked && strUserID) {
-            console.log('insert');
+        if (!blnIsFavouriteClicked && strUserID) {
             setItemsInFavourite(strUserID,product.ID)
+            setFavouriteClicked(true);
         }
-        else if(blnSsWishlistClicked && strUserID){
-            console.log('remove');
+        else if(blnIsFavouriteClicked && strUserID){
             removeItemFromFavourite(strUserID, product.ID);
+            setFavouriteClicked(false);
         }
     };
 
@@ -41,16 +49,16 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
             navigation.navigation.navigate('ShoppingNavigator',
                 {
                     screen: 'ProductDetails',
-                    params: { objProduct }
+                    params: { product ,blnIsFavouriteClicked}
                 }
             )
         }}>
             <View style={Styles.catProductSubContainer}>
                 <View style={Styles.catProductImg}>
-                    <FastImage resizeMode='cover' style={Styles.catProductImg} source={{ uri: objProduct?.image[0] || '' }} />
-                    <TouchableWithoutFeedback onPress={toggleWishlist}>
+                    <FastImage resizeMode='cover' style={Styles.catProductImg} source={{ uri: product?.image[0] || '' }} />
+                    <TouchableWithoutFeedback onPress={toggleWishlist} hitSlop={{bottom:20,top:20,right:20,left:20}}>
                         <View style={Styles.wishListImgContainer} >
-                            {blnSsWishlistClicked ?
+                            {blnIsFavouriteClicked ?
                                 <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.inWishList} />
                                 : <FastImage resizeMode='contain' style={Styles.wishListIcon} source={images.outWishList} />}
                         </View>
@@ -58,9 +66,9 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
                 </View>
                 <View style={Styles.catProdDetailsContainer}>
                     <View style={Styles.catProdDetailsSubContainer}>
-                        <Text style={Styles.txtProdCat}>{objProduct?.title}</Text>
-                        <Text style={Styles.txtProdDesc}>{objProduct?.description}</Text>
-                        <Text style={Styles.txtProdPrice}>${objProduct?.price}</Text>
+                        <Text style={Styles.txtProdCat}>{product?.title}</Text>
+                        <Text style={Styles.txtProdDesc}>{product?.description}</Text>
+                        <Text style={Styles.txtProdPrice}>${product?.price}</Text>
                     </View>
                     <FastImage resizeMode='contain' style={Styles.productPlusIcon} source={images.ProductPlus} />
                 </View>

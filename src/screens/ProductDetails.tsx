@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TouchableWithoutFeedback, View } from 'react-native';
 import { Styles } from '../styles/ProductDetails';
 import { images } from '../Content/resources';
@@ -8,15 +8,53 @@ import { strSecondColor, widthScale } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import { typProduct } from '../Content/Types';
 import { Size } from '../Content/Enums';
+import { setItemsInFavourite, removeItemFromFavourite } from '../Content/Database';
+import { getUserID } from '../Content/Authentication';
+import database from '@react-native-firebase/database';
 
 export function ProductDetails(navigation: any) {
-    const tpvProduct: typProduct = navigation.navigation.route.params.objProduct
+    const tpvProduct: typProduct = navigation.navigation.route.params.product
+    const isFavouriteClicked: boolean = navigation.navigation.route.params.blnIsFavouriteClicked
+    
     const [enmSelectedSize, setSelectedSize] = useState<Size>(Size.small);
     const [intProductCount, setProductCount] = useState<number>(1);
-    const [isWishlistClicked, setIsWishlistClicked] = useState<boolean>(false);
+    const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(isFavouriteClicked);
+    const strUserID = getUserID() 
 
+    useEffect(() => {
+        setFavouriteClicked(isFavouriteClicked);
+    }, [isFavouriteClicked]);
+
+    useEffect(() => {
+        if (strUserID) {
+            database().ref(`favourite/${strUserID}`).on('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const aintProductsID = snapshot.val().Products;   
+                    if (aintProductsID != undefined ) {
+                        if (aintProductsID.includes(tpvProduct.ID)) {
+                            setFavouriteClicked(true);
+                        }
+                        else{
+                            setFavouriteClicked(false);
+                        }
+                    }
+                    else{
+                        setFavouriteClicked(false);
+                    }
+                }
+            });
+        }
+    }, []);
+    
     const toggleWishlist = () => {
-        setIsWishlistClicked(!isWishlistClicked);
+        if (!blnIsFavouriteClicked && strUserID) {
+            setItemsInFavourite(strUserID,tpvProduct.ID)
+            setFavouriteClicked(true);
+        }
+        else if(blnIsFavouriteClicked && strUserID){
+            removeItemFromFavourite(strUserID, tpvProduct.ID);
+            setFavouriteClicked(false);
+        }
     };
 
     return (
@@ -28,7 +66,7 @@ export function ProductDetails(navigation: any) {
                     <FastImage style={Styles.arrowBackIcon} resizeMode='contain' source={images.ArrowBack} />
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={toggleWishlist}>
-                    {isWishlistClicked ?
+                    {blnIsFavouriteClicked ?
                         <FastImage resizeMode='contain' style={Styles.wishListButton} source={images.inWishList} />
                         : <FastImage resizeMode='contain' style={Styles.wishListButton} source={images.outWishList} />}
                 </TouchableWithoutFeedback>

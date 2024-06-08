@@ -21,7 +21,6 @@ export const images = {
     WishListIcon:require('../assets/images/WishListIcon.png'),
     CartIcon:require('../assets/images/CartIcon.png'),
     ShoppingIcon:require('../assets/images/ShoppingIcon.png'),
-    WishListButton:require('../assets/images/WishListButton.png'),
     SplashWall:require('../assets/images/SplashWall.jpg'),
     SplashWallIcon1:require('../assets/images/SplashWallIcon1.png'),
     SplashWallIcon2:require('../assets/images/SplashWallIcon2.png'),

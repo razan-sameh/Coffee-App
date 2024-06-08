@@ -12,7 +12,7 @@ export default memo(RailSelected);
 
 const styles = StyleSheet.create({
   root: {
-    height: heightScale(11),
+    height: heightScale(10),
     backgroundColor: strPrimaryColor,
     borderRadius: moderateScale(12),
   },

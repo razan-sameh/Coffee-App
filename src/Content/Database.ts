@@ -1,5 +1,5 @@
 import database from '@react-native-firebase/database';
-import { typCategory, typPriceRange, typProduct } from './Types';
+import { typCategory, typRange, typProduct } from './Types';
 export const getCategory = async (): Promise<typCategory[]> => {
     try {
         const data = await database().ref('category').once('value');
@@ -10,6 +10,17 @@ export const getCategory = async (): Promise<typCategory[]> => {
         return [];
     }
 };
+
+// import { getAuth, listUsers } from "firebase/auth";
+
+// const auth = getAuth();
+// listUsers(auth)
+//     .then((users: any) => {
+//         console.log('Successfully fetched user data: ', users);
+//     })
+//     .catch((error: Error) => {
+//         console.log('Error fetching user data: ', error);
+//     });
 
 export const getProduct = async (): Promise<typProduct[]> => {
     try {
@@ -23,10 +34,10 @@ export const getProduct = async (): Promise<typProduct[]> => {
 };
 
 
-export const getMinAndMaxPrice = async (): Promise<typPriceRange> => {
+export const getMinAndMaxPrice = async (): Promise<typRange> => {
     const data = await database().ref('product').once('value');
     const aobjProducts = data.val();
-    let tpvPriceRange: typPriceRange = {
+    let tpvPriceRange: typRange = {
         intMax: Number.NEGATIVE_INFINITY,
         intMin: Number.POSITIVE_INFINITY
     }
@@ -42,33 +53,6 @@ export const getMinAndMaxPrice = async (): Promise<typPriceRange> => {
     });
     return tpvPriceRange;
 }
-
-export const getFavouriteList = async (Uid: string): Promise<[]> => {
-    try {
-        const data = await database().ref(`favourite/${Uid}`).once('value');
-        const aintProductsID = data.val().Products;
-        console.log('aintProductsID',aintProductsID);
-        return aintProductsID;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
-};
-export const isProductInFavouriteList = async (Uid: string, productId: number): Promise<boolean> => {
-    try {
-        const data = await database().ref(`favourite/${Uid}`).once('value');
-        const aintProductsID = data.val().Products;
-        if (aintProductsID.includes(productId)) {
-            console.log('productId',productId);
-            console.log('true');
-            return true;
-        }
-        return false;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-};
 
 export const setItemsInFavourite = (Uid: string, productId: number) => {
     try {
@@ -94,7 +78,7 @@ export const setItemsInFavourite = (Uid: string, productId: number) => {
                         Uid: Uid,
                         Products: updatedProducts,
                     })
-                    .then(() => console.log('Data set.'));
+                    .then(() => console.log('Product insert in favorites successfully.'));
             });
     } catch (error) {
         console.error(error);
@@ -111,7 +95,7 @@ export const removeItemFromFavourite = (Uid: string, productId: number) => {
                 const data = snapshot.val();
                 let updatedProducts = [];
                 if (data && data.Products) {
-                    updatedProducts = data.Products.filter((id : number) => id !== productId); // Remove the product ID from the list
+                    updatedProducts = data.Products.filter((id: number) => id !== productId); // Remove the product ID from the list
                 }
                 // Update the database with the updated list
                 database()

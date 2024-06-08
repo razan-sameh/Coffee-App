@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator();
 
 const TapNavigator = ({ navigation, routeName }: any) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const blnIsTabBarHide = routeName == "ProductDetails"
+    const blnIsTabBarHide = routeName == "ProductDetails" || routeName == "Filter"
 
 
     return (

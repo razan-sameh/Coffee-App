@@ -11,7 +11,7 @@ export type typProduct = {
     image: string[],
     rate: number
 };
-export type typPriceRange = {
+export type typRange = {
     intMin: number,
     intMax: number
 };

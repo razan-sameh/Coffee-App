@@ -24,7 +24,7 @@ export const Styles = StyleSheet.create({
         position:'absolute',
         top:0,
         right:0,
-        margin:moderateScale(10)
+        margin:moderateScale(10),
     },
     catProdDetailsContainer:{
         width:widthScale(124),
