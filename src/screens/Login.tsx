@@ -38,7 +38,7 @@ const Login = ({ navigation }: any) => {
                 console.log(error.code);
                 setIsSign(false)
                 if (error.code === 'auth/invalid-credential') {
-                    ToastAndroid.showWithGravityAndOffset('That account is not found!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
+                    ToastAndroid.showWithGravityAndOffset('The account or password is not correct!', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);
                 }
                 else {
                     ToastAndroid.showWithGravityAndOffset('Authentication failed.', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);

@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { heightScale, mdblBAR_HEIGHT, moderateScale, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strInpitBtnColor, strPrimaryColor, strSecondColor, widthScale } from "./responsive";
+import { heightScale, mdblBAR_HEIGHT, moderateScale, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strWhiteColor, strPrimaryColor, strSecondColor, widthScale } from "./responsive";
 
 export const Styles = StyleSheet.create({
     mainContainer:{
@@ -44,7 +44,8 @@ export const Styles = StyleSheet.create({
         color:strPrimaryColor,
         marginTop:moderateScale(10),
         fontSize:moderateScale(20),
-        fontFamily:strINTER_SEMIBOLD600_Font
+        fontFamily:strINTER_SEMIBOLD600_Font,
+        textTransform:'capitalize'
     },
     searchContainer:{
         width:widthScale(343),
@@ -55,7 +56,7 @@ export const Styles = StyleSheet.create({
         borderRadius:moderateScale(150),
         marginTop:moderateScale(10),
         padding: moderateScale(10),
-        backgroundColor: strInpitBtnColor
+        backgroundColor: strWhiteColor
     },
     srchInputContainer:{
         flexDirection:'row',

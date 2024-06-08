@@ -11,15 +11,16 @@ import { Size } from '../Content/Enums';
 import { setItemsInFavourite, removeItemFromFavourite } from '../Content/Database';
 import { getUserID } from '../Content/Authentication';
 import database from '@react-native-firebase/database';
+import { ArrowBack } from '../Components/ArrowBack';
 
 export function ProductDetails(navigation: any) {
     const tpvProduct: typProduct = navigation.navigation.route.params.product
     const isFavouriteClicked: boolean = navigation.navigation.route.params.blnIsFavouriteClicked
-    
+
     const [enmSelectedSize, setSelectedSize] = useState<Size>(Size.small);
     const [intProductCount, setProductCount] = useState<number>(1);
     const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(isFavouriteClicked);
-    const strUserID = getUserID() 
+    const strUserID = getUserID()
 
     useEffect(() => {
         setFavouriteClicked(isFavouriteClicked);
@@ -29,29 +30,29 @@ export function ProductDetails(navigation: any) {
         if (strUserID) {
             database().ref(`favourite/${strUserID}`).on('value', (snapshot) => {
                 if (snapshot.exists()) {
-                    const aintProductsID = snapshot.val().Products;   
-                    if (aintProductsID != undefined ) {
+                    const aintProductsID = snapshot.val().Products;
+                    if (aintProductsID != undefined) {
                         if (aintProductsID.includes(tpvProduct.ID)) {
                             setFavouriteClicked(true);
                         }
-                        else{
+                        else {
                             setFavouriteClicked(false);
                         }
                     }
-                    else{
+                    else {
                         setFavouriteClicked(false);
                     }
                 }
             });
         }
     }, []);
-    
+
     const toggleFavouritelist = () => {
         if (!blnIsFavouriteClicked && strUserID) {
-            setItemsInFavourite(strUserID,tpvProduct.ID)
+            setItemsInFavourite(strUserID, tpvProduct.ID)
             setFavouriteClicked(true);
         }
-        else if(blnIsFavouriteClicked && strUserID){
+        else if (blnIsFavouriteClicked && strUserID) {
             removeItemFromFavourite(strUserID, tpvProduct.ID);
             setFavouriteClicked(false);
         }
@@ -62,9 +63,7 @@ export function ProductDetails(navigation: any) {
             <FastImage resizeMode='contain' style={Styles.wallCoffeeImage1} source={images.ProDetailsWallCoffee1} />
             <FastImage resizeMode='contain' style={Styles.wallCoffeeImage2} source={images.ProDetailsWallCoffee2} />
             <View style={Styles.headerContainer}>
-                <TouchableWithoutFeedback>
-                    <FastImage style={Styles.arrowBackIcon} resizeMode='contain' source={images.ArrowBack} />
-                </TouchableWithoutFeedback>
+                <ArrowBack />
                 <TouchableWithoutFeedback onPress={toggleFavouritelist}>
                     {blnIsFavouriteClicked ?
                         <FastImage resizeMode='contain' style={Styles.favouriteListButton} source={images.inFavouriteList} />

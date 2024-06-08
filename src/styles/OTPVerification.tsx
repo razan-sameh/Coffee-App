@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { moderateScale, strSecondColor, mbdlScreenHeight, mdblBAR_HEIGHT, strINTER_SEMIBOLD600_Font, strPrimaryColor, heightScale, widthScale, strInpitBtnColor, mdblScreenWidth, strINTER_MEDIUM500_Font } from "./responsive";
+import { moderateScale, strSecondColor, mbdlScreenHeight, mdblBAR_HEIGHT, strINTER_SEMIBOLD600_Font, strPrimaryColor, heightScale, widthScale, strWhiteColor, mdblScreenWidth, strINTER_MEDIUM500_Font } from "./responsive";
 
 export const Styles = StyleSheet.create({
     mainContainer: {

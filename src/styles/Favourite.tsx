@@ -4,6 +4,7 @@ import { Styles as styleHeader } from '../styles/Header';
 
 export const Styles = StyleSheet.create({
     wall:{
+        height:mbdlScreenHeight,
         backgroundColor:strSecondColor,
     },
     backArrowContainer: {
@@ -13,7 +14,7 @@ export const Styles = StyleSheet.create({
         justifyContent:'space-between',
         paddingLeft: moderateScale(15),
         paddingRight: moderateScale(15),
-        paddingTop: moderateScale(10),
+        paddingTop: mdblBAR_HEIGHT 
     },
     filterIcon:{
         width:widthScale(22),
@@ -30,7 +31,7 @@ export const Styles = StyleSheet.create({
         margin:moderateScale(15)
     },
     noDataContainer:{
-        height:'80%',
+        height:'90%',
         width:'70%',
         justifyContent:'center',
         alignItems:'center',

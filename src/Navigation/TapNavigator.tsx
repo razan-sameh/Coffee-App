@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
-import { Shopping } from '../screens/Shopping';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NoResultSearch } from '../screens/NoResultSearch';
 import { Header } from '../Components/Header';
-import { Filter } from '../screens/Filter';
-import { ProductDetails } from '../screens/ProductDetails';
-import { createNavigationContainerRef, useFocusEffect } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';

@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
-import { heightScale, mbdlScreenHeight, moderateScale, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strPrimaryColor, strSecondColor, widthScale } from "./responsive";
+import { heightScale, mbdlScreenHeight, mdblBAR_HEIGHT, moderateScale, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strPrimaryColor, strSecondColor, widthScale } from "./responsive";
 
 
 export const Styles = StyleSheet.create({
     wall: {
-        height: mbdlScreenHeight,
+        height: mbdlScreenHeight + mdblBAR_HEIGHT,
         backgroundColor: strSecondColor,
     },
     wallCoffeeImage1: {
@@ -16,7 +16,7 @@ export const Styles = StyleSheet.create({
     },
     wallCoffeeImage2: {
         position: 'absolute',
-        top: '41%',
+        top: '43%',
         left: 0,
         width: widthScale(38.87),
         height: heightScale(44.54)
@@ -33,7 +33,10 @@ export const Styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        margin: moderateScale(10)
+        paddingLeft: moderateScale(15),
+        paddingRight: moderateScale(15),
+        paddingBottom: moderateScale(10),
+        paddingTop: mdblBAR_HEIGHT 
     },
     carouselContainer: {
         justifyContent: 'center', alignItems: 'center'

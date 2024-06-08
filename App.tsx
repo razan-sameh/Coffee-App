@@ -9,6 +9,7 @@ import SignUp from './src/screens/SignUp';
 import ForgetPassword from './src/screens/ForgetPassword';
 import OTPVerification from './src/screens/OTPVerification';
 import ResetPassword from './src/screens/ResetPassword';
+import DrawerNavigator from './src/Navigation/DrawerNavigator';
 
 const ref: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
@@ -27,7 +28,7 @@ const App = () => {
         setRouteName(currentRouteName);
       }}>
       <Stack.Navigator
-        initialRouteName={'TapNavigator'}
+        initialRouteName={'DrawerNavigator'}
         screenOptions={{
           animationEnabled: false,
           headerShown:false
@@ -40,9 +41,7 @@ const App = () => {
         <Stack.Screen name="OTPVerification" component={OTPVerification} />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="TapNavigator"
-        children={(navigation) => <TapNavigator {...navigation} routeName={routeName} />}
-        />
+        <Stack.Screen name="DrawerNavigator" children={(navigation) => <DrawerNavigator routeName={routeName} />} />
       </Stack.Navigator>
     </NavigationContainer>
   );

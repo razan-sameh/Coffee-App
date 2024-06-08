@@ -14,13 +14,9 @@ export function Header({ navigation, searchQuery, setSearchQuery }: any) {
         })
     }
 
-    function onLogoutPress() {
-        logOut()
-        navigation.navigate('Login')
-    }
     return (
         <View style={Styles.mainContainer}>
-            <TouchableOpacity onPress={() => onLogoutPress()}>
+            <TouchableOpacity onPress={() =>  navigation.openDrawer()}>
                 <FastImage resizeMode='contain' style={Styles.sideBarImage} source={images.SideBarBtn} />
             </TouchableOpacity>
             <View style={Styles.locationContainer}>

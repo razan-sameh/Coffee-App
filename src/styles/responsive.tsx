@@ -23,7 +23,7 @@ export const strINTER_THIN100_Font = 'Inter-Thin'
 
 export const strSecondColor = '#251919'
 export const strPrimaryColor= '#C08F54'
-export const strInpitBtnColor= '#F0F0F2'
+export const strWhiteColor= '#F0F0F2'
 export const strInpitColor= '#A19D9D'
 export const strCatColor = '#CEBBAD'
 export const strTextColor = '#F0F0F2'

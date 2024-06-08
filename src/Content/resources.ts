@@ -46,4 +46,8 @@ export const images = {
     ForgetPasswordwallIcon2:require('../assets/images/ForgetPasswordwallIcon2.png'),
     ForgetPasswordwallIcon1:require('../assets/images/ForgetPasswordwallIcon1.png'),
     OtpVerficationIcon1:require('../assets/images/OtpVerficationIcon1.png'),
+    User:require('../assets/images/User.jpg'),
+    HelpIcon:require('../assets/images/HelpIcon.png'),
+    LogOutIcon:require('../assets/images/LogOutIcon.png'),
+    SettingIcon:require('../assets/images/SettingIcon.png'),
 }
