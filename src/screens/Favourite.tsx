@@ -3,7 +3,7 @@ import { SafeAreaView, SectionList, Text, TouchableOpacity, View } from 'react-n
 import { Styles } from '../styles/Favourite';
 import { typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
-import { getProductByID } from '../Content/Utils';
+import { getProductsByID } from '../Content/Utils';
 import { getUserID } from '../Content/Authentication';
 import database from '@react-native-firebase/database';
 import FastImage from 'react-native-fast-image';
@@ -33,7 +33,7 @@ export function Favourite({ ...props }: any) {
 
     const fetchFavouriteProducts = async (ProductIDs: number[]) => {
         let aObjData: typProduct[] = [];
-        aObjData = await getProductByID(ProductIDs);
+        aObjData = await getProductsByID(ProductIDs);
         console.log('aObjData', aObjData);
         const sectionData = { title: 'Favourite Products', data: [aObjData] };
         setSections([sectionData]);

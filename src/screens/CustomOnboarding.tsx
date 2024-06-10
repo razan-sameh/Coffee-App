@@ -53,8 +53,8 @@ const CustomOnboarding = ({ navigation }: any) => {
     );
     return (
         <View style={Styles.mainContainer}>
-            <FastImage resizeMode='contain' style={Styles.OnboardingWallIcon1} source={images.OnboardingWallIcon1} />
-            <FastImage resizeMode='contain' style={Styles.OnboardingWallIcon2} source={images.OnboardingWallIcon2} />
+            <FastImage resizeMode='contain' style={Styles.wallCoffeeImage1} source={images.OnboardingWallIcon1} />
+            <FastImage resizeMode='contain' style={Styles.wallCoffeeImage2} source={images.OnboardingWallIcon2} />
             <Onboarding
                 imageContainerStyles={Styles.imageContainer}
                 bottomBarHighlight={false}
@@ -110,7 +110,7 @@ export const Styles = StyleSheet.create({
         height: heightScale(317),
         borderBottomRightRadius: moderateScale(159),
     },
-    OnboardingWallIcon1: {
+    wallCoffeeImage1: {
         position: 'absolute',
         top: '40%',
         left: -10,
@@ -118,7 +118,7 @@ export const Styles = StyleSheet.create({
         height: heightScale(60),
         zIndex: 1000
     },
-    OnboardingWallIcon2: {
+    wallCoffeeImage2: {
         position: 'absolute',
         top: '80%',
         right: -5,

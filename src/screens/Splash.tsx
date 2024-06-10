@@ -31,7 +31,7 @@ const Splash = ({ navigation }: any) => {
                 auth().onAuthStateChanged(user => {
                     console.log('user', user);
                     if (user != null) {
-                        navigation.navigate('TapNavigator');
+                        navigation.navigate('DrawerNavigator', { screen: 'TapNavigator' });
                     }
                     else {
                         setIsLogin(false)
@@ -47,8 +47,8 @@ const Splash = ({ navigation }: any) => {
         <View style={Styles.container}>
             <StatusBar translucent={true} backgroundColor={'transparent'} />
             <ImageBackground source={images.SplashWall} resizeMode="cover" style={Styles.image}>
-                <FastImage resizeMode='contain' style={Styles.splashWallIcon1} source={images.SplashWallIcon1} />
-                <FastImage resizeMode='contain' style={Styles.splashWallIcon2} source={images.SplashWallIcon2} />
+                <FastImage resizeMode='contain' style={Styles.wallCoffeeImage1} source={images.SplashWallIcon1} />
+                <FastImage resizeMode='contain' style={Styles.wallCoffeeImage2} source={images.SplashWallIcon2} />
                 <FastImage resizeMode='contain' style={Styles.logo} source={images.Logo} />
             </ImageBackground>
         </View>
@@ -64,14 +64,14 @@ export const Styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-    splashWallIcon1: {
+    wallCoffeeImage1: {
         position: 'absolute',
         top: '30%',
         right: 0,
         width: widthScale(60),
         height: heightScale(60),
     },
-    splashWallIcon2: {
+    wallCoffeeImage2: {
         position: 'absolute',
         top: '70%',
         left: -5,

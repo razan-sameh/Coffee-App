@@ -8,12 +8,13 @@ import { Home } from '../screens/Home';
 import ShoppingNavigator from './ShoppingNavigator';
 import { heightScale, moderateScale, strSecondColor, widthScale } from '../styles/responsive';
 import { Favourite } from '../screens/Favourite';
+import { Cart } from '../screens/Cart';
 
 const Tab = createBottomTabNavigator();
 
 const TapNavigator = ({ navigation, routeName }: any) => {
     const [searchQuery, setSearchQuery] = useState('');
-    const blnIsTabBarHide = routeName == "ProductDetails" || routeName == "Filter"
+    const blnIsTabBarHide = routeName == "ProductDetails" || routeName == "Filter" 
 
 
     return (
@@ -49,9 +50,10 @@ const TapNavigator = ({ navigation, routeName }: any) => {
                                 <FastImage style={Styles.tabBarIcons} resizeMode='contain' tintColor={focused ? "#C08F54" : "#ffffff"} source={images.CartIcon} />
                             </View>
                         )
-                    }
+                    },
+                    tabBarStyle: { display: "none"}
                 }}
-                children={() => <View style={{ backgroundColor: 'lightblue', flex: 1 }} />}
+                children={() => <Cart navigation={navigation} />}
             />
             <Tab.Screen
                 name="ShoppingNavigator"

@@ -1,3 +1,5 @@
+import { Size } from "./Enums";
+
 export type typCategory = {
     ID: number,
     title: string
@@ -10,6 +12,12 @@ export type typProduct = {
     description: string,
     image: string[],
     rate: number
+};
+export type typCart = {
+    Uid: string,
+    productID: number,
+    size: Size,
+    count: number
 };
 export type typRange = {
     intMin: number,

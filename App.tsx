@@ -1,7 +1,6 @@
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import TapNavigator from './src/Navigation/TapNavigator';
 import  Splash  from './src/screens/Splash';
 import CustomOnboarding from './src/screens/CustomOnboarding';
 import Login from './src/screens/Login';
@@ -28,7 +27,7 @@ const App = () => {
         setRouteName(currentRouteName);
       }}>
       <Stack.Navigator
-        initialRouteName={'DrawerNavigator'}
+        initialRouteName={'Splash'}
         screenOptions={{
           animationEnabled: false,
           headerShown:false
@@ -41,7 +40,7 @@ const App = () => {
         <Stack.Screen name="OTPVerification" component={OTPVerification} />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="DrawerNavigator" children={(navigation) => <DrawerNavigator routeName={routeName} />} />
+        <Stack.Screen name="DrawerNavigator" children={() => <DrawerNavigator routeName={routeName} />} />
       </Stack.Navigator>
     </NavigationContainer>
   );

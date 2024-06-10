@@ -8,7 +8,7 @@ import { strSecondColor, widthScale } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import { typProduct } from '../Content/Types';
 import { Size } from '../Content/Enums';
-import { setItemsInFavourite, removeItemFromFavourite } from '../Content/Database';
+import { setItemsInFavourite, removeItemFromFavourite, addItemInCart } from '../Content/Database';
 import { getUserID } from '../Content/Authentication';
 import database from '@react-native-firebase/database';
 import { ArrowBack } from '../Components/ArrowBack';
@@ -57,6 +57,14 @@ export function ProductDetails(navigation: any) {
             setFavouriteClicked(false);
         }
     };
+
+    function addToCart() {
+        if (strUserID) {
+            // removeItemFromCart(userID,2)
+            addItemInCart(strUserID,tpvProduct.ID,enmSelectedSize,intProductCount)
+        }
+    }
+
 
     return (
         <View style={Styles.wall}>
@@ -137,7 +145,7 @@ export function ProductDetails(navigation: any) {
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
-                <TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => addToCart()}>
                     <View style={Styles.addToCartButton}>
                         <Text style={Styles.txtAddToCart}>Add to cart</Text>
                         <FastImage style={Styles.cartIcon} resizeMode='contain' tintColor={strSecondColor} source={images.CartIcon} />

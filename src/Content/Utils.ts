@@ -12,7 +12,7 @@ export const getProductByCategory = async (lngCategoryID: number[]) => {
   }
 };
 
-export const getProductByID = async (ID: number[]) => {
+export const getProductsByID = async (ID: number[]) => {
   try {
     const aobjData: typProduct[] = await getProduct();
     const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => ID.includes(objProduct.ID));

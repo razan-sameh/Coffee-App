@@ -8,7 +8,7 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = ({ routeName }: any) => {
     return (
         <Drawer.Navigator
-            initialRouteName='Ads'
+            initialRouteName='TapNavigator'
             drawerContent={(props) => <CustomDrawer {...props} />}
             screenOptions={{
                 headerShown: false,
@@ -16,6 +16,9 @@ const DrawerNavigator = ({ routeName }: any) => {
                     borderTopRightRadius: Styles.mainContainer.borderTopRightRadius,
                     backgroundColor: Styles.mainContainer.backgroundColor,
                     width: '75%',
+                },
+                sceneContainerStyle: {
+                    backgroundColor: 'transparent', 
                 },
             }}>
             <Drawer.Screen name="TapNavigator" children={(navigation) => <TapNavigator {...navigation} routeName={routeName} />} />

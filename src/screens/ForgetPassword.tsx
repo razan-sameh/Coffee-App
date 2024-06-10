@@ -86,8 +86,8 @@ const ForgetPassword = ({ navigation }: any) => {
         <View style={Styles.mainContainer}>
             <ArrowBack />
             <FastImage style={Styles.wave} resizeMode='contain' source={images.WallWave} />
-            <FastImage style={Styles.forgetPasswordwallIcon1} resizeMode='contain' source={images.ForgetPasswordwallIcon1} />
-            <FastImage style={Styles.forgetPasswordwallIcon2} resizeMode='contain' source={images.ForgetPasswordwallIcon2} />
+            <FastImage style={Styles.wallCoffeeImage1} resizeMode='contain' source={images.ForgetPasswordwallIcon1} />
+            <FastImage style={Styles.wallCoffeeImage2} resizeMode='contain' source={images.ForgetPasswordwallIcon2} />
             <Text style={Styles.txtTitle}>Forget Password</Text>
             <View style={Styles.instructionContainer}>
                 <Text style={Styles.titleInstruction}>Mail Address Here</Text>

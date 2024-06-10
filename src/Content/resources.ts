@@ -50,4 +50,8 @@ export const images = {
     HelpIcon:require('../assets/images/HelpIcon.png'),
     LogOutIcon:require('../assets/images/LogOutIcon.png'),
     SettingIcon:require('../assets/images/SettingIcon.png'),
+    DeleteCartItem:require('../assets/images/DeleteCartItem.png'),
+    CartWallIcon1:require('../assets/images/CartWallIcon1.png'),
+    CartWallIcon2:require('../assets/images/CartWallIcon2.png'),
+    FrameContainer:require('../assets/images/FrameContainer.png'),
 }

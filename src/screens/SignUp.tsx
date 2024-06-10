@@ -38,7 +38,7 @@ const SignUp = ({ navigation }: any) => {
                     displayName: data.strFullName,
                 })
                 console.log('User account created & signed in!');
-                navigation.navigate("TapNavigator")
+                navigation.navigate('DrawerNavigator', { screen: 'TapNavigator' });
             })
             .catch(error => {
                 setIsSign(false)
@@ -63,8 +63,8 @@ const SignUp = ({ navigation }: any) => {
         <View style={Styles.mainContainer}>
             <ArrowBack />
             <FastImage style={Styles.wave} resizeMode='contain' source={images.WallWave} />
-            <FastImage style={Styles.SignUpWallIcon1} resizeMode='contain' source={images.SignUpWallIcon1} />
-            <FastImage style={Styles.SignUpWallIcon2} resizeMode='contain' source={images.SignUpWallIcon2} />
+            <FastImage style={Styles.wallCoffeeImage1} resizeMode='contain' source={images.SignUpWallIcon1} />
+            <FastImage style={Styles.wallCoffeeImage2} resizeMode='contain' source={images.SignUpWallIcon2} />
             <Text style={Styles.txtTitle}>Hello! Register Now</Text>
             <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={0}>
                 <Controller

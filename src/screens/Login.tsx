@@ -32,7 +32,8 @@ const Login = ({ navigation }: any) => {
             .then((res) => {
                 console.log(res)
                 console.log('User logged-in successfully!')
-                navigation.navigate("TapNavigator")
+                // navigation.navigate("DrawerNavigator")
+                navigation.navigate('DrawerNavigator', { screen: 'TapNavigator' });
             })
             .catch(error => {
                 console.log(error.code);
@@ -50,8 +51,8 @@ const Login = ({ navigation }: any) => {
         <View style={Styles.mainContainer}>
             <ArrowBack />
             <FastImage style={Styles.wave} resizeMode='contain' source={images.WallWave} />
-            <FastImage style={Styles.LoginWallIcon1} resizeMode='contain' source={images.LoginWallIcon1} />
-            <FastImage style={Styles.LoginWallIcon2} resizeMode='contain' source={images.LoginWallIcon2} />
+            <FastImage style={Styles.wallCoffeeImage1} resizeMode='contain' source={images.LoginWallIcon1} />
+            <FastImage style={Styles.wallCoffeeImage2} resizeMode='contain' source={images.LoginWallIcon2} />
             <Text style={Styles.txtTitle}>Welcome Back!</Text>
             <KeyboardAvoidingView behavior='padding' keyboardVerticalOffset={0}>
                 <Controller

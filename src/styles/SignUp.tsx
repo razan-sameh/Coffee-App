@@ -84,14 +84,14 @@ export const Styles = StyleSheet.create({
         bottom: 0,
         left: 0
     },
-    SignUpWallIcon1: {
+    wallCoffeeImage1: {
         width: widthScale(63),
         height: heightScale(63),
         position: 'absolute',
         top: '7%',
         right: -17
     },
-    SignUpWallIcon2: {
+    wallCoffeeImage2: {
         width: widthScale(66),
         height: heightScale(66),
         position: 'absolute',

@@ -18,7 +18,7 @@ export async function signinWithGoogle(navigation:any) {
     // Sign-in the user with the credential
     auth().signInWithCredential(googleCredential);
     console.log('you are sign in sucessfully');
-    navigation.navigate("TapNavigator")
+    navigation.navigate('DrawerNavigator', { screen: 'TapNavigator' });
 
     } catch (error) {
         console.log('error:',error);

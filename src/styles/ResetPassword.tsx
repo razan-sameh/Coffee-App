@@ -95,14 +95,14 @@ export const Styles = StyleSheet.create({
         bottom: 0,
         left: 0
     },
-    forgetPasswordwallIcon1: {
+    wallCoffeeImage1: {
         width: widthScale(63),
         height: heightScale(72),
         position: 'absolute',
         top: '10%',
         right: -7
     },
-    forgetPasswordwallIcon2: {
+    wallCoffeeImage2: {
         width: widthScale(58),
         height: heightScale(66),
         position: 'absolute',
