@@ -76,6 +76,7 @@ export const Styles = StyleSheet.create({
         fontFamily: strINTER_EXTRABOLD800_Font,
         fontSize: moderateScale(13),
         color: strSecondColor,
+        flexWrap:'wrap'
     },
     txtItemPrice:{
         fontFamily: strINTER_MEDIUM500_Font,
@@ -121,6 +122,7 @@ export const Styles = StyleSheet.create({
         alignItems:'center',
     },
     txtCount:{
+        width:100,
         fontFamily: strINTER_MEDIUM500_Font,
         fontSize: moderateScale(20),
         color: strSecondColor,

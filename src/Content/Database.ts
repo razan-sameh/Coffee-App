@@ -1,6 +1,7 @@
 import database from '@react-native-firebase/database';
 import { typCategory, typRange, typProduct, typCart } from './Types';
 import { Size } from './Enums';
+import { getProductsByID } from './Utils';
 export const getCategory = async (): Promise<typCategory[]> => {
     try {
         const data = await database().ref('category').once('value');
@@ -124,79 +125,121 @@ export const removeItemFromFavourite = (Uid: string, productId: number) => {
     }
 };
 
-export const addItemInCart = (Uid: string, productID: number, size: Size, count: number = 1) => {
+export const addItemInCart =  (Uid: string, productID: number, size: Size, count: number = 1) => {
     // Get a reference to the user's cart
     const userCartRef = database().ref(`cart/${Uid}`);
 
     // Create a unique key for the cart item using productID and size
-    const itemKey = `${Uid}_${productID}`;
-
-    // Fetch the current cart items for the user
-    userCartRef.once('value')
-        .then((snapshot) => {
-            const cartItems = snapshot.val() || {};
-
-            // Check if the item already exists in the cart
-            if (cartItems[itemKey]) {
-                // If item exists, update the count
-                cartItems[itemKey].count += count;
-            } else {
-                // If item does not exist, add new item to the cart
-                cartItems[itemKey] = {
-                    Uid,
-                    productID,
-                    size,
-                    count
-                };
-            }
-            // Update the user's cart in the database
-            return userCartRef.set(cartItems);
-        })
-        .then(() => {
-            console.log('Cart updated successfully');
-        })
-        .catch((error) => {
-            console.error('Error updating cart:', error);
-        });
-};
-
-export const decreaseCountItemInCart = (Uid: string, productID: number, count: number = 1) => {
-    // Get a reference to the user's cart
-    const userCartRef = database().ref(`cart/${Uid}`);
-
-    // Create a unique key for the cart item using productID and size
-    const itemKey = `${Uid}_${productID}`;
-
-    // Fetch the current cart items for the user
-    userCartRef.once('value')
-        .then((snapshot) => {
-            const cartItems = snapshot.val() || {};
-
-            // Check if the item exists in the cart
-            if (cartItems[itemKey]) {
-                // If item exists, decrease the count but not less than 1
-                cartItems[itemKey].count = Math.max(1, cartItems[itemKey].count - count);
-
+    const itemKey = `${Uid}_${productID}_${size}`;
+    getProductsByID([productID]).then((product : typProduct[])=>{
+        // Fetch the current cart items for the user
+        userCartRef.once('value')
+            .then((snapshot) => {
+                const cartItems = snapshot.val() || {};
+    
+                // Check if the item already exists in the cart
+                if (cartItems[itemKey]) {
+                    // If item exists, update the count
+                    cartItems[itemKey].count += count;
+                    cartItems[itemKey].price = (product[0].price * cartItems[itemKey].count);
+                } else {
+                    // If item does not exist, add new item to the cart
+                    cartItems[itemKey] = {
+                        Uid,
+                        productID,
+                        size,
+                        count,
+                        price: (product[0].price * count)
+                    };
+                }
                 // Update the user's cart in the database
                 return userCartRef.set(cartItems);
-            } else {
-                throw new Error('Item does not exist in the cart');
-            }
-        })
-        .then(() => {
-            console.log('Cart updated successfully');
-        })
-        .catch((error) => {
-            console.error('Error updating cart:', error);
-        });
+            })
+            .then(() => {
+                console.log('Cart updated successfully');
+            })
+            .catch((error) => {
+                console.error('Error updating cart:', error);
+            });
+    })
 };
 
-export const removeItemFromCart = (Uid: string, productID: number) => {
+export const updateItemInCart = (Uid: string, productID: number, oldSize: Size, newSize: Size, newCount: number) => {
+    // Get a reference to the user's cart
+    const userCartRef = database().ref(`cart/${Uid}`);
+    // Create a unique key for the old item and new item using productID and size
+    const oldItemKey = `${Uid}_${productID}_${oldSize}`;
+    const newItemKey = `${Uid}_${productID}_${newSize}`;
+    getProductsByID([productID]).then((product:typProduct[])=>{
+        // Fetch the current cart items for the user
+        userCartRef.once('value')
+            .then((snapshot) => {
+                const cartItems = snapshot.val() || {};
+                // Check if the old item exists in the cart
+                if (cartItems[oldItemKey]) {
+                    // Remove the old item from the cart
+                    delete cartItems[oldItemKey];
+                    // Add or update the new item in the cart with the new count
+                    cartItems[newItemKey] = {
+                        Uid,
+                        productID,
+                        size: newSize,
+                        count: newCount,
+                        price : product[0].price * newCount
+                    };
+                    // Update the user's cart in the database
+                    return userCartRef.set(cartItems);
+                } else {
+                    throw new Error('Old item does not exist in the cart');
+                }
+            })
+            .then(() => {
+                console.log('Cart updated successfully');
+            })
+            .catch((error) => {
+                console.error('Error updating cart:', error);
+            });
+    })
+};
+
+export const decreaseCountItemInCart = (Uid: string, productID: number, size: Size) => {
     // Get a reference to the user's cart
     const userCartRef = database().ref(`cart/${Uid}`);
 
     // Create a unique key for the cart item using productID and size
-    const itemKey = `${Uid}_${productID}`;
+    const itemKey = `${Uid}_${productID}_${size}`;
+    getProductsByID([productID]).then((product : typProduct[])=>{
+        // Fetch the current cart items for the user
+        userCartRef.once('value')
+            .then((snapshot) => {
+                const cartItems = snapshot.val() || {};
+    
+                // Check if the item exists in the cart
+                if (cartItems[itemKey]) {
+                    // If item exists, decrease the count but not less than 1
+                    cartItems[itemKey].count = Math.max(1, cartItems[itemKey].count - 1);
+                    cartItems[itemKey].price = (product[0].price * cartItems[itemKey].count);
+                    // Update the user's cart in the database
+                    return userCartRef.set(cartItems);
+                } else {
+                    throw new Error('Item does not exist in the cart');
+                }
+            })
+            .then(() => {
+                console.log('Cart updated successfully');
+            })
+            .catch((error) => {
+                console.error('Error updating cart:', error);
+            });
+    })
+};
+
+export const removeItemFromCart = (Uid: string, productID: number, size: Size) => {
+    // Get a reference to the user's cart
+    const userCartRef = database().ref(`cart/${Uid}`);
+
+    // Create a unique key for the cart item using productID and size
+    const itemKey = `${Uid}_${productID}_${size}`;
 
     // Fetch the current cart items for the user
     userCartRef.once('value')
@@ -222,7 +265,6 @@ export const removeItemFromCart = (Uid: string, productID: number) => {
         });
 };
 
-
 export const getCartItems = (Uid: string, callback: (cartItems: typCart[]) => void) => {
     // Get a reference to the user's cart
     database().ref(`cart/${Uid}`).on('value', (snapshot) => {
@@ -235,64 +277,23 @@ export const getCartItems = (Uid: string, callback: (cartItems: typCart[]) => vo
     });
 };
 
+export const getCartItemDetails = (Uid: string, productID: number, size: Size, callback: (itemDetails: { size: Size, count: number } | null) => void) => {
+    // Get a reference to the specific cart item
+    const itemRef = database().ref(`cart/${Uid}/${Uid}_${productID}_${size}`);
 
-// export const removeFromCart = (Uid: string, productID: number, count: number) => {
-//     // Get a reference to the user's cart
-//     const userCartRef = database().ref(`cart/${Uid}`);
+    // Listen for changes to the specific cart item
+    itemRef.on('value', (snapshot) => {
+        const itemDetails = snapshot.val();
+        if (itemDetails) {
+            callback({ size: itemDetails.size, count: itemDetails.count });
+        } else {
+            callback(null); // Item not found
+        }
+    }, (error) => {
+        console.error('Error retrieving item details:', error);
+        callback(null); // Error occurred
+    });
 
-//     // Create a unique key for the cart item using productID and size
-//     const itemKey = `${Uid}_${productID}`;
-
-//     // Fetch the current cart items for the user
-//     userCartRef.once('value')
-//         .then((snapshot) => {
-//             const cartItems = snapshot.val() || {};
-
-//             // Check if the item exists in the cart
-//             if (cartItems[itemKey]) {
-//                 // Decrease the count of the item
-//                 cartItems[itemKey].count -= count;
-
-//                 // If the count reaches zero or below, delete the item from the cart
-//                 if (cartItems[itemKey].count <= 0) {
-//                     delete cartItems[itemKey];
-//                 }
-
-//                 // Update the user's cart in the database
-//                 return userCartRef.set(cartItems);
-//             } else {
-//                 console.log('Item not found in cart');
-//                 return Promise.resolve();  // Resolve the promise since no update is needed
-//             }
-//         })
-//         .then(() => {
-//             console.log('Cart updated successfully');
-//         })
-//         .catch((error) => {
-//             console.error('Error updating cart:', error);
-//         });
-// };
-
-
-// export const addToCart = (Uid: string, productID: number, size: string, count: number) => {
-//     // Construct the cart item
-//     const cartItem : typCart= {
-//         Uid,
-//         productID,
-//         size,
-//         count
-//     };
-
-//     // Get a reference to the user's cart
-//     const userCartRef = database().ref(`cart/${Uid}`);
-
-//     // Set the cart item in the user's cart
-//     userCartRef.set(cartItem)
-//         .then(() => {
-//             console.log('Item added to cart successfully');
-//         })
-//         .catch((error) => {
-//             console.error('Error adding item to cart:', error);
-//         });
-// };
-
+    // Return the item reference to allow cleanup
+    return itemRef;
+};

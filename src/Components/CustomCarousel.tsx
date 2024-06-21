@@ -90,7 +90,6 @@ export function CustomCarousel({ productImages }: { productImages: string[] }) {
                             width: widthScale(333),
                             alignSelf: 'center',
                             borderRadius: moderateScale(30),
-
                         }}
                     >
                         <FastImage source={{ uri: item }} style={{ width: '100%', height: '100%', borderRadius: 30 }} />
@@ -114,7 +113,6 @@ export function CustomCarousel({ productImages }: { productImages: string[] }) {
                     {productImages.map((backgroundColor, index) => {
                         return (
                             <PaginationItem
-                                // backgroundColor={backgroundColor}
                                 animValue={progressValue}
                                 index={index}
                                 key={index}

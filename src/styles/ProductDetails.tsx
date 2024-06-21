@@ -131,15 +131,27 @@ export const Styles = StyleSheet.create({
         color: '#CEBBAD',
     },
     productCountBtnContainer: {
-        width: widthScale(69),
+        width: widthScale(90),
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
+    plusContainer:{
+        width:24,
+        height:24,
+        borderRadius:50,
+        justifyContent:'center',
+        alignItems:'center',
+        borderWidth:1,
+        borderColor:strPrimaryColor,
+        // margin:5
+    },
     txtProductCountBtn: {
         fontFamily: strINTER_MEDIUM500_Font,
         fontSize: moderateScale(20),
-        color: strPrimaryColor
+        color: strPrimaryColor,
+        includeFontPadding:false,
+        textAlign:'center'
     },
     productCount: {
         width: widthScale(24),

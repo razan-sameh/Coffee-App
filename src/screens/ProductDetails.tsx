@@ -8,19 +8,22 @@ import { strSecondColor, widthScale } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import { typProduct } from '../Content/Types';
 import { Size } from '../Content/Enums';
-import { setItemsInFavourite, removeItemFromFavourite, addItemInCart } from '../Content/Database';
+import { setItemsInFavourite, removeItemFromFavourite, addItemInCart, getCartItemDetails, updateItemInCart } from '../Content/Database';
 import { getUserID } from '../Content/Authentication';
 import database from '@react-native-firebase/database';
 import { ArrowBack } from '../Components/ArrowBack';
+import { Screen } from 'react-native-screens';
 
 export function ProductDetails(navigation: any) {
     const tpvProduct: typProduct = navigation.navigation.route.params.product
+    const size: Size = navigation.navigation.route.params.size
+    const count: number = navigation.navigation.route.params.count
     const isFavouriteClicked: boolean = navigation.navigation.route.params.blnIsFavouriteClicked
-
-    const [enmSelectedSize, setSelectedSize] = useState<Size>(Size.small);
-    const [intProductCount, setProductCount] = useState<number>(1);
-    const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(isFavouriteClicked);
     const strUserID = getUserID()
+    const [enmSelectedSize, setSelectedSize] = useState<Size>(Size.small);
+    const [intProductCount, setProductCount] = useState<number>(count || 1);
+    const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(isFavouriteClicked);
+    const [blnIsAdded, setAdded] = useState<boolean>(false);
 
     useEffect(() => {
         setFavouriteClicked(isFavouriteClicked);
@@ -45,7 +48,30 @@ export function ProductDetails(navigation: any) {
                 }
             });
         }
-    }, []);
+    }, [strUserID]);
+
+
+
+    useEffect(() => {
+        if (strUserID && size && count) {
+            getCartItemDetails(strUserID, tpvProduct.ID, size, (itemDetails) => {
+                if (itemDetails) {
+                    setProductCount(itemDetails.count)
+                    setSelectedSize(itemDetails.size)
+                }
+            });
+        } else {
+            setProductCount(1)
+            setSelectedSize(Size.small)
+        }
+    }, [strUserID, tpvProduct]);
+
+    useEffect(() => {
+        if (blnIsAdded) {
+            navigation.navigation.navigation.navigate('Cart')
+            setAdded(false)
+        }
+    }, [blnIsAdded]);
 
     const toggleFavouritelist = () => {
         if (!blnIsFavouriteClicked && strUserID) {
@@ -60,11 +86,17 @@ export function ProductDetails(navigation: any) {
 
     function addToCart() {
         if (strUserID) {
-            // removeItemFromCart(userID,2)
-            addItemInCart(strUserID,tpvProduct.ID,enmSelectedSize,intProductCount)
+            addItemInCart(strUserID, tpvProduct.ID, enmSelectedSize, intProductCount)
+            setAdded(true)
         }
     }
 
+    function updateCart() {
+        if (strUserID) {
+            updateItemInCart(strUserID, tpvProduct.ID, size, enmSelectedSize, intProductCount)
+            setAdded(true)
+        }
+    }
 
     return (
         <View style={Styles.wall}>
@@ -126,7 +158,6 @@ export function ProductDetails(navigation: any) {
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-
                 </View>
                 <View style={Styles.productCountContainer}>
                     <View style={Styles.txtProductCountTitle}>
@@ -135,19 +166,23 @@ export function ProductDetails(navigation: any) {
                     </View>
                     <View style={Styles.productCountBtnContainer}>
                         <TouchableWithoutFeedback onPress={() => { setProductCount(intProductCount + 1) }}>
-                            <Text style={Styles.txtProductCountBtn}>+</Text>
+                            <View style={Styles.plusContainer}>
+                                <Text style={Styles.txtProductCountBtn}>+</Text>
+                            </View>
                         </TouchableWithoutFeedback>
                         <View style={Styles.productCount}>
                             <Text style={Styles.txtProductCount}>{intProductCount}</Text>
                         </View>
                         <TouchableWithoutFeedback onPress={() => { intProductCount > 1 ? setProductCount(intProductCount - 1) : null }}>
-                            <Text style={Styles.txtProductCountBtn}>-</Text>
+                            <View style={Styles.plusContainer}>
+                                <Text style={Styles.txtProductCountBtn}>-</Text>
+                            </View>
                         </TouchableWithoutFeedback>
                     </View>
                 </View>
-                <TouchableWithoutFeedback onPress={() => addToCart()}>
+                <TouchableWithoutFeedback onPress={() => (size && count) ? updateCart() : addToCart()}>
                     <View style={Styles.addToCartButton}>
-                        <Text style={Styles.txtAddToCart}>Add to cart</Text>
+                        <Text style={Styles.txtAddToCart}>{(size && count) ? 'Update Cart' : 'Add to cart'}</Text>
                         <FastImage style={Styles.cartIcon} resizeMode='contain' tintColor={strSecondColor} source={images.CartIcon} />
                     </View>
                 </TouchableWithoutFeedback>

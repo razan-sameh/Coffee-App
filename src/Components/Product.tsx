@@ -5,8 +5,9 @@ import { typProduct } from '../Content/Types';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
 import { getUserID } from '../Content/Authentication';
-import { removeItemFromFavourite, setItemsInFavourite } from '../Content/Database';
+import { addItemInCart, removeItemFromFavourite, setItemsInFavourite } from '../Content/Database';
 import database from '@react-native-firebase/database';
+import { Size } from '../Content/Enums';
 
 export function Product({ product, navigation }: { product: typProduct } & { navigation: any }) {
     const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(false);
@@ -70,7 +71,9 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
                         <Text style={Styles.txtProdDesc}>{product?.description}</Text>
                         <Text style={Styles.txtProdPrice}>${product?.price}</Text>
                     </View>
+                    <TouchableWithoutFeedback onPress={() => { strUserID ? addItemInCart(strUserID, product.ID, Size.small) : null}}>
                     <FastImage resizeMode='contain' style={Styles.productPlusIcon} source={images.ProductPlus} />
+                    </TouchableWithoutFeedback>
                 </View>
             </View>
         </TouchableWithoutFeedback>

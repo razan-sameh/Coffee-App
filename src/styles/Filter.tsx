@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
-import { heightScale, mbdlScreenHeight, moderateScale, strCatColor, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strPrimaryColor, strSecondColor, widthScale } from "./responsive";
+import { heightScale, mbdlScreenHeight, mdblBAR_HEIGHT, moderateScale, strCatColor, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strPrimaryColor, strSecondColor, widthScale } from "./responsive";
 
 export const Styles = StyleSheet.create({
     wall: {
         width: widthScale(375),
         backgroundColor: strSecondColor,
-        height: mbdlScreenHeight,
+        height: mbdlScreenHeight + mdblBAR_HEIGHT,
     },
     backArrowContainer: {
+        marginTop:mdblBAR_HEIGHT,
         margin: moderateScale(10),
     },
     headerContainer:{

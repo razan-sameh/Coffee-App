@@ -17,7 +17,8 @@ export type typCart = {
     Uid: string,
     productID: number,
     size: Size,
-    count: number
+    count: number,
+    price:number
 };
 export type typRange = {
     intMin: number,
