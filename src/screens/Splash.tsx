@@ -5,8 +5,10 @@ import FastImage from 'react-native-fast-image';
 import { widthScale, heightScale } from '../styles/responsive';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
-const Splash = ({ navigation }: any) => {
+const Splash = () => {
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
     const [blnIsLogin, setIsLogin] = useState(false);
     const [blnIsFirstLaunch, setFirstLaunch] = useState<boolean>();
     const checkFirstLaunch = async () => {        

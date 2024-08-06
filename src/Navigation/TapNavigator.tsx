@@ -9,12 +9,15 @@ import ShoppingNavigator from './ShoppingNavigator';
 import { heightScale, moderateScale, strSecondColor, widthScale } from '../styles/responsive';
 import { Favourite } from '../screens/Favourite';
 import { Cart } from '../screens/Cart';
+import CartNavigator from './CartNavigator';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const TapNavigator = ({ navigation, routeName }: any) => {
+const TapNavigator = ({  routeName }: any) => {
     const [searchQuery, setSearchQuery] = useState('');
     const blnIsTabBarHide = routeName == "ProductDetails" || routeName == "Filter" 
+    const navigation: NavigationProp<ParamListBase>= useNavigation();
 
 
     return (
@@ -28,7 +31,7 @@ const TapNavigator = ({ navigation, routeName }: any) => {
         >
             <Tab.Screen
                 name="Home"
-                children={(props) => <Home {...props} />}
+                children={() => <Home/>}
                 options={{
                     tabBarIcon: ({ focused }) => {
                         return (
@@ -41,7 +44,7 @@ const TapNavigator = ({ navigation, routeName }: any) => {
 
             />
             <Tab.Screen
-                name="Cart"
+                name="CartNavigator"
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) => {
@@ -53,7 +56,7 @@ const TapNavigator = ({ navigation, routeName }: any) => {
                     },
                     tabBarStyle: { display: "none"}
                 }}
-                children={() => <Cart navigation={navigation} />}
+                children={() => <CartNavigator />}
             />
             <Tab.Screen
                 name="ShoppingNavigator"
@@ -100,7 +103,7 @@ const TapNavigator = ({ navigation, routeName }: any) => {
                         });
                     }
                 }}
-                children={(navigation) => <Favourite navigation={navigation} />}
+                children={() => <Favourite />}
             />
             <Tab.Screen
                 name="Profile"

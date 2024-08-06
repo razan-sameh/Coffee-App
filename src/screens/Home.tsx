@@ -7,10 +7,12 @@ import { getCategory, getProduct } from '../Content/Database';
 import { typCategory, typProduct } from '../Content/Types';
 import { Product } from '../Components/Product';
 import FastImage from 'react-native-fast-image';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
-export function Home({...props}:any) {
+export function Home() {
   const [aobjFilteredProducts, setFilteredProducts] = useState<typProduct[]>([]);
   const [aobjCategories, setCategory] = useState<typCategory[]>([]);
+  const navigation : NavigationProp<ParamListBase>= useNavigation();
 
   useEffect(() => {
     fetchCategoryData();
@@ -47,7 +49,7 @@ export function Home({...props}:any) {
               <TouchableWithoutFeedback
                 key={category.ID}
                 onPress={() => {
-                  props.navigation.navigate('ShoppingNavigator', {
+                  navigation.navigate('ShoppingNavigator', {
                     screen: 'Shopping',
                     params: { categoryID: category.ID }
                   })
@@ -73,7 +75,7 @@ export function Home({...props}:any) {
         >
           {aobjFilteredProducts.map((product: any, index) => {
             return (
-              <Product key={product.ID} product={product} navigation={props}/>
+              <Product key={product.ID} product={product}/>
             );
           })}
         </ScrollView>

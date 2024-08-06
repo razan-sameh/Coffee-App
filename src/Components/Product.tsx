@@ -8,11 +8,13 @@ import { getUserID } from '../Content/Authentication';
 import { addItemInCart, removeItemFromFavourite, setItemsInFavourite } from '../Content/Database';
 import database from '@react-native-firebase/database';
 import { Size } from '../Content/Enums';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
-export function Product({ product, navigation }: { product: typProduct } & { navigation: any }) {
+export function Product({ product }: { product: typProduct }) {
     const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(false);
     const strUserID = getUserID() 
-    
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
+
     useEffect(() => {
         if (strUserID) {
             database().ref(`favourite/${strUserID}`).on('value', (snapshot) => {
@@ -47,7 +49,7 @@ export function Product({ product, navigation }: { product: typProduct } & { nav
 
     return (
         <TouchableWithoutFeedback onPress={() => {
-            navigation.navigation.navigate('ShoppingNavigator',
+            navigation.navigate('ShoppingNavigator',
                 {
                     screen: 'ProductDetails',
                     params: { product ,blnIsFavouriteClicked}

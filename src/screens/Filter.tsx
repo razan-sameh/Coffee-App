@@ -8,8 +8,10 @@ import Thumb from '../Components/RangeSlider/Thumb';
 import { typCategory, typRange } from '../Content/Types';
 import { getCategory, getMinAndMaxPrice } from '../Content/Database';
 import { ArrowBack } from '../Components/ArrowBack';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 export function Filter({...props }: any) {
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
     const [aobjCategories, setCategory] = useState<typCategory[]>([]);
     const [alngCategoryID, setSelectedCategoryID] = useState<number[]>([]);
     const [lowPrice, setLowPrice] = useState<number>(0);
@@ -132,7 +134,7 @@ export function Filter({...props }: any) {
             </ScrollView>
             <View style={Styles.applyBtnContainer}>
                 <TouchableWithoutFeedback onPress={() => {
-                    props.navigation.navigation.navigate(screenNameApplyOn, 
+                    navigation.navigate(screenNameApplyOn, 
                         // screen: screenNameApplyOn
                         { categoryID: alngCategoryID, intMinPrice: lowPrice, intMaxPrice: highPrice,intMinRating:lowRating,intMaxRating:highRating }
                     )

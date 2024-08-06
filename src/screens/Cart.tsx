@@ -8,11 +8,13 @@ import { getUserID } from '../Content/Authentication';
 import { typCart } from '../Content/Types';
 import { getCartItems } from '../Content/Database';
 import { CartItem } from './Cart/CartItem';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
-export function Cart(navigation: any) {
+export function Cart() {
     const [atpvCartItems, setCartItems] = useState<typCart[]>();
     const strUserID = getUserID();
     const [totalPrice, setTotalPrice] = useState<number>(0);
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
 
     useEffect(() => {
         if (strUserID) {
@@ -20,16 +22,15 @@ export function Cart(navigation: any) {
                 console.log('Cart items:', cartItems);
                 if (cartItems && cartItems.length > 0) {
                     setCartItems(cartItems);
-                    let totalPriceCalc : number = 0;
-                    cartItems.forEach((item : typCart) => {
-                        totalPriceCalc += item.price ;
+                    let totalPriceCalc: number = 0;
+                    cartItems.forEach((item: typCart) => {
+                        totalPriceCalc += item.price;
                     });
                     setTotalPrice(totalPriceCalc);
                 }
             });
         }
     }, [strUserID]);
-
 
     return (
         <View style={Styles.wall}>
@@ -47,7 +48,7 @@ export function Cart(navigation: any) {
                 >
                     {atpvCartItems?.map((item: typCart, index: number) => {
                         return (
-                            <CartItem key={index} item={item} navigation={navigation} />
+                            <CartItem key={index} item={item}/>
                         );
                     })}
                 </ScrollView>
@@ -59,7 +60,13 @@ export function Cart(navigation: any) {
                     <Text style={Styles.txtTitlePrice}>Total</Text>
                     <Text style={Styles.txtPrice}>$ {totalPrice.toFixed(2)}</Text>
                 </FastImage>
-                <TouchableWithoutFeedback >
+                <TouchableWithoutFeedback onPress={() => {
+                    navigation.navigate('CartNavigator',
+                        {
+                            screen: 'CheckOut',
+                        }
+                    )
+                }}>
                     <View style={Styles.checkOutButton}>
                         <Text style={Styles.txtCheckOut}>CheckOut</Text>
                     </View>

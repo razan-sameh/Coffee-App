@@ -9,9 +9,11 @@ import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
 import { typSignUp } from '../Content/Types';
-import { signinWithGoogle } from '../Content/Authentication';
+import { getUserID, signinWithGoogle } from '../Content/Authentication';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
+import { addUser } from '../Content/Database';
 
-const SignUp = ({ navigation }: any) => {
+const SignUp = () => {
     const { control, handleSubmit, formState: { errors }, } = useForm<typSignUp>({
         defaultValues: {
             strEmail: '',
@@ -26,6 +28,7 @@ const SignUp = ({ navigation }: any) => {
     const PasswordShowIcon = <TextInput.Icon onPress={() => setSecureTextEntry(true)} icon={images.PasswordShowIcon} color={strPrimaryColor} />
     const PasswordHiddenIcon = <TextInput.Icon onPress={() => setSecureTextEntry(false)} icon={images.PasswordHiddenIcon} color={strPrimaryColor} />
     const FullNameIcon = <TextInput.Icon icon={images.FullNameIcon} color={strPrimaryColor} />
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
 
     const onSubmit = (data: typSignUp) => {
         console.log('Submitted Data:', data);
@@ -37,6 +40,10 @@ const SignUp = ({ navigation }: any) => {
                 res.user.updateProfile({
                     displayName: data.strFullName,
                 })
+                const userID = getUserID();
+                if (userID) {
+                    addUser(userID,data.strFullName,data.strEmail,data.strPassword)
+                }
                 console.log('User account created & signed in!');
                 navigation.navigate('DrawerNavigator', { screen: 'TapNavigator' });
             })
@@ -56,7 +63,7 @@ const SignUp = ({ navigation }: any) => {
     };
 
     function onGoogleButtonPress() {
-        signinWithGoogle(navigation)
+        signinWithGoogle()
     }
     
     return (

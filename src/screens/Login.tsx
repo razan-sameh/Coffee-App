@@ -8,10 +8,14 @@ import { TextInput } from 'react-native-paper';
 import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
-import { typLogin } from '../Content/Types';
-import { EmailJSResponseStatus, send } from '@emailjs/react-native';
+import { typLogin, typUser } from '../Content/Types';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux'
+import { changeName, changePassword, changeUserID } from '../Config/userSlice';
+import { getUserID } from '../Content/Authentication';
+import { getUserInfo, updateUserPassword } from '../Content/Database';
 
-const Login = ({ navigation }: any) => {
+const Login = () => {
     const { control, handleSubmit, formState: { errors }, } = useForm<typLogin>({
         defaultValues: {
             strEmail: "",
@@ -24,15 +28,26 @@ const Login = ({ navigation }: any) => {
     const PasswordIcon = <TextInput.Icon icon={images.PasswordIcon} color={strPrimaryColor} />
     const PasswordShowIcon = <TextInput.Icon onPress={() => setSecureTextEntry(true)} icon={images.PasswordShowIcon} color={strPrimaryColor} />
     const PasswordHiddenIcon = <TextInput.Icon onPress={() => setSecureTextEntry(false)} icon={images.PasswordHiddenIcon} color={strPrimaryColor} />
-
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
+	const dispatch = useDispatch();
+    
     const onSubmit = (data: typLogin) => {
         console.log('Submitted Data:', data);
         setIsSign(true)
         auth().signInWithEmailAndPassword(data.strEmail, data.strPassword)
-            .then((res) => {
+            .then(async (res) => {
                 console.log(res)
                 console.log('User logged-in successfully!')
-                // navigation.navigate("DrawerNavigator")
+                const userID = getUserID();
+                if (userID) {
+                    const user  = await getUserInfo(userID)
+                    dispatch(changeUserID(user.Uid));
+                    dispatch(changeName(user.name));
+                    if (user.password != data.strPassword) {
+                        updateUserPassword(userID,data.strPassword)
+                        dispatch(changePassword(data.strPassword));
+                    }
+                }
                 navigation.navigate('DrawerNavigator', { screen: 'TapNavigator' });
             })
             .catch(error => {

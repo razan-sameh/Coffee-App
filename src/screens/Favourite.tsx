@@ -6,11 +6,9 @@ import { Product } from '../Components/Product';
 import { getProductsByID } from '../Content/Utils';
 import { getUserID } from '../Content/Authentication';
 import database from '@react-native-firebase/database';
-import FastImage from 'react-native-fast-image';
-import { images } from '../Content/resources';
 import { ArrowBack } from '../Components/ArrowBack';
 
-export function Favourite({ ...props }: any) {
+export function Favourite() {
     const [sections, setSections] = useState<{ title: string, data: typProduct[][] }[]>([]);
     const objListRef = useRef<SectionList>(null);
     const strUserID = getUserID();
@@ -43,7 +41,7 @@ export function Favourite({ ...props }: any) {
         ({ item }: { item: typProduct[] }) => (
             <View style={Styles.productContainer}>
                 {item.map((product, index) => (
-                    <Product key={index} product={product} navigation={props.navigation} />
+                    <Product key={index} product={product} />
                 ))}
             </View>
         ),

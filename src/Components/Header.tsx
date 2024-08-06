@@ -4,11 +4,13 @@ import { strInpitColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import { images } from '../Content/resources';
 import { getUserName, logOut } from '../Content/Authentication';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 export function Header({ navigation, searchQuery, setSearchQuery }: any) {
+    const navigationTo : NavigationProp<ParamListBase>= useNavigation();
 
     const executeSearch = () => {
-        navigation.navigate('ShoppingNavigator', {
+        navigationTo.navigate('ShoppingNavigator', {
             screen: 'Shopping',
             params: { strSearch: searchQuery }
         })

@@ -9,8 +9,10 @@ import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
 import { EmailJSResponseStatus, send } from '@emailjs/react-native';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
-const ForgetPassword = ({ navigation }: any) => {
+const ForgetPassword = () => {
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
     const { control, handleSubmit, formState: { errors }, } = useForm({
         defaultValues: {
             strEmail: ""

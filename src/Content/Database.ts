@@ -1,7 +1,8 @@
 import database from '@react-native-firebase/database';
-import { typCategory, typRange, typProduct, typCart } from './Types';
+import { typCategory, typRange, typProduct, typCart, typUser } from './Types';
 import { Size } from './Enums';
 import { getProductsByID } from './Utils';
+
 export const getCategory = async (): Promise<typCategory[]> => {
     try {
         const data = await database().ref('category').once('value');
@@ -13,17 +14,6 @@ export const getCategory = async (): Promise<typCategory[]> => {
     }
 };
 
-// import { getAuth, listUsers } from "firebase/auth";
-
-// const auth = getAuth();
-// listUsers(auth)
-//     .then((users: any) => {
-//         console.log('Successfully fetched user data: ', users);
-//     })
-//     .catch((error: Error) => {
-//         console.log('Error fetching user data: ', error);
-//     });
-
 export const getProduct = async (): Promise<typProduct[]> => {
     try {
         const data = await database().ref('product').once('value');
@@ -34,6 +24,7 @@ export const getProduct = async (): Promise<typProduct[]> => {
         return [];
     }
 };
+
 export const getProductById = async (productId: number): Promise<typProduct> => {
     try {
         const snapshot = await database()
@@ -46,7 +37,6 @@ export const getProductById = async (productId: number): Promise<typProduct> => 
         throw error;
     }
 }
-
 
 export const getMinAndMaxPrice = async (): Promise<typRange> => {
     const data = await database().ref('product').once('value');
@@ -296,4 +286,130 @@ export const getCartItemDetails = (Uid: string, productID: number, size: Size, c
 
     // Return the item reference to allow cleanup
     return itemRef;
+};
+
+export const addUser = (Uid: string, strName: string, strEmail: string, strPassword: string) => {
+    const reference = database().ref(`/user/${Uid}`);
+    reference.set({
+        Uid,
+        name : strName,
+        email : strEmail,
+        password : strPassword
+    })
+        .then(() => console.log('User data inserted successfully'))
+        .catch(error => console.error('Error inserting user data:', error));
+};
+
+export const getUserInfo = async (Uid: string): Promise<typUser> => {
+    try {
+        const snapshot = await database()
+            .ref(`/user/${Uid}`)
+            .once('value');
+        const data = snapshot.val();
+        return data;
+    } catch (error) {
+        console.error("Error getting user by ID:", error);
+        throw error;
+    }
+}
+
+export const updateUserPassword = (Uid: string, newPassword:string) => {
+    const reference = database().ref(`/user/${Uid}`);
+    reference.update({
+        password: newPassword
+    })
+        .then(() => console.log('User password updated successfully'))
+        .catch(error => console.error('Error updating user password:', error));
+};
+
+export const addUserDetails = async (Uid: string, address: string, phoneNumber: string) => {
+    try {
+        const userRef = database().ref(`user/${Uid}`);
+        // Check if the user already exists
+        const snapshot = await userRef.once('value');
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            // Initialize address and phoneNumber as arrays if they don't already exist
+            const addresses = userData.address ? userData.address : [];
+            const phoneNumbers = userData.phoneNumber ? userData.phoneNumber : [];
+
+            // Add new address and phoneNumber to arrays
+            if (!addresses.includes(address)) {
+                addresses.push(address);
+            }
+            if (!phoneNumbers.includes(phoneNumber)) {
+                phoneNumbers.push(phoneNumber);
+            }
+
+            // Update user data
+            await userRef.update({
+                address: addresses,
+                phoneNumber: phoneNumbers,
+            });
+            console.log('Address and phone number updated.');
+        } else {
+            // If user doesn't exist, create the user with address and phoneNumber as arrays
+            await userRef.set({
+                address: [address],
+                phoneNumber: [phoneNumber],
+            });
+            console.log('User created with address and phone number.');
+        }
+    } catch (error) {
+        console.error('Error updating user details:', error);
+    }
+};
+
+export const getAddressByUid = async (Uid: string) => {
+    try {
+        const userRef = database().ref(`user/${Uid}`);
+        // Fetch user data
+        const snapshot = await userRef.once('value');
+        
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            
+            // Check if the address field exists
+            if (userData.address && Array.isArray(userData.address)) {
+                console.log('Addresses:', userData.address);
+                return userData.address;
+            } else {
+                console.log('Address field not found or is not an array.');
+                return [];
+            }
+        } else {
+            console.log('User does not exist.');
+            return [];
+        }
+    } catch (error) {
+        console.error('Error retrieving address:', error);
+        return [];
+    }
+};
+
+export const getPhoneNumberByUid = async (Uid: string) => {
+    try {
+        const userRef = database().ref(`user/${Uid}`);
+        // Fetch user data
+        const snapshot = await userRef.once('value');
+        
+        if (snapshot.exists()) {
+            const userData = snapshot.val();
+            
+            // Check if the phoneNumber field exists and is an array
+            if (userData.phoneNumber && Array.isArray(userData.phoneNumber)) {
+                console.log('Phone Numbers:', userData.phoneNumber);
+                return userData.phoneNumber;
+            } else {
+                console.log('PhoneNumber field not found or is not an array.');
+                return [];
+            }
+        } else {
+            console.log('User does not exist.');
+            return [];
+        }
+    } catch (error) {
+        console.error('Error retrieving phone number:', error);
+        return [];
+    }
 };

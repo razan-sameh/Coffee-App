@@ -8,9 +8,10 @@ import { TextInput } from 'react-native-paper';
 import { strPrimaryColor, strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 
-const ResetPassword = ({ navigation }: any) => {
+const ResetPassword = () => {
     const { control, handleSubmit, formState: { errors }, } = useForm({
         defaultValues: {
             strPassword: "",
@@ -22,6 +23,7 @@ const ResetPassword = ({ navigation }: any) => {
     const PasswordIcon = <TextInput.Icon icon={images.PasswordIcon} color={strPrimaryColor} />
     const PasswordShowIcon = <TextInput.Icon onPress={() => setSecureTextEntry(true)} icon={images.PasswordShowIcon} color={strPrimaryColor} />
     const PasswordHiddenIcon = <TextInput.Icon onPress={() => setSecureTextEntry(false)} icon={images.PasswordHiddenIcon} color={strPrimaryColor} />
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
 
     const onSubmit = (data: any) => {
         console.log('Submitted Data:', data);

@@ -1,22 +1,35 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { typUser } from '../Content/Types'
 
+const initialState: typUser = {
+    Uid: '',
+    name: '',
+    phoneNumber: '',
+    address: '',
+    password:''
+}
 export const userSlice = createSlice({
     name: 'counter',
-    initialState: {
-        UID: 0
-    },
+    initialState,
     reducers: {
-        increment: state => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.UID += 1
+        changeUserID: (state,action: PayloadAction<string>) => {
+            state.Uid = action.payload;
         },
+        changeName: (state,action: PayloadAction<string>) => {
+            state.name = action.payload;
+        },
+        changePhoneNumber: (state,action: PayloadAction<string>) => {
+            state.phoneNumber = action.payload;
+        },
+        changeAddress: (state,action: PayloadAction<string>) => {
+            state.address = action.payload;
+        },
+        changePassword: (state,action: PayloadAction<string>) => {
+            state.password = action.payload;
+        }
     }
 })
 
-// Action creators are generated for each case reducer function
-export const { increment } = userSlice.actions
+export const { changeUserID,changeName,changePhoneNumber,changeAddress,changePassword } = userSlice.actions
 
 export default userSlice.reducer

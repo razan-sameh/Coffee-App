@@ -6,19 +6,21 @@ import { ArrowBack } from '../Components/ArrowBack';
 import {strSecondColor } from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import OtpTextInput from 'react-native-text-input-otp';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 const OTPVerification = ({ ...props }: any) => {
     const [blnIsVerified, setVerified] = useState<boolean>(false);
     const [otp, setOtp] = React.useState('');
     const strOtpParam = props.route.params.otp //'1234' 
     const strEmailParam = props.route.params.email  
+    const navigation: NavigationProp<ParamListBase>= useNavigation();
 
 
     function verifyOtp() {
         setVerified(true)
         if (otp.length == 4) {
             if (strOtpParam === otp) {
-                props.navigation.navigate('ResetPassword',{email:strEmailParam})
+                navigation.navigate('ResetPassword',{email:strEmailParam})
             }
             else {
                 ToastAndroid.showWithGravityAndOffset('Wrong Number', ToastAndroid.LONG, ToastAndroid.BOTTOM, 25, 50,);

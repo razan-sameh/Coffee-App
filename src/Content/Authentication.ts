@@ -1,11 +1,14 @@
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 GoogleSignin.configure({
     webClientId: '24598469643-j2n8f7apgotbn4h0vm3brc1ptmnqhh06.apps.googleusercontent.com',
 });
 
-export async function signinWithGoogle(navigation:any) {
+export async function signinWithGoogle() {
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
+
     try {
             // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });

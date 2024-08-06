@@ -6,13 +6,11 @@ import {
 import {
     DrawerContentScrollView,
 } from "@react-navigation/drawer";
-import { useState } from "react";
 import FastImage from "react-native-fast-image";
 import { StyleSheet } from "react-native";
 import { heightScale, mdblBAR_HEIGHT, moderateScale, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strPrimaryColor, strSecondColor, strWhiteColor, widthScale } from "../styles/responsive";
 import { images } from "../Content/resources";
 import { getUserName, logOut } from "../Content/Authentication";
-import { white } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 const CustomDrawer = (props: any) => {
     const { state, navigation  } = props;

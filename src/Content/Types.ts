@@ -34,3 +34,16 @@ export type typSignUp = {
     strFullName: string,
     strPhoneNumber: string
 }
+export type typCheckout = {
+    strFullName: string,
+    strPhoneNumber: string
+    strAddress: string,
+}
+
+export type typUser = {
+    Uid: string,
+    name: string,
+    phoneNumber: string
+    address: string,
+    password:string
+}

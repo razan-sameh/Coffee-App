@@ -5,14 +5,15 @@ import { getProductById, decreaseCountItemInCart, addItemInCart, removeItemFromC
 import { images } from "../../Content/resources";
 import { typCart, typProduct } from "../../Content/Types";
 import { Styles } from "../../styles/Cart";
+import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
 
 interface CartItemProps {
     item: typCart;
-    navigation: any;
 }
 
-export function CartItem({ item, navigation }: CartItemProps) {
+export function CartItem({ item }: CartItemProps) {
     const [tpvProduct, setProduct] = useState<typProduct>();
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
 
     const fetchProduct = async () => {
         try {
@@ -30,7 +31,7 @@ export function CartItem({ item, navigation }: CartItemProps) {
 
     return tpvProduct && (
         <TouchableWithoutFeedback onPress={() => {
-            navigation.navigation.navigate('ShoppingNavigator',
+            navigation.navigate('ShoppingNavigator',
                 {
                     screen: 'ProductDetails',
                     params: { product: tpvProduct, size:item.size,count:item.count }

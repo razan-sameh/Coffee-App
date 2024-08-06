@@ -12,18 +12,19 @@ import { setItemsInFavourite, removeItemFromFavourite, addItemInCart, getCartIte
 import { getUserID } from '../Content/Authentication';
 import database from '@react-native-firebase/database';
 import { ArrowBack } from '../Components/ArrowBack';
-import { Screen } from 'react-native-screens';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 export function ProductDetails(navigation: any) {
     const tpvProduct: typProduct = navigation.navigation.route.params.product
     const size: Size = navigation.navigation.route.params.size
     const count: number = navigation.navigation.route.params.count
     const isFavouriteClicked: boolean = navigation.navigation.route.params.blnIsFavouriteClicked
-    const strUserID = getUserID()
+    const strUserID = getUserID();
     const [enmSelectedSize, setSelectedSize] = useState<Size>(Size.small);
     const [intProductCount, setProductCount] = useState<number>(count || 1);
     const [blnIsFavouriteClicked, setFavouriteClicked] = useState<boolean>(isFavouriteClicked);
     const [blnIsAdded, setAdded] = useState<boolean>(false);
+    const navigationTo : NavigationProp<ParamListBase>= useNavigation();
 
     useEffect(() => {
         setFavouriteClicked(isFavouriteClicked);
@@ -68,7 +69,7 @@ export function ProductDetails(navigation: any) {
 
     useEffect(() => {
         if (blnIsAdded) {
-            navigation.navigation.navigation.navigate('Cart')
+            navigationTo.navigate('Cart')
             setAdded(false)
         }
     }, [blnIsAdded]);

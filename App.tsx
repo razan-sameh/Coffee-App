@@ -9,6 +9,8 @@ import ForgetPassword from './src/screens/ForgetPassword';
 import OTPVerification from './src/screens/OTPVerification';
 import ResetPassword from './src/screens/ResetPassword';
 import DrawerNavigator from './src/Navigation/DrawerNavigator';
+import {  Provider } from 'react-redux';
+import { store } from './src/Config/store';
 
 const ref: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
@@ -17,6 +19,7 @@ const App = () => {
   const [routeName, setRouteName] = useState<string>('');
   
   return (
+    <Provider store={store}>
     <NavigationContainer
       ref={ref}
       onReady={() => {
@@ -43,6 +46,7 @@ const App = () => {
         <Stack.Screen name="DrawerNavigator" children={() => <DrawerNavigator routeName={routeName} />} />
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 };
 

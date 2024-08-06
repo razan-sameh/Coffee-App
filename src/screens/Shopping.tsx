@@ -8,6 +8,7 @@ import { getProducByRangePrice, getProducByRangeRating, getProductByCategory } f
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
 export function Shopping({ ...props }: any) {
     const [sections, setSections] = useState<{ title: string, data: typProduct[][] }[]>([]);
@@ -23,7 +24,8 @@ export function Shopping({ ...props }: any) {
     const intMaxRatingParam = props.route.params?.intMaxRating;
     const aintcategoryIDParam = props.route.params?.categoryID;
     const strSearchParam = props.route.params?.strSearch;
-    
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
+
     useEffect(() => {
         if (intMinPriceParam) {
             setMinPrice(intMinPriceParam)
@@ -76,7 +78,7 @@ export function Shopping({ ...props }: any) {
                 product.description.toLowerCase().includes(strSearch.toLowerCase())
             );
             if (aObjData.length === 0) {
-                props.navigation.navigate('ShoppingNavigator', { screen: 'NoResultSearch' });
+                navigation.navigate('ShoppingNavigator', { screen: 'NoResultSearch' });
             }
         }
         else if ((strSearch == "" || strSearch == undefined) && alngCategoryID.length === 0) {
@@ -97,7 +99,7 @@ export function Shopping({ ...props }: any) {
         ({ item }: { item: typProduct[] }) => (
             <View style={Styles.productContainer}>
                 {item.map((product, index) => (
-                    <Product key={index} product={product} navigation={props} />
+                    <Product key={index} product={product} />
                 ))}
             </View>
         ),
@@ -107,7 +109,7 @@ export function Shopping({ ...props }: any) {
     return (
         <View style={Styles.wall}>
             <TouchableOpacity style={Styles.filterContainer}
-                onPress={() => { props.navigation.navigate('ShoppingNavigator', { screen: 'Filter',params:{ screenName:props.route.name} }); }}>
+                onPress={() => { navigation.navigate('ShoppingNavigator', { screen: 'Filter',params:{ screenName:props.route.name} }); }}>
                 <FastImage resizeMode='contain' style={Styles.filterIcon} source={images.FilterIcon} />
             </TouchableOpacity>
             <SafeAreaView>

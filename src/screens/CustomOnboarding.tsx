@@ -4,8 +4,11 @@ import { images } from '../Content/resources';
 import FastImage from 'react-native-fast-image';
 import { widthScale, heightScale, moderateScale, strSecondColor, strPrimaryColor, strINTER_SEMIBOLD600_Font, strINTER_MEDIUM500_Font } from '../styles/responsive';
 import Onboarding from 'react-native-onboarding-swiper';
+import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
 
-const CustomOnboarding = ({ navigation }: any) => {
+const CustomOnboarding = () => {
+    const navigation : NavigationProp<ParamListBase>= useNavigation();
+
     const Dots = ({ selected }: any) => {
         let backgroundColor;
 
