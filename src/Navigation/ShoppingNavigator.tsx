@@ -5,7 +5,6 @@ import {NoResultSearch} from '../screens/NoResultSearch';
 import {Header} from '../Components/Header';
 import {Filter} from '../screens/Filter';
 import {ProductDetails} from '../screens/ProductDetails';
-import {useFocusEffect} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
@@ -26,7 +25,7 @@ const ShoppingNavigator = ({searchQuery, setSearchQuery}: any) => {
       <Stack.Screen
         name="Shopping"
         options={{headerShown: true}}
-        children={props => <Shopping {...props} />}
+        children={() => <Shopping />}
       />
       <Stack.Screen
         name="NoResultSearch"
@@ -36,7 +35,7 @@ const ShoppingNavigator = ({searchQuery, setSearchQuery}: any) => {
       <Stack.Screen
         name="Filter"
         options={{headerShown: false}}
-        children={navigation => <Filter navigation={navigation} />}
+        children={() => <Filter />}
       />
       <Stack.Screen
         name="ProductDetails"

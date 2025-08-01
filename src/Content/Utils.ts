@@ -1,75 +1,19 @@
-import {getProduct} from './Database';
-import {typProduct} from './Types';
+import {store} from '../redux/store';
+import {firebaseApi} from '../services/firebaseApi';
 
-export const getProductByCategory = async (lngCategoryID: number[]) => {
+export const fetchProductById = async (id: string) => {
   try {
-    const aobjData: typProduct[] = await getProduct();
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) =>
-      lngCategoryID.includes(objProduct.category),
+    const result = await store.dispatch(
+      firebaseApi.endpoints.getProductById.initiate(id),
     );
-    return aobjFilteredProducts;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
 
-export const getProductsByID = async (ID: number[]) => {
-  try {
-    const aobjData: typProduct[] = await getProduct();
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) =>
-      ID.includes(objProduct.ID),
-    );
-    return aobjFilteredProducts;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-export const getTopRatedProduct = async () => {
-  try {
-    const aobjData: typProduct[] = await getProduct();
-    const aobjFilteredProducts = aobjData.filter(
-      (objProduct: typProduct) => objProduct.rate >= 4,
-    );
-    return aobjFilteredProducts;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-export const getProducByRangePrice = async (
-  aobjData: typProduct[],
-  intMin: number,
-  intMax: number,
-) => {
-  try {
-    const aobjFilteredProducts = aobjData.filter(
-      (objProduct: typProduct) =>
-        objProduct.price >= intMin && objProduct.price <= intMax,
-    );
-    return aobjFilteredProducts;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
-export const getProducByRangeRating = async (
-  aobjData: typProduct[],
-  intMin: number,
-  intMax: number,
-) => {
-  try {
-    const aobjFilteredProducts = aobjData.filter(
-      (objProduct: typProduct) =>
-        objProduct.rate >= intMin && objProduct.rate <= intMax,
-    );
-    return aobjFilteredProducts;
-  } catch (error) {
-    console.error(error);
-    return [];
+    if ('data' in result) {
+      return result.data;
+    } else {
+      throw new Error((result as any).error?.message || 'Unknown error');
+    }
+  } catch (err) {
+    console.error('Error fetching product by ID:', err);
+    throw err;
   }
 };

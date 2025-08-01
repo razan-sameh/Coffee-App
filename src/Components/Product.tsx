@@ -59,7 +59,7 @@ export function Product({product}: {product: typProduct}) {
       onPress={() => {
         navigation.navigate('ShoppingNavigator', {
           screen: 'ProductDetails',
-          params: {product, blnIsFavouriteClicked},
+          params: {ProductId: product.ID, blnIsFavouriteClicked},
         });
       }}>
       <View style={Styles.catProductSubContainer}>

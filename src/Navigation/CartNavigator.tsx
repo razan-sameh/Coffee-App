@@ -1,6 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {Cart} from '../screens/Cart';
+import {Cart} from '../screens/Cart/Cart';
 import CheckOut from '../screens/CheckOut';
 import {Payment} from '../screens/Payment';
 

@@ -6,14 +6,10 @@ import {CustomCarousel} from '../Components/CustomCarousel';
 import {Rating} from 'react-native-ratings';
 import {strSecondColor, widthScale} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
-import {typProduct} from '../Content/Types';
 import {enmSize} from '../Content/Enums';
 import {
   setItemsInFavourite,
   removeItemFromFavourite,
-  addItemInCart,
-  getCartItemDetails,
-  updateItemInCart,
 } from '../Content/Database';
 import {getUserID} from '../Content/Authentication';
 import database from '@react-native-firebase/database';
@@ -23,95 +19,117 @@ import {
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
+import {useGetProductByIdQuery} from '../services/firebaseApi';
+import {
+  addToCartFirebase,
+  updateCartItemFirebase,
+} from '../redux/slices/cartSlice';
+import {RootState, useAppDispatch} from '../redux/store';
+import {useSelector} from 'react-redux';
 
 export function ProductDetails(navigation: any) {
-  const tpvProduct: typProduct = navigation.navigation.route.params.product;
-  const size: enmSize = navigation.navigation.route.params.size;
-  const count: number = navigation.navigation.route.params.count;
+  const ProductId: string = navigation.navigation.route.params.ProductId;
   const isFavouriteClicked: boolean =
     navigation.navigation.route.params.blnIsFavouriteClicked;
   const strUserID = getUserID();
-  const [enmSelectedSize, setSelectedSize] = useState<enmSize>(enmSize.small);
-  const [intProductCount, setProductCount] = useState<number>(count || 1);
+  const appDispatch = useAppDispatch();
+  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
+  const {data: tpvProduct, isLoading} = useGetProductByIdQuery(ProductId);
   const [blnIsFavouriteClicked, setFavouriteClicked] =
     useState<boolean>(isFavouriteClicked);
-  const [blnIsAdded, setAdded] = useState<boolean>(false);
-  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
+  const [blnIsInCart, setIsInCart] = useState<boolean>(false);
+  const cartItem = useSelector((state: RootState) =>
+    state.cart.items.find(item => item.productID === tpvProduct?.ID),
+  );
+
+  const oldsize = cartItem?.size;
+  const [enmSelectedSize, setSelectedSize] = useState<enmSize>(enmSize.small);
+  const [intProductCount, setProductCount] = useState<number>(1);
 
   useEffect(() => {
     setFavouriteClicked(isFavouriteClicked);
   }, [isFavouriteClicked]);
 
   useEffect(() => {
-    if (strUserID) {
+    if (strUserID && tpvProduct) {
       database()
         .ref(`favourite/${strUserID}`)
         .on('value', snapshot => {
           if (snapshot.exists()) {
             const aintProductsID = snapshot.val().Products;
-            if (aintProductsID != undefined) {
-              if (aintProductsID.includes(tpvProduct.ID)) {
-                setFavouriteClicked(true);
-              } else {
-                setFavouriteClicked(false);
-              }
-            } else {
-              setFavouriteClicked(false);
-            }
+            setFavouriteClicked(aintProductsID?.includes(tpvProduct.ID));
+          } else {
+            setFavouriteClicked(false);
           }
         });
-    }
-  }, [strUserID]);
-
-  useEffect(() => {
-    if (strUserID && size && count) {
-      getCartItemDetails(strUserID, tpvProduct.ID, size, itemDetails => {
-        if (itemDetails) {
-          setProductCount(itemDetails.count);
-          setSelectedSize(itemDetails.size);
-        }
-      });
-    } else {
-      setProductCount(1);
-      setSelectedSize(enmSize.small);
     }
   }, [strUserID, tpvProduct]);
 
   useEffect(() => {
-    if (blnIsAdded) {
-      navigationTo.navigate('Cart');
-      setAdded(false);
+    if (cartItem) {
+      setProductCount(cartItem.count);
+      setIsInCart(true);
+      setSelectedSize(cartItem.size);
+    } else {
+      setSelectedSize(enmSize.small);
+      setProductCount(1);
+      setIsInCart(false);
     }
-  }, [blnIsAdded]);
+  }, [cartItem, ProductId]);
 
   const toggleFavouritelist = () => {
-    if (!blnIsFavouriteClicked && strUserID) {
+    if (!blnIsFavouriteClicked && strUserID && tpvProduct) {
       setItemsInFavourite(strUserID, tpvProduct.ID);
       setFavouriteClicked(true);
-    } else if (blnIsFavouriteClicked && strUserID) {
+    } else if (blnIsFavouriteClicked && strUserID && tpvProduct) {
       removeItemFromFavourite(strUserID, tpvProduct.ID);
       setFavouriteClicked(false);
     }
   };
 
-  function addToCart() {
-    if (strUserID) {
-      addItemInCart(strUserID, tpvProduct.ID, enmSelectedSize, intProductCount);
-      setAdded(true);
+  const handleCartAction = async () => {
+    if (!strUserID || !tpvProduct) {
+      return;
     }
-  }
-
-  function updateCart() {
-    if (strUserID) {
-      updateItemInCart(
-        strUserID,
-        tpvProduct.ID,
-        size,
-        enmSelectedSize,
-        intProductCount,
+    let result;
+    if (blnIsInCart) {
+      result = await appDispatch(
+        updateCartItemFirebase({
+          Uid: strUserID,
+          productID: tpvProduct.ID,
+          oldSize: oldsize || enmSize.small,
+          newSize: enmSelectedSize,
+          newCount: intProductCount,
+        }),
       );
-      setAdded(true);
+    } else {
+      result = await appDispatch(
+        addToCartFirebase({
+          Uid: strUserID,
+          productID: tpvProduct.ID,
+          size: enmSelectedSize,
+          count: intProductCount,
+        }),
+      );
     }
+    if (
+      addToCartFirebase.fulfilled.match(result) ||
+      updateCartItemFirebase.fulfilled.match(result)
+    ) {
+      navigationTo.navigate('CartNavigator', {
+        screen: 'Cart',
+      });
+    } else {
+      console.warn('Cart update failed:', result.payload);
+    }
+  };
+
+  if (isLoading || !tpvProduct) {
+    return (
+      <View style={Styles.wall}>
+        <Text style={{color: '#fff', textAlign: 'center'}}>Loading...</Text>
+      </View>
+    );
   }
 
   return (
@@ -129,19 +147,15 @@ export function ProductDetails(navigation: any) {
       <View style={Styles.headerContainer}>
         <ArrowBack />
         <TouchableWithoutFeedback onPress={toggleFavouritelist}>
-          {blnIsFavouriteClicked ? (
-            <FastImage
-              resizeMode="contain"
-              style={Styles.favouriteListButton}
-              source={images.inFavouriteList}
-            />
-          ) : (
-            <FastImage
-              resizeMode="contain"
-              style={Styles.favouriteListButton}
-              source={images.outFavouriteList}
-            />
-          )}
+          <FastImage
+            resizeMode="contain"
+            style={Styles.favouriteListButton}
+            source={
+              blnIsFavouriteClicked
+                ? images.inFavouriteList
+                : images.outFavouriteList
+            }
+          />
         </TouchableWithoutFeedback>
       </View>
       <View style={Styles.carouselContainer}>
@@ -159,7 +173,7 @@ export function ProductDetails(navigation: any) {
           imageSize={widthScale(19)}
           startingValue={tpvProduct.rate}
           tintColor="#251919"
-          readonly={true}
+          readonly
           style={Styles.rating}
         />
         <View style={Styles.ProductDesContainer}>
@@ -169,86 +183,29 @@ export function ProductDetails(navigation: any) {
         <View style={Styles.productSizeContainer}>
           <Text style={Styles.txtTitles}>Select Size</Text>
           <View style={Styles.productSizeBtnContainer}>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setSelectedSize(enmSize.small);
-              }}>
-              <View
-                style={
-                  enmSelectedSize == enmSize.small
-                    ? Styles.productSizeBtnSelected
-                    : Styles.productSizeBtn
-                }>
-                <Text
-                  style={
-                    enmSelectedSize == enmSize.small
-                      ? Styles.txtProductSizeSelected
-                      : Styles.txtProductSize
-                  }>
-                  S
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setSelectedSize(enmSize.medium);
-              }}>
-              <View
-                style={
-                  enmSelectedSize == enmSize.medium
-                    ? Styles.productSizeBtnSelected
-                    : Styles.productSizeBtn
-                }>
-                <Text
-                  style={
-                    enmSelectedSize == enmSize.medium
-                      ? Styles.txtProductSizeSelected
-                      : Styles.txtProductSize
-                  }>
-                  M
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setSelectedSize(enmSize.large);
-              }}>
-              <View
-                style={
-                  enmSelectedSize == enmSize.large
-                    ? Styles.productSizeBtnSelected
-                    : Styles.productSizeBtn
-                }>
-                <Text
-                  style={
-                    enmSelectedSize == enmSize.large
-                      ? Styles.txtProductSizeSelected
-                      : Styles.txtProductSize
-                  }>
-                  L
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                setSelectedSize(enmSize.xLarge);
-              }}>
-              <View
-                style={
-                  enmSelectedSize == enmSize.xLarge
-                    ? Styles.productSizeBtnSelected
-                    : Styles.productSizeBtn
-                }>
-                <Text
-                  style={
-                    enmSelectedSize == enmSize.xLarge
-                      ? Styles.txtProductSizeSelected
-                      : Styles.txtProductSize
-                  }>
-                  XL
-                </Text>
-              </View>
-            </TouchableWithoutFeedback>
+            {[enmSize.small, enmSize.medium, enmSize.large, enmSize.xLarge].map(
+              sizeVal => (
+                <TouchableWithoutFeedback
+                  key={sizeVal}
+                  onPress={() => setSelectedSize(sizeVal)}>
+                  <View
+                    style={
+                      enmSelectedSize === sizeVal
+                        ? Styles.productSizeBtnSelected
+                        : Styles.productSizeBtn
+                    }>
+                    <Text
+                      style={
+                        enmSelectedSize === sizeVal
+                          ? Styles.txtProductSizeSelected
+                          : Styles.txtProductSize
+                      }>
+                      {sizeVal.charAt(0).toUpperCase()}
+                    </Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              ),
+            )}
           </View>
         </View>
         <View style={Styles.productCountContainer}>
@@ -258,9 +215,7 @@ export function ProductDetails(navigation: any) {
           </View>
           <View style={Styles.productCountBtnContainer}>
             <TouchableWithoutFeedback
-              onPress={() => {
-                setProductCount(intProductCount + 1);
-              }}>
+              onPress={() => setProductCount(intProductCount + 1)}>
               <View style={Styles.plusContainer}>
                 <Text style={Styles.txtProductCountBtn}>+</Text>
               </View>
@@ -269,22 +224,19 @@ export function ProductDetails(navigation: any) {
               <Text style={Styles.txtProductCount}>{intProductCount}</Text>
             </View>
             <TouchableWithoutFeedback
-              onPress={() => {
-                intProductCount > 1
-                  ? setProductCount(intProductCount - 1)
-                  : null;
-              }}>
+              onPress={() =>
+                intProductCount > 1 && setProductCount(intProductCount - 1)
+              }>
               <View style={Styles.plusContainer}>
                 <Text style={Styles.txtProductCountBtn}>-</Text>
               </View>
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <TouchableWithoutFeedback
-          onPress={() => (size && count ? updateCart() : addToCart())}>
+        <TouchableWithoutFeedback onPress={handleCartAction}>
           <View style={Styles.addToCartButton}>
             <Text style={Styles.txtAddToCart}>
-              {size && count ? 'Update Cart' : 'Add to cart'}
+              {blnIsInCart ? 'Update Cart' : 'Add to Cart'}
             </Text>
             <FastImage
               style={Styles.cartIcon}

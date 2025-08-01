@@ -1,40 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {Styles} from '../styles/Cart';
-import {images} from '../Content/resources';
+import {Styles} from '../../styles/Cart';
+import {images} from '../../Content/resources';
 import FastImage from 'react-native-fast-image';
-import {ArrowBack} from '../Components/ArrowBack';
-import {getUserID} from '../Content/Authentication';
-import {typCart} from '../Content/Types';
-import {getCartItems} from '../Content/Database';
-import {CartItem} from './Cart/CartItem';
+import {ArrowBack} from '../../Components/ArrowBack';
+import {useSelector} from 'react-redux';
+import {fetchCart} from '../../redux/slices/cartSlice';
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
+import {RootState, useAppDispatch} from '../../redux/store';
+import {getUserID} from '../../Content/Authentication';
+import {CartItem} from './component/CartItem';
 
 export function Cart() {
-  const [atpvCartItems, setCartItems] = useState<typCart[]>();
-  const strUserID = getUserID();
-  const [totalPrice, setTotalPrice] = useState<number>(0);
   const navigation: NavigationProp<ParamListBase> = useNavigation();
+  const dispatch = useAppDispatch();
+  const strUserID = getUserID();
+
+  const {items: atpvCartItems} = useSelector((state: RootState) => state.cart);
 
   useEffect(() => {
     if (strUserID) {
-      getCartItems(strUserID, (cartItems: typCart[]) => {
-        console.log('Cart items:', cartItems);
-        if (cartItems && cartItems.length > 0) {
-          setCartItems(cartItems);
-          let totalPriceCalc: number = 0;
-          cartItems.forEach((item: typCart) => {
-            totalPriceCalc += item.price;
-          });
-          setTotalPrice(totalPriceCalc);
-        }
-      });
+      dispatch(fetchCart(strUserID));
     }
-  }, [strUserID]);
+  }, [dispatch, strUserID]);
+
+  const totalPrice = useMemo(() => {
+    return atpvCartItems.reduce(
+      (sum, item) => sum + item.price * item.count,
+      0,
+    );
+  }, [atpvCartItems]);
 
   return (
     <View style={Styles.wall}>
@@ -44,29 +43,35 @@ export function Cart() {
           <Text style={Styles.txtTitle}>Cart</Text>
         </View>
       </View>
+
       <View style={Styles.mainContainer}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          scrollEnabled={true}
           style={Styles.cartItemsContainer}>
-          {atpvCartItems?.map((item: typCart, index: number) => {
-            return <CartItem key={index} item={item} />;
-          })}
+          {atpvCartItems.map((item, index) => (
+            <CartItem
+              key={`${item.productID}_${item.size}_${index}`}
+              item={item}
+            />
+          ))}
         </ScrollView>
+
         <FastImage
           resizeMode="contain"
           style={Styles.frameContainer}
           source={images.FrameContainer}>
           <Text style={Styles.txtTitlePrice}>Subtotal</Text>
-          <Text style={Styles.txtPrice}>$ {totalPrice.toFixed(2)}</Text>
+          <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
         </FastImage>
+
         <FastImage
           resizeMode="contain"
           style={Styles.frameContainer}
           source={images.FrameContainer}>
           <Text style={Styles.txtTitlePrice}>Total</Text>
-          <Text style={Styles.txtPrice}>$ {totalPrice.toFixed(2)}</Text>
+          <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
         </FastImage>
+
         <TouchableWithoutFeedback
           onPress={() => {
             navigation.navigate('CartNavigator', {

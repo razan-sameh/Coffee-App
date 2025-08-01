@@ -50,23 +50,28 @@ export const firebaseApi = createApi({
             },
           );
 
-          // ✅ Calculate min/max price and rating
           let minPrice = Infinity;
           let maxPrice = -Infinity;
           let minRating = Infinity;
           let maxRating = -Infinity;
 
           for (const p of products) {
-            if (p.price < minPrice) minPrice = p.price;
-            if (p.price > maxPrice) maxPrice = p.price;
-            if (p.rate < minRating) minRating = p.rate;
-            if (p.rate > maxRating) maxRating = p.rate;
+            if (p.price < minPrice) {
+              minPrice = p.price;
+            }
+            if (p.price > maxPrice) {
+              maxPrice = p.price;
+            }
+            if (p.rate < minRating) {
+              minRating = p.rate;
+            }
+            if (p.rate > maxRating) {
+              maxRating = p.rate;
+            }
           }
 
-          // ✅ Dispatch to filterSlice
           store.dispatch(setDefaultPrice({min: minPrice, max: maxPrice}));
           store.dispatch(setDefaultRating({min: minRating, max: maxRating}));
-
           store.dispatch(setPriceRange({min: minPrice, max: maxPrice}));
           store.dispatch(setRatingRange({min: minRating, max: maxRating}));
 
@@ -79,6 +84,33 @@ export const firebaseApi = createApi({
         result
           ? result.map(p => ({type: 'product' as const, id: p.ID}))
           : [{type: 'product', id: 'LIST'}],
+    }),
+
+    getProductById: build.query<typProduct, string>({
+      async queryFn(id, _queryApi) {
+        const cached = (store.getState() as any).firebaseApi.queries?.[
+          'getProducts(undefined)'
+        ]?.data as typProduct[] | undefined;
+
+        if (cached) {
+          const found = cached.find(p => p.ID === id);
+          if (found) {
+            return {data: found};
+          }
+        }
+
+        try {
+          const snap = await database().ref(`product/${id}`).once('value');
+          const raw = snap.val();
+          if (!raw) {
+            throw new Error('Product not found');
+          }
+          return {data: {id, ...(raw as Omit<typProduct, 'id'>)}};
+        } catch (error) {
+          return {error};
+        }
+      },
+      providesTags: (_result, _error, id) => [{type: 'product', id}],
     }),
 
     getCategories: build.query<typCategory[], void>({
@@ -109,4 +141,8 @@ export const firebaseApi = createApi({
   }),
 });
 
-export const {useGetProductsQuery, useGetCategoriesQuery} = firebaseApi;
+export const {
+  useGetProductsQuery,
+  useGetProductByIdQuery,
+  useGetCategoriesQuery,
+} = firebaseApi;
