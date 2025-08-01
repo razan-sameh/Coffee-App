@@ -1,82 +1,82 @@
 [
-    {
-        "id": 1,
-        "title": "Cappuccino"
-    },
-    {
-        "id": 2,
-        "title": "Cold Brew"
-    },
-    {
-        "id": 3,
-        "title": "Espresso"
-    },
-    {
-        "id": 4,
-        "title": "Coffee"
-    },
-    {
-        "id": 5,
-        "title": "Nescafe"
-    },
-    {
-        "id": 6,
-        "title": "Hot Chocolate"
-    },
-    {
-        "id": 7,
-        "title": "Nescafe Gold"
-    },
-    {
-        "id": 8,
-        "title": "Iced Coffee"
-    },
-    {
-        "id": 9,
-        "title": "Macchiato"
-    },
-    {
-        "id": 10,
-        "title": "Latte"
-    },
-    {
-        "id": 11,
-        "title": "Mocha"
-    },
-    {
-        "id": 12,
-        "title": "Americano"
-    },
-    {
-        "id": 13,
-        "title": "Affogato"
-    },
-    {
-        "id": 14,
-        "title": "Flat White"
-    },
-    {
-        "id": 15,
-        "title": "Irish Coffee"
-    },
-    {
-        "id": 16,
-        "title": "Turkish Coffee"
-    },
-    {
-        "id": 17,
-        "title": "Vietnamese Coffee"
-    },
-    {
-        "id": 18,
-        "title": "Café au Lait"
-    },
-    {
-        "id": 19,
-        "title": "Ristretto"
-    },
-    {
-        "id": 20,
-        "title": "Doppio"
-    }
+  {
+    "id": 1,
+    "title": "Cappuccino"
+  },
+  {
+    "id": 2,
+    "title": "Cold Brew"
+  },
+  {
+    "id": 3,
+    "title": "Espresso"
+  },
+  {
+    "id": 4,
+    "title": "Coffee"
+  },
+  {
+    "id": 5,
+    "title": "Nescafe"
+  },
+  {
+    "id": 6,
+    "title": "Hot Chocolate"
+  },
+  {
+    "id": 7,
+    "title": "Nescafe Gold"
+  },
+  {
+    "id": 8,
+    "title": "Iced Coffee"
+  },
+  {
+    "id": 9,
+    "title": "Macchiato"
+  },
+  {
+    "id": 10,
+    "title": "Latte"
+  },
+  {
+    "id": 11,
+    "title": "Mocha"
+  },
+  {
+    "id": 12,
+    "title": "Americano"
+  },
+  {
+    "id": 13,
+    "title": "Affogato"
+  },
+  {
+    "id": 14,
+    "title": "Flat White"
+  },
+  {
+    "id": 15,
+    "title": "Irish Coffee"
+  },
+  {
+    "id": 16,
+    "title": "Turkish Coffee"
+  },
+  {
+    "id": 17,
+    "title": "Vietnamese Coffee"
+  },
+  {
+    "id": 18,
+    "title": "Café au Lait"
+  },
+  {
+    "id": 19,
+    "title": "Ristretto"
+  },
+  {
+    "id": 20,
+    "title": "Doppio"
+  }
 ]

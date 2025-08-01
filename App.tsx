@@ -1,7 +1,10 @@
-import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import  Splash  from './src/screens/Splash';
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import Splash from './src/screens/Splash';
 import CustomOnboarding from './src/screens/CustomOnboarding';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
@@ -9,43 +12,45 @@ import ForgetPassword from './src/screens/ForgetPassword';
 import OTPVerification from './src/screens/OTPVerification';
 import ResetPassword from './src/screens/ResetPassword';
 import DrawerNavigator from './src/Navigation/DrawerNavigator';
-import {  Provider } from 'react-redux';
-import { store } from './src/Config/store';
+import {Provider} from 'react-redux';
+import {store} from './src/redux/store';
 
-const ref: any = createNavigationContainerRef();
+export const navigationRef: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
 
 const App = () => {
   const [routeName, setRouteName] = useState<string>('');
-  
+
   return (
     <Provider store={store}>
-    <NavigationContainer
-      ref={ref}
-      onReady={() => {
-        setRouteName(ref.getCurrentRoute().name)
-      }}
-      onStateChange={async () => {
-        const currentRouteName = ref.getCurrentRoute().name;
-        setRouteName(currentRouteName);
-      }}>
-      <Stack.Navigator
-        initialRouteName={'Splash'}
-        screenOptions={{
-          animationEnabled: false,
-          headerShown:false
+      <NavigationContainer
+        ref={navigationRef}
+        onReady={() => {
+          setRouteName(navigationRef.getCurrentRoute().name);
         }}
-      >
-        <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Onboarding" component={CustomOnboarding} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
-        <Stack.Screen name="OTPVerification" component={OTPVerification} />
-        <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="DrawerNavigator" children={() => <DrawerNavigator routeName={routeName} />} />
-      </Stack.Navigator>
-    </NavigationContainer>
+        onStateChange={async () => {
+          const currentRouteName = navigationRef.getCurrentRoute().name;
+          setRouteName(currentRouteName);
+        }}>
+        <Stack.Navigator
+          initialRouteName={'Splash'}
+          screenOptions={{
+            animationEnabled: false,
+            headerShown: false,
+          }}>
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Onboarding" component={CustomOnboarding} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="ForgetPassword" component={ForgetPassword} />
+          <Stack.Screen name="OTPVerification" component={OTPVerification} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} />
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen
+            name="DrawerNavigator"
+            children={() => <DrawerNavigator routeName={routeName} />}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
     </Provider>
   );
 };

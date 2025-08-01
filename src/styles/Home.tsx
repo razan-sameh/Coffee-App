@@ -1,99 +1,114 @@
-import { StyleSheet } from "react-native";
-import { heightScale, mbdlScreenHeight, mdblBAR_HEIGHT, moderateScale, strCatColor, strINTER_BOLD700_Font, strINTER_MEDIUM500_Font, strINTER_SEMIBOLD600_Font, strPrimaryColor, strSecondColor, strTextColor, widthScale } from "./responsive";
-import { Styles as styleHeader } from '../styles/Header';
+import {StyleSheet} from 'react-native';
+import {
+  heightScale,
+  mbdlScreenHeight,
+  moderateScale,
+  strCatColor,
+  strINTER_BOLD700_Font,
+  strINTER_MEDIUM500_Font,
+  strINTER_SEMIBOLD600_Font,
+  strPrimaryColor,
+  strSecondColor,
+  strTextColor,
+  widthScale,
+} from './responsive';
+import {Styles as styleHeader} from '../styles/Header';
 
 export const Styles = StyleSheet.create({
-    wall:{
-        backgroundColor:strSecondColor,
-    },
-    mainContainer:{
-        paddingLeft:moderateScale(16),
-        paddingRight:moderateScale(16),
-        backgroundColor:strSecondColor,
-        height: mbdlScreenHeight - styleHeader.mainContainer.height 
-    },
-    catTitle:{
-        color:strPrimaryColor,
-        fontFamily:strINTER_SEMIBOLD600_Font,
-        fontSize:moderateScale(20),
-        marginTop:moderateScale(10),
-        marginBottom:moderateScale(10)
-    },
-    catContainer:{
-        height:heightScale(60)
-    },
-    catItem:{
-        minWidth:widthScale(104),
-        height:heightScale(35),
-        borderRadius:moderateScale(150),
-        marginTop:moderateScale(10),
-        marginBottom:moderateScale(20),
-        marginRight:moderateScale(10),
-        padding:moderateScale(5),
-        borderColor:strPrimaryColor,
-        borderWidth:1,
-        alignItems:'center',
-        justifyContent:'center'
-    },
-    txtCat:{
-        color:strCatColor,
-        fontFamily:strINTER_MEDIUM500_Font,
-        fontSize: moderateScale(13)
-    },
-    catProductContainer:{
-        height:heightScale(280),
-        marginTop:moderateScale(10)
-    },
-    catProductTitle:{
-        fontSize:moderateScale(20),
-        fontFamily:strINTER_SEMIBOLD600_Font,
-        color:strPrimaryColor,
-        marginRight:moderateScale(10),
-        marginBottom:moderateScale(20),
-        includeFontPadding:false
-    },
-    offerTitleContainer:{
-        marginBottom:moderateScale(20),
-        flexDirection: 'row',
-        alignItems:'center',
-    },
-    txtOfferTitle:{
-        fontSize:moderateScale(20),
-        fontFamily:strINTER_SEMIBOLD600_Font,
-        color:strPrimaryColor,
-        marginRight:moderateScale(10),
-        includeFontPadding:false
-    },
-    offerItemsContainer:{
-        width:widthScale(343),
-        height:heightScale(112),
-        borderRadius:moderateScale(30),
-        padding:moderateScale(10),
-        marginBottom:moderateScale(25),
-        backgroundColor:strPrimaryColor,
-        flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'space-between'
-    },
-    offerItemImg:{
-        width:widthScale(96),
-        height:heightScale(95),
-        borderRadius:moderateScale(22),
-    },
-    OffersIcon:{
-        width:widthScale(14),
-        height:heightScale(18),
-    },
-    txtProdPriceofferItemTitle:{
-        fontSize:moderateScale(13),
-        fontFamily:strINTER_BOLD700_Font,
-        color:strSecondColor,
-    },
-    txtofferItemDesc:{
-        width:widthScale(205),
-        fontSize:moderateScale(13),
-        fontFamily:strINTER_MEDIUM500_Font,
-        color:strTextColor,
-        flexWrap:'wrap'
-    }
-});   
+  wall: {
+    flex: 1, // ensures full screen height
+    backgroundColor: strSecondColor,
+    justifyContent: 'center', // vertical centering
+    alignItems: 'center', // horizontal centering
+  },
+  mainContainer: {
+    paddingLeft: moderateScale(16),
+    paddingRight: moderateScale(16),
+    backgroundColor: strSecondColor,
+    height: mbdlScreenHeight - styleHeader.mainContainer.height,
+  },
+  catTitle: {
+    color: strPrimaryColor,
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    fontSize: moderateScale(20),
+    marginTop: moderateScale(10),
+    marginBottom: moderateScale(10),
+  },
+  catContainer: {
+    height: heightScale(60),
+  },
+  catItem: {
+    minWidth: widthScale(104),
+    height: heightScale(35),
+    borderRadius: moderateScale(150),
+    marginTop: moderateScale(10),
+    marginBottom: moderateScale(20),
+    marginRight: moderateScale(10),
+    padding: moderateScale(5),
+    borderColor: strPrimaryColor,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  txtCat: {
+    color: strCatColor,
+    fontFamily: strINTER_MEDIUM500_Font,
+    fontSize: moderateScale(13),
+  },
+  catProductContainer: {
+    height: heightScale(280),
+    marginTop: moderateScale(10),
+  },
+  catProductTitle: {
+    fontSize: moderateScale(20),
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    color: strPrimaryColor,
+    marginRight: moderateScale(10),
+    marginBottom: moderateScale(20),
+    includeFontPadding: false,
+  },
+  offerTitleContainer: {
+    marginBottom: moderateScale(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  txtOfferTitle: {
+    fontSize: moderateScale(20),
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    color: strPrimaryColor,
+    marginRight: moderateScale(10),
+    includeFontPadding: false,
+  },
+  offerItemsContainer: {
+    width: widthScale(343),
+    height: heightScale(112),
+    borderRadius: moderateScale(30),
+    padding: moderateScale(10),
+    marginBottom: moderateScale(25),
+    backgroundColor: strPrimaryColor,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  offerItemImg: {
+    width: widthScale(96),
+    height: heightScale(95),
+    borderRadius: moderateScale(22),
+  },
+  OffersIcon: {
+    width: widthScale(14),
+    height: heightScale(18),
+  },
+  txtProdPriceofferItemTitle: {
+    fontSize: moderateScale(13),
+    fontFamily: strINTER_BOLD700_Font,
+    color: strSecondColor,
+  },
+  txtofferItemDesc: {
+    width: widthScale(205),
+    fontSize: moderateScale(13),
+    fontFamily: strINTER_MEDIUM500_Font,
+    color: strTextColor,
+    flexWrap: 'wrap',
+  },
+});

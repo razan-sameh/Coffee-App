@@ -1,11 +1,9 @@
-import React, { memo } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { heightScale, moderateScale } from '../../styles/responsive';
+import React, {memo} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {heightScale, moderateScale} from '../../styles/responsive';
 
 const Rail = () => {
-  return (
-    <View style={styles.root}/>
-  );
+  return <View style={styles.root} />;
 };
 
 export default memo(Rail);

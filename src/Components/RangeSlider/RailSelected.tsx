@@ -1,11 +1,13 @@
-import React, { memo } from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, View} from 'react-native';
-import { heightScale, moderateScale, strPrimaryColor } from '../../styles/responsive';
+import {
+  heightScale,
+  moderateScale,
+  strPrimaryColor,
+} from '../../styles/responsive';
 
 const RailSelected = () => {
-  return (
-    <View style={styles.root}/>
-  );
+  return <View style={styles.root} />;
 };
 
 export default memo(RailSelected);

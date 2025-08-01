@@ -1,10 +1,12 @@
-import { getProduct } from "./Database";
-import { typProduct } from "./Types";
+import {getProduct} from './Database';
+import {typProduct} from './Types';
 
 export const getProductByCategory = async (lngCategoryID: number[]) => {
   try {
     const aobjData: typProduct[] = await getProduct();
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => lngCategoryID.includes(objProduct.category));
+    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) =>
+      lngCategoryID.includes(objProduct.category),
+    );
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);
@@ -15,7 +17,9 @@ export const getProductByCategory = async (lngCategoryID: number[]) => {
 export const getProductsByID = async (ID: number[]) => {
   try {
     const aobjData: typProduct[] = await getProduct();
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => ID.includes(objProduct.ID));
+    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) =>
+      ID.includes(objProduct.ID),
+    );
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);
@@ -26,7 +30,9 @@ export const getProductsByID = async (ID: number[]) => {
 export const getTopRatedProduct = async () => {
   try {
     const aobjData: typProduct[] = await getProduct();
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.rate >= 4);
+    const aobjFilteredProducts = aobjData.filter(
+      (objProduct: typProduct) => objProduct.rate >= 4,
+    );
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);
@@ -34,9 +40,16 @@ export const getTopRatedProduct = async () => {
   }
 };
 
-export const getProducByRangePrice = async (aobjData: typProduct[], intMin: number, intMax: number) => {
+export const getProducByRangePrice = async (
+  aobjData: typProduct[],
+  intMin: number,
+  intMax: number,
+) => {
   try {
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.price >= intMin && objProduct.price <= intMax);
+    const aobjFilteredProducts = aobjData.filter(
+      (objProduct: typProduct) =>
+        objProduct.price >= intMin && objProduct.price <= intMax,
+    );
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);
@@ -44,9 +57,16 @@ export const getProducByRangePrice = async (aobjData: typProduct[], intMin: numb
   }
 };
 
-export const getProducByRangeRating = async (aobjData: typProduct[], intMin: number, intMax: number) => {
+export const getProducByRangeRating = async (
+  aobjData: typProduct[],
+  intMin: number,
+  intMax: number,
+) => {
   try {
-    const aobjFilteredProducts = aobjData.filter((objProduct: typProduct) => objProduct.rate >= intMin && objProduct.rate <= intMax);
+    const aobjFilteredProducts = aobjData.filter(
+      (objProduct: typProduct) =>
+        objProduct.rate >= intMin && objProduct.rate <= intMax,
+    );
     return aobjFilteredProducts;
   } catch (error) {
     console.error(error);

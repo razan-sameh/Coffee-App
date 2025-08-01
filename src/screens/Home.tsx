@@ -1,113 +1,147 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Image, TouchableWithoutFeedback } from 'react-native';
-import { Styles } from '../styles/Home';
-import { images } from '../Content/resources';
-import { getTopRatedProduct } from '../Content/Utils';
-import { getCategory, getProduct } from '../Content/Database';
-import { typCategory, typProduct } from '../Content/Types';
-import { Product } from '../Components/Product';
+import React from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from 'react-native';
+import {Styles} from '../styles/Home';
+import {images} from '../Content/resources';
+import {Product} from '../Components/Product';
 import FastImage from 'react-native-fast-image';
-import { NavigationProp, ParamListBase, useNavigation } from '@react-navigation/native';
+import {ParamListBase, useNavigation} from '@react-navigation/native';
+import {typCategory, typProduct} from '../Content/Types';
+import {
+  useGetCategoriesQuery,
+  useGetProductsQuery,
+} from '../services/firebaseApi';
+import {strPrimaryColor} from '../styles/responsive';
+import ErrorScreen from './ErrorScreen';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {navigationRef} from '../../App';
+import {setCategoryID} from '../redux/slices/filterSlice';
+import {useDispatch} from 'react-redux';
 
 export function Home() {
-  const [aobjFilteredProducts, setFilteredProducts] = useState<typProduct[]>([]);
-  const [aobjCategories, setCategory] = useState<typCategory[]>([]);
-  const navigation : NavigationProp<ParamListBase>= useNavigation();
+  const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    fetchCategoryData();
-    fetchProductsData();
-  }, []);
+  // Fetch categories and products using RTK Query
+  const {
+    data: categories = [],
+    isLoading: loadingCategories,
+    isError: errorProd,
+  } = useGetCategoriesQuery();
 
-  const fetchCategoryData = async () => {
-    const aobjCategories: typCategory[] = await getCategory();
-    setCategory(aobjCategories)
+  const {
+    data: products = [],
+    isLoading: loadingProducts,
+    isError: errorCat,
+  } = useGetProductsQuery();
+
+  // Filter top-rated products (rate >= 4)
+  const topRatedProducts: typProduct[] = products.filter(
+    product => product.rate >= 4,
+  );
+
+  if (loadingProducts || loadingCategories) {
+    return (
+      <View style={Styles.wall}>
+        <ActivityIndicator size="large" color={strPrimaryColor} />
+      </View>
+    );
   }
 
-  const fetchProductsData = async () => {
-    const aobjProducts: typProduct[] = await getTopRatedProduct();
-    setFilteredProducts(aobjProducts);    
-  };
+  if (errorProd || errorCat) {
+    return (
+      <ErrorScreen
+        onRetry={() => {
+          navigationRef.navigate('DrawerNavigator', {
+            screen: 'TapNavigator',
+            params: {
+              screen: 'Home',
+            },
+          });
+        }}
+      />
+    );
+  }
 
   return (
     <View style={Styles.wall}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
         scrollEnabled={true}
-        style={Styles.mainContainer}
-      >
+        style={Styles.mainContainer}>
+        {/* Categories */}
         <Text style={Styles.catTitle}>Category</Text>
         <View style={Styles.catContainer}>
-        <ScrollView
-          nestedScrollEnabled={true}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
-          {aobjCategories.map((category: any, index) => {
-            return (
-              <TouchableWithoutFeedback
-                key={category.ID}
-                onPress={() => {
-                  navigation.navigate('ShoppingNavigator', {
-                    screen: 'Shopping',
-                    params: { categoryID: category.ID }
-                  })
-                  }}
-                >
-                <View
-                  style={Styles.catItem}
-                >
-                  <Text style={Styles.txtCat}>{category.title}</Text>
-                </View>
-              </TouchableWithoutFeedback>
-            );
-          })}
-        </ScrollView>
+          <ScrollView
+            nestedScrollEnabled={true}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{flexGrow: 1}}>
+            {!loadingCategories &&
+              categories.map((category: typCategory) => (
+                <TouchableWithoutFeedback
+                  key={category.ID}
+                  onPress={() => {
+                    dispatch(setCategoryID([Number(category.ID)])); // Ensure it's a number
+                    navigation.navigate('ShoppingNavigator', {
+                      screen: 'Shopping',
+                    });
+                  }}>
+                  <View style={Styles.catItem}>
+                    <Text style={Styles.txtCat}>{category.title}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              ))}
+          </ScrollView>
         </View>
+
+        {/* Top Rated Products */}
         <View style={Styles.catProductContainer}>
           <Text style={Styles.catProductTitle}>Top Rated</Text>
-        <ScrollView
-          nestedScrollEnabled={true}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
-        >
-          {aobjFilteredProducts.map((product: any, index) => {
-            return (
-              <Product key={product.ID} product={product}/>
-            );
-          })}
-        </ScrollView>
+          <ScrollView
+            nestedScrollEnabled={true}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{flexGrow: 1}}>
+            {!loadingProducts &&
+              topRatedProducts.map((product: typProduct) => (
+                <Product key={product.ID} product={product} />
+              ))}
+          </ScrollView>
         </View>
+
+        {/* Offers Section */}
         <View style={Styles.offerTitleContainer}>
           <Text style={Styles.txtOfferTitle}>Special Offer</Text>
-          <FastImage source={images.OffersIcon} resizeMode='contain' style={Styles.OffersIcon}/>
+          <FastImage
+            source={images.OffersIcon}
+            resizeMode="contain"
+            style={Styles.OffersIcon}
+          />
         </View>
-        <View style={Styles.offerItemsContainer}>
-          <FastImage resizeMode='cover' style={Styles.offerItemImg} source={images.offer1} />
-          <View>
-            <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
-            <Text style={Styles.txtofferItemDesc}>It is a long established fact that a reader will be distracted by the readable content</Text>
+
+        {[images.offer1, images.offer2, images.offer3].map((img, index) => (
+          <View key={index} style={Styles.offerItemsContainer}>
+            <FastImage
+              resizeMode="cover"
+              style={Styles.offerItemImg}
+              source={img}
+            />
+            <View>
+              <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
+              <Text style={Styles.txtofferItemDesc}>
+                It is a long established fact that a reader will be distracted
+                by the readable content
+              </Text>
+            </View>
           </View>
-        </View>
-        <View style={Styles.offerItemsContainer}>
-          <FastImage resizeMode='cover' style={Styles.offerItemImg} source={images.offer2} />
-          <View>
-            <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
-            <Text style={Styles.txtofferItemDesc}>It is a long established fact that a reader will be distracted by the readable content</Text>
-          </View>
-        </View>
-        <View style={Styles.offerItemsContainer}>
-          <FastImage resizeMode='cover' style={Styles.offerItemImg} source={images.offer3} />
-          <View>
-            <Text style={Styles.txtProdPriceofferItemTitle}>Discount</Text>
-            <Text style={Styles.txtofferItemDesc}>It is a long established fact that a reader will be distracted by the readable content</Text>
-          </View>
-        </View>
+        ))}
       </ScrollView>
     </View>
   );
 }
-
-

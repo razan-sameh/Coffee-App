@@ -1,262 +1,242 @@
 [
-    {
-        "id": 1,
-        "title": "Creamy Cappuccino",
-        "price": 3.99,
-        "category": 1,
-        "description": "Smooth and creamy espresso mixed with frothy steamed milk.",
-        "image": [
-            "cappuccino_image.jpg"
-        ]
-    },
-    {
-        "id": 2,
-        "title": "Refreshing Cold Brew",
-        "price": 4.49,
-        "category": 2,
-        "description": "Chilled coffee brewed over an extended period for a refreshing taste.",
-        "image": [
-            "cold_brew_image.jpg"
-        ]
-    },
-    {
-        "id": 3,
-        "title": "Intense Espresso",
-        "price": 2.49,
-        "category": 3,
-        "description": "Intense and concentrated coffee shot.",
-        "image": [
-            "espresso_image.jpg"
-        ]
-    },
-    {
-        "id": 4,
-        "title": "Bold Classic Coffee",
-        "price": 2.99,
-        "category": 4,
-        "description": "Classic brewed coffee with a rich and bold flavor.",
-        "image": [
-            "coffee_image.jpg"
-        ]
-    },
-    {
-        "id": 5,
-        "title": "Quick Nescafe",
-        "price": 1.99,
-        "category": 5,
-        "description": "Instant coffee for a quick and convenient brew.",
-        "image": [
-            "nescafe_image.jpg"
-        ]
-    },
-    {
-        "id": 6,
-        "title": "Comforting Hot Chocolate",
-        "price": 3.79,
-        "category": 6,
-        "description": "A comforting blend of rich cocoa and steamed milk.",
-        "image": [
-            "hot_chocolate_image.jpg"
-        ]
-    },
-    {
-        "id": 7,
-        "title": "Premium Nescafe Gold",
-        "price": 4.99,
-        "category": 7,
-        "description": "Premium instant coffee with a smooth and bold flavor.",
-        "image": [
-            "nescafe_gold_image.jpg"
-        ]
-    },
-    {
-        "id": 8,
-        "title": "Refreshing Iced Coffee",
-        "price": 4.29,
-        "category": 8,
-        "description": "Chilled coffee served over ice for a refreshing experience.",
-        "image": [
-            "iced_coffee_image.jpg"
-        ]
-    },
-    {
-        "id": 9,
-        "title": "Frothy Macchiato",
-        "price": 3.49,
-        "category": 9,
-        "description": "Espresso with a dollop of frothy milk.",
-        "image": [
-            "macchiato_image.jpg"
-        ]
-    },
-    {
-        "id": 10,
-        "title": "Creamy Latte",
-        "price": 4.19,
-        "category": 10,
-        "description": "Espresso with steamed milk and a light layer of foam.",
-        "image": [
-            "latte_image.jpg"
-        ]
-    },
-    {
-        "id": 11,
-        "title": "Decadent Mocha Delight",
-        "price": 4.59,
-        "category": 11,
-        "description": "Espresso with rich chocolate and steamed milk, topped with whipped cream.",
-        "image": ["mocha_image.jpg"]
-    },
-    {
-        "id": 12,
-        "title": "Bold Robust Americano",
-        "price": 3.29,
-        "category": 12,
-        "description": "Espresso diluted with hot water, providing a bold and robust flavor.",
-        "image": ["americano_image.jpg"]
-    },
-    {
-        "id": 13,
-        "title": "Indulgent Affogato",
-        "price": 5.29,
-        "category": 13,
-        "description": "Vanilla ice cream drowned in a shot of hot espresso.",
-        "image": ["affogato_image.jpg"]
-    },
-    {
-        "id": 14,
-        "title": "Smooth Flat White",
-        "price": 4.39,
-        "category": 14,
-        "description": "Espresso with velvety microfoam for a smooth and strong coffee.",
-        "image": ["flat_white_image.jpg"]
-    },
-    {
-        "id": 15,
-        "title": "Irresistible Irish Coffee",
-        "price": 5.99,
-        "category": 15,
-        "description": "Hot coffee with Irish whiskey and topped with cream.",
-        "image": ["irish_coffee_image.jpg"]
-    },
-    {
-        "id": 16,
-        "title": "Traditional Turkish Coffee",
-        "price": 4.79,
-        "category": 16,
-        "description": "Finely ground coffee simmered with water and sugar, traditionally served unfiltered.",
-        "image": ["turkish_coffee_image.jpg"]
-    },
-    {
-        "id": 17,
-        "title": "Sweet Vietnamese Coffee",
-        "price": 4.89,
-        "category": 17,
-        "description": "Strong drip-brewed coffee with sweetened condensed milk.",
-        "image": ["vietnamese_coffee_image.jpg"]
-    },
-    {
-        "id": 18,
-        "title": "Balanced Café au Lait",
-        "price": 3.59,
-        "category": 18,
-        "description": "Equal parts brewed coffee and steamed milk, creating a balanced flavor.",
-        "image": ["cafe_au_lait_image.jpg"]
-    },
-    {
-        "id": 19,
-        "title": "Intense Ristretto Shot",
-        "price": 3.49,
-        "category": 19,
-        "description": "A short, strong shot of espresso with less water for an intense flavor.",
-        "image": ["ristretto_image.jpg"]
-    },
-    {
-        "id": 20,
-        "title": "Double Rich Doppio",
-        "price": 3.79,
-        "category": 20,
-        "description": "Double shot of espresso for a bold and rich coffee experience.",
-        "image": ["doppio_image.jpg"]
-    },
-    {
-        "id": 21,
-        "title": "Caramel Delight Macchiato",
-        "price": 4.99,
-        "category": 9,
-        "description": "Espresso with steamed milk and vanilla syrup, topped with caramel drizzle.",
-        "image": ["caramel_macchiato_image.jpg"]
-    },
-    {
-        "id": 22,
-        "title": "Hazelnut Bliss Latte",
-        "price": 5.29,
-        "category": 10,
-        "description": "Latte with hazelnut syrup, creating a nutty and flavorful coffee.",
-        "image": ["hazelnut_latte_image.jpg"]
-    },
-    {
-        "id": 23,
-        "title": "Holiday Peppermint Mocha",
-        "price": 5.49,
-        "category": 11,
-        "description": "Mocha with a hint of peppermint, perfect for the holiday season.",
-        "image": ["peppermint_mocha_image.jpg"]
-    },
-    {
-        "id": 24,
-        "title": "Vanilla-infused Americano",
-        "price": 4.39,
-        "category": 12,
-        "description": "Americano with a touch of vanilla syrup for a sweet and balanced taste.",
-        "image": ["vanilla_americano_image.jpg"]
-    },
-    {
-        "id": 25,
-        "title": "Iced Caramel Macchiato Delight",
-        "price": 5.59,
-        "category": 8,
-        "description": "Chilled version of caramel macchiato over ice, perfect for warm days.",
-        "image": ["iced_caramel_macchiato_image.jpg"]
-    },
-    {
-        "id": 26,
-        "title": "Coconut Tropical Cold Brew",
-        "price": 5.79,
-        "category": 2,
-        "description": "Cold brew infused with the tropical flavor of coconut, a refreshing delight.",
-        "image": ["coconut_cold_brew_image.jpg"]
-    },
-    {
-        "id": 27,
-        "title": "Maple Pecan Warm Latte",
-        "price": 5.99,
-        "category": 10,
-        "description": "Latte with a blend of maple syrup and pecan flavor, a warm and comforting choice.",
-        "image": ["maple_pecan_latte_image.jpg"]
-    },
-    {
-        "id": 28,
-        "title": "Decadent Dark Chocolate Espresso",
-        "price": 4.69,
-        "category": 3,
-        "description": "Espresso with a rich dark chocolate twist, a decadent treat for chocolate lovers.",
-        "image": ["dark_chocolate_espresso_image.jpg"]
-    },
-    {
-        "id": 29,
-        "title": "Festive Gingerbread Mocha",
-        "price": 5.49,
-        "category": 11,
-        "description": "Mocha with the festive flavor of gingerbread, perfect for the holiday season.",
-        "image": ["gingerbread_mocha_image.jpg"]
-    },
-    {
-        "id": 30,
-        "title": "Unique Matcha Latte",
-        "price": 4.89,
-        "category": 10,
-        "description": "Latte infused with high-quality matcha powder, offering a unique and earthy taste.",
-        "image": ["matcha_latte_image.jpg"]
-    }
+  {
+    "id": 1,
+    "title": "Creamy Cappuccino",
+    "price": 3.99,
+    "category": 1,
+    "description": "Smooth and creamy espresso mixed with frothy steamed milk.",
+    "image": ["cappuccino_image.jpg"]
+  },
+  {
+    "id": 2,
+    "title": "Refreshing Cold Brew",
+    "price": 4.49,
+    "category": 2,
+    "description": "Chilled coffee brewed over an extended period for a refreshing taste.",
+    "image": ["cold_brew_image.jpg"]
+  },
+  {
+    "id": 3,
+    "title": "Intense Espresso",
+    "price": 2.49,
+    "category": 3,
+    "description": "Intense and concentrated coffee shot.",
+    "image": ["espresso_image.jpg"]
+  },
+  {
+    "id": 4,
+    "title": "Bold Classic Coffee",
+    "price": 2.99,
+    "category": 4,
+    "description": "Classic brewed coffee with a rich and bold flavor.",
+    "image": ["coffee_image.jpg"]
+  },
+  {
+    "id": 5,
+    "title": "Quick Nescafe",
+    "price": 1.99,
+    "category": 5,
+    "description": "Instant coffee for a quick and convenient brew.",
+    "image": ["nescafe_image.jpg"]
+  },
+  {
+    "id": 6,
+    "title": "Comforting Hot Chocolate",
+    "price": 3.79,
+    "category": 6,
+    "description": "A comforting blend of rich cocoa and steamed milk.",
+    "image": ["hot_chocolate_image.jpg"]
+  },
+  {
+    "id": 7,
+    "title": "Premium Nescafe Gold",
+    "price": 4.99,
+    "category": 7,
+    "description": "Premium instant coffee with a smooth and bold flavor.",
+    "image": ["nescafe_gold_image.jpg"]
+  },
+  {
+    "id": 8,
+    "title": "Refreshing Iced Coffee",
+    "price": 4.29,
+    "category": 8,
+    "description": "Chilled coffee served over ice for a refreshing experience.",
+    "image": ["iced_coffee_image.jpg"]
+  },
+  {
+    "id": 9,
+    "title": "Frothy Macchiato",
+    "price": 3.49,
+    "category": 9,
+    "description": "Espresso with a dollop of frothy milk.",
+    "image": ["macchiato_image.jpg"]
+  },
+  {
+    "id": 10,
+    "title": "Creamy Latte",
+    "price": 4.19,
+    "category": 10,
+    "description": "Espresso with steamed milk and a light layer of foam.",
+    "image": ["latte_image.jpg"]
+  },
+  {
+    "id": 11,
+    "title": "Decadent Mocha Delight",
+    "price": 4.59,
+    "category": 11,
+    "description": "Espresso with rich chocolate and steamed milk, topped with whipped cream.",
+    "image": ["mocha_image.jpg"]
+  },
+  {
+    "id": 12,
+    "title": "Bold Robust Americano",
+    "price": 3.29,
+    "category": 12,
+    "description": "Espresso diluted with hot water, providing a bold and robust flavor.",
+    "image": ["americano_image.jpg"]
+  },
+  {
+    "id": 13,
+    "title": "Indulgent Affogato",
+    "price": 5.29,
+    "category": 13,
+    "description": "Vanilla ice cream drowned in a shot of hot espresso.",
+    "image": ["affogato_image.jpg"]
+  },
+  {
+    "id": 14,
+    "title": "Smooth Flat White",
+    "price": 4.39,
+    "category": 14,
+    "description": "Espresso with velvety microfoam for a smooth and strong coffee.",
+    "image": ["flat_white_image.jpg"]
+  },
+  {
+    "id": 15,
+    "title": "Irresistible Irish Coffee",
+    "price": 5.99,
+    "category": 15,
+    "description": "Hot coffee with Irish whiskey and topped with cream.",
+    "image": ["irish_coffee_image.jpg"]
+  },
+  {
+    "id": 16,
+    "title": "Traditional Turkish Coffee",
+    "price": 4.79,
+    "category": 16,
+    "description": "Finely ground coffee simmered with water and sugar, traditionally served unfiltered.",
+    "image": ["turkish_coffee_image.jpg"]
+  },
+  {
+    "id": 17,
+    "title": "Sweet Vietnamese Coffee",
+    "price": 4.89,
+    "category": 17,
+    "description": "Strong drip-brewed coffee with sweetened condensed milk.",
+    "image": ["vietnamese_coffee_image.jpg"]
+  },
+  {
+    "id": 18,
+    "title": "Balanced Café au Lait",
+    "price": 3.59,
+    "category": 18,
+    "description": "Equal parts brewed coffee and steamed milk, creating a balanced flavor.",
+    "image": ["cafe_au_lait_image.jpg"]
+  },
+  {
+    "id": 19,
+    "title": "Intense Ristretto Shot",
+    "price": 3.49,
+    "category": 19,
+    "description": "A short, strong shot of espresso with less water for an intense flavor.",
+    "image": ["ristretto_image.jpg"]
+  },
+  {
+    "id": 20,
+    "title": "Double Rich Doppio",
+    "price": 3.79,
+    "category": 20,
+    "description": "Double shot of espresso for a bold and rich coffee experience.",
+    "image": ["doppio_image.jpg"]
+  },
+  {
+    "id": 21,
+    "title": "Caramel Delight Macchiato",
+    "price": 4.99,
+    "category": 9,
+    "description": "Espresso with steamed milk and vanilla syrup, topped with caramel drizzle.",
+    "image": ["caramel_macchiato_image.jpg"]
+  },
+  {
+    "id": 22,
+    "title": "Hazelnut Bliss Latte",
+    "price": 5.29,
+    "category": 10,
+    "description": "Latte with hazelnut syrup, creating a nutty and flavorful coffee.",
+    "image": ["hazelnut_latte_image.jpg"]
+  },
+  {
+    "id": 23,
+    "title": "Holiday Peppermint Mocha",
+    "price": 5.49,
+    "category": 11,
+    "description": "Mocha with a hint of peppermint, perfect for the holiday season.",
+    "image": ["peppermint_mocha_image.jpg"]
+  },
+  {
+    "id": 24,
+    "title": "Vanilla-infused Americano",
+    "price": 4.39,
+    "category": 12,
+    "description": "Americano with a touch of vanilla syrup for a sweet and balanced taste.",
+    "image": ["vanilla_americano_image.jpg"]
+  },
+  {
+    "id": 25,
+    "title": "Iced Caramel Macchiato Delight",
+    "price": 5.59,
+    "category": 8,
+    "description": "Chilled version of caramel macchiato over ice, perfect for warm days.",
+    "image": ["iced_caramel_macchiato_image.jpg"]
+  },
+  {
+    "id": 26,
+    "title": "Coconut Tropical Cold Brew",
+    "price": 5.79,
+    "category": 2,
+    "description": "Cold brew infused with the tropical flavor of coconut, a refreshing delight.",
+    "image": ["coconut_cold_brew_image.jpg"]
+  },
+  {
+    "id": 27,
+    "title": "Maple Pecan Warm Latte",
+    "price": 5.99,
+    "category": 10,
+    "description": "Latte with a blend of maple syrup and pecan flavor, a warm and comforting choice.",
+    "image": ["maple_pecan_latte_image.jpg"]
+  },
+  {
+    "id": 28,
+    "title": "Decadent Dark Chocolate Espresso",
+    "price": 4.69,
+    "category": 3,
+    "description": "Espresso with a rich dark chocolate twist, a decadent treat for chocolate lovers.",
+    "image": ["dark_chocolate_espresso_image.jpg"]
+  },
+  {
+    "id": 29,
+    "title": "Festive Gingerbread Mocha",
+    "price": 5.49,
+    "category": 11,
+    "description": "Mocha with the festive flavor of gingerbread, perfect for the holiday season.",
+    "image": ["gingerbread_mocha_image.jpg"]
+  },
+  {
+    "id": 30,
+    "title": "Unique Matcha Latte",
+    "price": 4.89,
+    "category": 10,
+    "description": "Latte infused with high-quality matcha powder, offering a unique and earthy taste.",
+    "image": ["matcha_latte_image.jpg"]
+  }
 ]

@@ -1,4 +1,4 @@
-package com.coffeeapp
+package com.coffeeApp
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

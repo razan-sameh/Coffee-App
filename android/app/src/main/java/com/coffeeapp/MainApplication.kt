@@ -1,4 +1,4 @@
-package com.coffeeapp
+package com.coffeeApp
 
 import android.app.Application
 import com.facebook.react.PackageList
