@@ -3,14 +3,12 @@ import {
   heightScale,
   mbdlScreenHeight,
   mdblBAR_HEIGHT,
-  mdblScreenWidth,
   moderateScale,
   strINTER_SEMIBOLD600_Font,
   strPrimaryColor,
   strSecondColor,
   widthScale,
 } from './responsive';
-import {Styles as styleHeader} from '../styles/Header';
 
 export const Styles = StyleSheet.create({
   wall: {
@@ -52,5 +50,10 @@ export const Styles = StyleSheet.create({
     fontSize: moderateScale(24),
     color: strPrimaryColor,
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

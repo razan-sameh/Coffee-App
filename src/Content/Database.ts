@@ -3,65 +3,6 @@ import {typCart, typUser} from './Types';
 import {enmRole, enmSize} from './Enums';
 import {fetchProductById} from './Utils';
 
-export const setItemsInFavourite = (Uid: string, productId: string) => {
-  try {
-    // Fetch the current list of favorite products
-    database()
-      .ref(`favourite/${Uid}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
-        let updatedProducts = [];
-        if (data && data.Products) {
-          updatedProducts = [...data.Products]; // Copy existing products
-          if (!updatedProducts.includes(productId)) {
-            updatedProducts.push(productId); // Add new product if not already in the list
-          }
-        } else {
-          updatedProducts.push(productId); // If no existing list, create a new one
-        }
-        // Update the database with the updated list
-        database()
-          .ref(`favourite/${Uid}`)
-          .set({
-            Uid: Uid,
-            Products: updatedProducts,
-          })
-          .then(() => console.log('Product insert in favorites successfully.'));
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const removeItemFromFavourite = (Uid: string, productId: string) => {
-  try {
-    // Fetch the current list of favorite products
-    database()
-      .ref(`favourite/${Uid}`)
-      .once('value')
-      .then(snapshot => {
-        const data = snapshot.val();
-        let updatedProducts = [];
-        if (data && data.Products) {
-          updatedProducts = data.Products.filter(
-            (id: string) => id !== productId,
-          ); // Remove the product ID from the list
-        }
-        // Update the database with the updated list
-        database()
-          .ref(`favourite/${Uid}`)
-          .set({
-            Uid: Uid,
-            Products: updatedProducts,
-          })
-          .then(() => console.log('Product removed from favorites.'));
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 export const addItemInCart = async (
   Uid: string,
   productID: string,

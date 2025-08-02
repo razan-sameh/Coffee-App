@@ -2,6 +2,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import userReducer from './slices/userSlice';
 import filterReducer from './slices/filterSlice';
 import cartReducer from './slices/cartSlice';
+import favouriteReducer from './slices/favouriteSlice';
 import {firebaseApi} from '../services/firebaseApi';
 import {useDispatch} from 'react-redux';
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     user: userReducer,
     filter: filterReducer,
     cart: cartReducer,
+    favourite: favouriteReducer,
     [firebaseApi.reducerPath]: firebaseApi.reducer,
   },
   middleware: getDefaultMiddleware =>

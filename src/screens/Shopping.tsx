@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {SafeAreaView, SectionList, View} from 'react-native';
+import {ActivityIndicator, SafeAreaView, SectionList, View} from 'react-native';
 import {Styles} from '../styles/Shopping';
 import {typProduct} from '../Content/Types';
 import {Product} from '../Components/Product';
@@ -14,6 +14,7 @@ import {
 import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {useGetProductsQuery} from '../services/firebaseApi';
+import {strSecondColor} from '../styles/responsive';
 
 export function Shopping() {
   const objListRef = useRef<SectionList>(null);
@@ -98,24 +99,30 @@ export function Shopping() {
         />
       </TouchableOpacity>
 
-      <SafeAreaView>
-        <SectionList
-          ref={objListRef}
-          sections={sections}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={renderRow}
-          style={Styles.mainContainer}
-          removeClippedSubviews
-          maxToRenderPerBatch={45}
-          updateCellsBatchingPeriod={65}
-          initialNumToRender={50}
-          viewabilityConfig={{
-            minimumViewTime: 500,
-            itemVisiblePercentThreshold: 100,
-            waitForInteraction: true,
-          }}
-        />
-      </SafeAreaView>
+      {isLoading ? (
+        <View style={[Styles.loadingContainer]}>
+          <ActivityIndicator size="large" color={strSecondColor} />
+        </View>
+      ) : (
+        <SafeAreaView>
+          <SectionList
+            ref={objListRef}
+            sections={sections}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderRow}
+            style={Styles.mainContainer}
+            removeClippedSubviews
+            maxToRenderPerBatch={45}
+            updateCellsBatchingPeriod={65}
+            initialNumToRender={50}
+            viewabilityConfig={{
+              minimumViewTime: 500,
+              itemVisiblePercentThreshold: 100,
+              waitForInteraction: true,
+            }}
+          />
+        </SafeAreaView>
+      )}
     </View>
   );
 }

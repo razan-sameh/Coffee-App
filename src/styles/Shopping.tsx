@@ -3,7 +3,6 @@ import {
   heightScale,
   mbdlScreenHeight,
   mdblBAR_HEIGHT,
-  mdblScreenWidth,
   moderateScale,
   strSecondColor,
   widthScale,
@@ -36,5 +35,10 @@ export const Styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     margin: moderateScale(15),
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

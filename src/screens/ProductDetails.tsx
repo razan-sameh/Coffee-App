@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {Text, TouchableWithoutFeedback, View} from 'react-native';
 import {Styles} from '../styles/ProductDetails';
 import {images} from '../Content/resources';
@@ -7,12 +7,7 @@ import {Rating} from 'react-native-ratings';
 import {strSecondColor, widthScale} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import {enmSize} from '../Content/Enums';
-import {
-  setItemsInFavourite,
-  removeItemFromFavourite,
-} from '../Content/Database';
 import {getUserID} from '../Content/Authentication';
-import database from '@react-native-firebase/database';
 import {ArrowBack} from '../Components/ArrowBack';
 import {
   NavigationProp,
@@ -26,44 +21,30 @@ import {
 } from '../redux/slices/cartSlice';
 import {RootState, useAppDispatch} from '../redux/store';
 import {useSelector} from 'react-redux';
+import {addFavourite, removeFavourite} from '../redux/slices/favouriteSlice';
 
 export function ProductDetails(navigation: any) {
   const ProductId: string = navigation.navigation.route.params.ProductId;
-  const isFavouriteClicked: boolean =
-    navigation.navigation.route.params.blnIsFavouriteClicked;
   const strUserID = getUserID();
   const appDispatch = useAppDispatch();
   const navigationTo: NavigationProp<ParamListBase> = useNavigation();
   const {data: tpvProduct, isLoading} = useGetProductByIdQuery(ProductId);
-  const [blnIsFavouriteClicked, setFavouriteClicked] =
-    useState<boolean>(isFavouriteClicked);
-  const [blnIsInCart, setIsInCart] = useState<boolean>(false);
+
+  const favouriteItems = useSelector(
+    (state: RootState) => state.favourite.items,
+  );
+  const isFavourite = useMemo(
+    () => favouriteItems.includes(ProductId),
+    [favouriteItems, ProductId],
+  );
+
   const cartItem = useSelector((state: RootState) =>
     state.cart.items.find(item => item.productID === tpvProduct?.ID),
   );
-
+  const [blnIsInCart, setIsInCart] = useState<boolean>(false);
   const oldsize = cartItem?.size;
   const [enmSelectedSize, setSelectedSize] = useState<enmSize>(enmSize.small);
   const [intProductCount, setProductCount] = useState<number>(1);
-
-  useEffect(() => {
-    setFavouriteClicked(isFavouriteClicked);
-  }, [isFavouriteClicked]);
-
-  useEffect(() => {
-    if (strUserID && tpvProduct) {
-      database()
-        .ref(`favourite/${strUserID}`)
-        .on('value', snapshot => {
-          if (snapshot.exists()) {
-            const aintProductsID = snapshot.val().Products;
-            setFavouriteClicked(aintProductsID?.includes(tpvProduct.ID));
-          } else {
-            setFavouriteClicked(false);
-          }
-        });
-    }
-  }, [strUserID, tpvProduct]);
 
   useEffect(() => {
     if (cartItem) {
@@ -77,13 +58,16 @@ export function ProductDetails(navigation: any) {
     }
   }, [cartItem, ProductId]);
 
-  const toggleFavouritelist = () => {
-    if (!blnIsFavouriteClicked && strUserID && tpvProduct) {
-      setItemsInFavourite(strUserID, tpvProduct.ID);
-      setFavouriteClicked(true);
-    } else if (blnIsFavouriteClicked && strUserID && tpvProduct) {
-      removeItemFromFavourite(strUserID, tpvProduct.ID);
-      setFavouriteClicked(false);
+  const toggleFavourite = () => {
+    if (!tpvProduct || !strUserID) {
+      return;
+    }
+    if (isFavourite) {
+      appDispatch(
+        removeFavourite({userId: strUserID, productId: tpvProduct.ID}),
+      );
+    } else {
+      appDispatch(addFavourite({userId: strUserID, productId: tpvProduct.ID}));
     }
   };
 
@@ -109,6 +93,7 @@ export function ProductDetails(navigation: any) {
           productID: tpvProduct.ID,
           size: enmSelectedSize,
           count: intProductCount,
+          price: tpvProduct.price,
         }),
       );
     }
@@ -146,14 +131,12 @@ export function ProductDetails(navigation: any) {
       />
       <View style={Styles.headerContainer}>
         <ArrowBack />
-        <TouchableWithoutFeedback onPress={toggleFavouritelist}>
+        <TouchableWithoutFeedback onPress={toggleFavourite}>
           <FastImage
             resizeMode="contain"
             style={Styles.favouriteListButton}
             source={
-              blnIsFavouriteClicked
-                ? images.inFavouriteList
-                : images.outFavouriteList
+              isFavourite ? images.inFavouriteList : images.outFavouriteList
             }
           />
         </TouchableWithoutFeedback>

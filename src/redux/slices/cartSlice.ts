@@ -59,7 +59,13 @@ export const updateCartItemFirebase = createAsyncThunk(
         newSize,
         newCount,
       ); // return price
-      return {productID, size: newSize, count: newCount, price};
+      return {
+        Uid, // ✅ add Uid to return
+        productID,
+        size: newSize,
+        count: newCount,
+        price,
+      };
     } catch (err: any) {
       return rejectWithValue(err.message);
     }
@@ -74,17 +80,25 @@ export const addToCartFirebase = createAsyncThunk(
       productID,
       size,
       count,
-    }: {Uid: string; productID: string; size: enmSize; count: number},
+      price, // ✅ add price
+    }: {
+      Uid: string;
+      productID: string;
+      size: enmSize;
+      count: number;
+      price: number;
+    },
     {rejectWithValue},
   ) => {
     try {
-      await addItemInCart(Uid, productID, size, count);
-      return {Uid, productID, size, count}; // 👈 Include count
+      await addItemInCart(Uid, productID, size, count); // your DB save
+      return {Uid, productID, size, count, price}; // ✅ include price in return
     } catch (err: any) {
       return rejectWithValue(err.message);
     }
   },
 );
+
 export const decreaseFromCartFirebase = createAsyncThunk(
   'cart/decreaseFromCartFirebase',
   async (
@@ -151,7 +165,7 @@ const cartSlice = createSlice({
       );
     });
     builder.addCase(addToCartFirebase.fulfilled, (state, action) => {
-      const {productID, size, count} = action.payload;
+      const {productID, size, count, Uid, price} = action.payload;
       const existing = state.items.find(
         item => item.productID === productID && item.size === size,
       );
@@ -162,13 +176,13 @@ const cartSlice = createSlice({
           productID,
           size,
           count,
-          Uid: '',
-          price: 0,
+          Uid,
+          price,
         });
       }
     });
     builder.addCase(updateCartItemFirebase.fulfilled, (state, action) => {
-      const {productID, size, count, price} = action.payload;
+      const {productID, size, count, price, Uid} = action.payload;
       const existing = state.items.find(
         item => item.productID === productID && item.size === size,
       );
@@ -181,7 +195,7 @@ const cartSlice = createSlice({
           size,
           count,
           price,
-          Uid: '',
+          Uid,
         });
       }
     });
