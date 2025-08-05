@@ -78,10 +78,11 @@ const SignUp = () => {
     );
   };
 
-  function onGoogleButtonPress() {
-    signinWithGoogle().then(() => {
+  async function onGoogleButtonPress() {
+    const success = await signinWithGoogle();
+    if (success) {
       navigation.navigate('DrawerNavigator', {screen: 'TapNavigator'});
-    });
+    }
   }
 
   return (

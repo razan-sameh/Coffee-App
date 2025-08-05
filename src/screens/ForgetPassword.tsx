@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,17 +6,16 @@ import {
   TouchableWithoutFeedback,
   ToastAndroid,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import {images} from '../Content/resources';
 import {Styles} from '../styles/ForgetPassword';
 import {ArrowBack} from '../Components/ArrowBack';
-import {Control, Controller, useForm} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import {TextInput} from 'react-native-paper';
 import {strPrimaryColor, strSecondColor} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import auth from '@react-native-firebase/auth';
-import {EmailJSResponseStatus, send} from '@emailjs/react-native';
+// import {EmailJSResponseStatus, send} from '@emailjs/react-native';
 import {
   NavigationProp,
   ParamListBase,
@@ -35,96 +34,91 @@ const ForgetPassword = () => {
     },
   });
   const [blnIsSendEmail, setSendEmail] = useState<boolean>(false);
-  const [strOtp, setOtp] = useState<string>('');
+  // const [strOtp, setOtp] = useState<string>('');
   const EmailIcon = (
     <TextInput.Icon icon={images.EmailIcon} color={strPrimaryColor} />
   );
-  const generateOtp = () => {
-    let Otp = '';
-    const characters = '0123456789';
-    for (let i = 0; i < 4; i++) {
-      Otp += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return Otp;
-  };
+  // const generateOtp = () => {
+  //   let Otp = '';
+  //   const characters = '0123456789';
+  //   for (let i = 0; i < 4; i++) {
+  //     Otp += characters.charAt(Math.floor(Math.random() * characters.length));
+  //   }
+  //   return Otp;
+  // };
 
-  useEffect(() => {
-    if (!blnIsSendEmail) {
-      setOtp(generateOtp());
-    }
-  }, [blnIsSendEmail]);
+  // useEffect(() => {
+  //   if (!blnIsSendEmail) {
+  //     setOtp(generateOtp());
+  //   }
+  // }, [blnIsSendEmail]);
 
-  const sendEmail = async (email: string | undefined) => {
-    console.log('email', email);
+  // const sendEmail = async (email: string | undefined) => {
+  //   console.log('email', email);
+  //   setSendEmail(true);
+  //   if (email != undefined || email != '') {
+  //     try {
+  //       await send(
+  //         'service_h8e83zf',
+  //         'template_6b96vxy',
+  //         {
+  //           email: `${email}`,
+  //           message: ` ${strOtp}`,
+  //         },
+  //         {
+  //           publicKey: 'dHAuW7eHQvNC5nb7_',
+  //         },
+  //       );
+  //       console.log('SUCCESS!');
+  //       navigation.navigate('OTPVerification', {otp: strOtp, email: email});
+  //     } catch (err) {
+  //       setSendEmail(false);
+  //       if (err instanceof EmailJSResponseStatus) {
+  //         console.log('EmailJS Request Failed...', err);
+  //         ToastAndroid.showWithGravityAndOffset(
+  //           err.text,
+  //           ToastAndroid.LONG,
+  //           ToastAndroid.BOTTOM,
+  //           25,
+  //           50,
+  //         );
+  //       }
+  //       console.log('ERROR', err);
+  //     }
+  //   }
+  // };
+
+  const forgotPassword = async ({strEmail}: {strEmail: string}) => {
+    if (!strEmail || strEmail.trim() === '') {
+      ToastAndroid.show('Please enter your email.', ToastAndroid.SHORT);
+      return;
+    }
+
     setSendEmail(true);
-    if (email != undefined || email != '') {
-      try {
-        await send(
-          'service_h8e83zf',
-          'template_6b96vxy',
-          {
-            email: `${email}`,
-            message: ` ${strOtp}`,
-          },
-          {
-            publicKey: 'dHAuW7eHQvNC5nb7_',
-          },
-        );
-        console.log('SUCCESS!');
-        navigation.navigate('OTPVerification', {otp: strOtp, email: email});
-      } catch (err) {
-        setSendEmail(false);
-        if (err instanceof EmailJSResponseStatus) {
-          console.log('EmailJS Request Failed...', err);
-          ToastAndroid.showWithGravityAndOffset(
-            err.text,
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-        }
-        console.log('ERROR', err);
+
+    try {
+      await auth().sendPasswordResetEmail(strEmail.trim());
+
+      ToastAndroid.showWithGravityAndOffset(
+        'Check your email',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+      navigation.navigate('Login');
+    } catch (error: any) {
+      console.log('Reset Error:', error);
+      if (error.code === 'auth/invalid-email') {
+        ToastAndroid.show('Invalid email address.', ToastAndroid.LONG);
+      } else if (error.code === 'auth/user-not-found') {
+        ToastAndroid.show('No user found with that email.', ToastAndroid.LONG);
+      } else {
+        ToastAndroid.show('Something went wrong.', ToastAndroid.LONG);
       }
+    } finally {
+      setSendEmail(false);
     }
-  };
-
-  const forgotPassword = async (email: string) => {
-    setSendEmail(true);
-    await auth()
-      .sendPasswordResetEmail(email)
-      .then(res => {
-        console.log(res);
-        ToastAndroid.showWithGravityAndOffset(
-          'Check your email',
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        );
-        navigation.navigate('Login');
-      })
-      .catch(error => {
-        console.log('Error sending password reset:', error);
-        if (error.code == 'auth/invalid-email') {
-          ToastAndroid.showWithGravityAndOffset(
-            'Invalid Email", "No user corresponding to that email address.',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-        } else if (error.code == 'auth/user-not-found') {
-          ToastAndroid.showWithGravityAndOffset(
-            'User Error", "Email may not be verified, check email.',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50,
-          );
-        }
-        setSendEmail(false);
-      });
   };
 
   return (
@@ -179,10 +173,7 @@ const ForgetPassword = () => {
         {errors.strEmail && errors.strEmail.type === 'required' && (
           <Text style={Styles.txtError}>This is required.</Text>
         )}
-        <TouchableWithoutFeedback
-          onPress={handleSubmit(() =>
-            forgotPassword(control._formValues.strEmail),
-          )}>
+        <TouchableWithoutFeedback onPress={handleSubmit(forgotPassword)}>
           <View style={Styles.btnSubmitContainer}>
             {blnIsSendEmail ? (
               <ActivityIndicator size={20} color={strSecondColor} />

@@ -114,7 +114,9 @@ export const decreaseCountItemInCart = async (
 
   try {
     const product = await fetchProductById(productID);
-    if (!product) throw new Error('Product not found');
+    if (!product) {
+      throw new Error('Product not found');
+    }
 
     const snapshot = await userCartRef.once('value');
     const cartItems = snapshot.val() || {};
@@ -210,139 +212,67 @@ export const getCartItemDetails = (
   });
 };
 
-export const addUser = (
+// Create new user
+export const createUser = async (
   Uid: string,
-  strName: string,
-  strEmail: string,
-  strPassword: string,
-) => {
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+): Promise<void> => {
   const reference = database().ref(`/user/${Uid}`);
-  reference
-    .set({
-      Uid,
-      name: strName,
-      email: strEmail,
-      password: strPassword,
-      isActive: true,
-      role: enmRole.customer,
-    })
-    .then(() => console.log('User data inserted successfully'))
-    .catch(error => console.error('Error inserting user data:', error));
+  await reference.set({
+    Uid,
+    firstName,
+    lastName,
+    email,
+    password,
+    isActive: true,
+    role: enmRole.customer,
+  });
 };
 
-export const getUserInfo = async (Uid: string): Promise<typUser> => {
-  try {
-    const snapshot = await database().ref(`/user/${Uid}`).once('value');
-    const data = snapshot.val();
-    return data;
-  } catch (error) {
-    console.error('Error getting user by ID:', error);
-    throw error;
-  }
+// Fetch user data
+export const getUserById = async (Uid: string): Promise<typUser> => {
+  const snapshot = await database().ref(`/user/${Uid}`).once('value');
+  return snapshot.val();
 };
 
-export const updateUserPassword = (Uid: string, newPassword: string) => {
-  const reference = database().ref(`/user/${Uid}`);
-  reference
-    .update({
-      password: newPassword,
-    })
-    .then(() => console.log('User password updated successfully'))
-    .catch(error => console.error('Error updating user password:', error));
-};
-
-export const addUserDetails = async (
+// Update user password
+export const changeUserPassword = async (
   Uid: string,
-  address: string,
-  phoneNumber: string,
-) => {
-  try {
-    const userRef = database().ref(`user/${Uid}`);
-    // Check if the user already exists
-    const snapshot = await userRef.once('value');
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-      // Initialize address and phoneNumber as arrays if they don't already exist
-      const addresses = userData.address ? userData.address : [];
-      const phoneNumbers = userData.phoneNumber ? userData.phoneNumber : [];
-
-      // Add new address and phoneNumber to arrays
-      if (!addresses.includes(address)) {
-        addresses.push(address);
-      }
-      if (!phoneNumbers.includes(phoneNumber)) {
-        phoneNumbers.push(phoneNumber);
-      }
-
-      // Update user data
-      await userRef.update({
-        address: addresses,
-        phoneNumber: phoneNumbers,
-      });
-      console.log('Address and phone number updated.');
-    } else {
-      // If user doesn't exist, create the user with address and phoneNumber as arrays
-      await userRef.set({
-        address: [address],
-        phoneNumber: [phoneNumber],
-      });
-      console.log('User created with address and phone number.');
-    }
-  } catch (error) {
-    console.error('Error updating user details:', error);
-  }
+  newPassword: string,
+): Promise<void> => {
+  const reference = database().ref(`/user/${Uid}`);
+  await reference.update({password: newPassword});
 };
 
-export const getAddressByUid = async (Uid: string) => {
-  try {
-    const userRef = database().ref(`user/${Uid}`);
-    // Fetch user data
-    const snapshot = await userRef.once('value');
+// Add address and phone number
+export const addUserDetailsToFirebase = async (
+  Uid: string,
+  address?: string,
+  phoneNumber?: string,
+): Promise<void> => {
+  const userRef = database().ref(`user/${Uid}`);
+  const snapshot = await userRef.once('value');
 
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
+  if (snapshot.exists()) {
+    const userData = snapshot.val();
+    const addresses = userData.address ?? [];
+    const phoneNumbers = userData.phoneNumber ?? [];
 
-      // Check if the address field exists
-      if (userData.address && Array.isArray(userData.address)) {
-        console.log('Addresses:', userData.address);
-        return userData.address;
-      } else {
-        console.log('Address field not found or is not an array.');
-        return [];
-      }
-    } else {
-      console.log('User does not exist.');
-      return [];
+    if (!addresses.includes(address)) {
+      addresses.push(address);
     }
-  } catch (error) {
-    console.error('Error retrieving address:', error);
-    return [];
-  }
-};
-
-export const getPhoneNumberByUid = async (Uid: string) => {
-  try {
-    const userRef = database().ref(`user/${Uid}`);
-    // Fetch user data
-    const snapshot = await userRef.once('value');
-
-    if (snapshot.exists()) {
-      const userData = snapshot.val();
-
-      // Check if the phoneNumber field exists and is an array
-      if (userData.phoneNumber && Array.isArray(userData.phoneNumber)) {
-        console.log('Phone Numbers:', userData.phoneNumber);
-        return userData.phoneNumber;
-      } else {
-        console.log('PhoneNumber field not found or is not an array.');
-        return [];
-      }
-    } else {
-      console.log('User does not exist.');
-      return [];
+    if (!phoneNumbers.includes(phoneNumber)) {
+      phoneNumbers.push(phoneNumber);
     }
-  } catch (error) {
-    console.error('Error retrieving phone number:', error);
-    return [];
+
+    await userRef.update({address: addresses, phoneNumber: phoneNumbers});
+  } else {
+    await userRef.set({
+      address: [address],
+      phoneNumber: [phoneNumber],
+    });
   }
 };

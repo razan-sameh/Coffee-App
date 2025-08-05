@@ -13,7 +13,6 @@ import {
 
 const Splash = () => {
   const navigation: NavigationProp<ParamListBase> = useNavigation();
-  const [blnIsLogin, setIsLogin] = useState(false);
   const [blnIsFirstLaunch, setFirstLaunch] = useState<boolean>();
   const checkFirstLaunch = async () => {
     const strFirstLanuch = await AsyncStorage.getItem('FIRST_LAUNCH');
@@ -38,7 +37,6 @@ const Splash = () => {
           if (user != null) {
             navigation.navigate('DrawerNavigator', {screen: 'TapNavigator'});
           } else {
-            setIsLogin(false);
             navigation.navigate('Login');
           }
         });

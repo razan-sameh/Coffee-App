@@ -52,7 +52,7 @@ export type typUser = {
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber: string[];
+  phoneNumber?: string[];
   address?: string[];
   password: string;
   role: enmRole;
@@ -77,7 +77,7 @@ export type typOrder = {
   total: number;
   paymentMethod: enmPaymentMethod;
   orderType: enmOrderType;
-  deliveryInfo: typDeliveryInfo | null;
+  deliveryInfo: typDeliveryInfo;
   userId: string;
   date: string;
   platform: enmPlatform;

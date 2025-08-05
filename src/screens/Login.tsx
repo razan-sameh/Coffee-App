@@ -19,14 +19,9 @@ import {
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
-import {
-  changeName,
-  changePassword,
-  changeUserID,
-} from '../redux/slices/userSlice';
 import {signInWithEmail, signinWithGoogle} from '../Content/Authentication';
-import {getUserInfo} from '../Content/Database';
+import {useAppDispatch} from '../redux/store';
+import {fetchUserInfo} from '../redux/slices/userSlice';
 
 const Login = () => {
   const {
@@ -39,6 +34,7 @@ const Login = () => {
       strPassword: '',
     },
   });
+  const dispatch = useAppDispatch();
   const [blnIsSign, setIsSign] = useState<boolean>(false);
   const [blnSecureTextEntry, setSecureTextEntry] = useState<boolean>(true);
   const EmailIcon = (
@@ -62,30 +58,26 @@ const Login = () => {
     />
   );
   const navigation: NavigationProp<ParamListBase> = useNavigation();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const onSubmit = (data: typLogin) => {
     setIsSign(true);
     signInWithEmail(data, {
       onSuccess: userID => {
-        getUserInfo(userID).then(user => {
-          dispatch(changeUserID(user.Uid));
-          dispatch(changeName(user.firstName + user.lastName));
-        });
+        dispatch(fetchUserInfo(userID));
         navigation.navigate('DrawerNavigator', {screen: 'TapNavigator'});
       },
       onError: () => setIsSign(false),
-      comparePassword: updatedPassword => {
-        dispatch(changePassword(updatedPassword));
-      },
     });
   };
 
-  function onGoogleButtonPress() {
-    signinWithGoogle().then(() => {
+  async function onGoogleButtonPress() {
+    const success = await signinWithGoogle();
+    if (success) {
       navigation.navigate('DrawerNavigator', {screen: 'TapNavigator'});
-    });
+    }
   }
+
   return (
     <View style={Styles.mainContainer}>
       <ArrowBack />

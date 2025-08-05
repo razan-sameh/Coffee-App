@@ -1,44 +1,47 @@
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {ToastAndroid} from 'react-native';
-import {addUser, getUserInfo, updateUserPassword} from './Database';
 import {typLogin, typSignUp} from './Types';
+import {addUserAsync, fetchUserInfo} from '../redux/slices/userSlice';
+import {store} from '../redux/store';
 
 GoogleSignin.configure({
   webClientId:
     '24598469643-697jcmilfshc905sk5jnl602tst5qtve.apps.googleusercontent.com',
 });
 
-export async function signinWithGoogle() {
+export async function signinWithGoogle(): Promise<boolean> {
   try {
-    // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-
-    // Get the user's ID token
     const {idToken} = await GoogleSignin.signIn();
-
-    // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-
-    // Sign-in the user with the credential
     const userCredential = await auth().signInWithCredential(googleCredential);
 
     const user = userCredential.user;
     const userID = user.uid;
+    const fullName = user.displayName || '';
+    const email = user.email || '';
 
-    const existingUser = await getUserInfo(userID);
+    const existingUser = await store.dispatch(fetchUserInfo(userID)).unwrap();
+
     if (!existingUser) {
-      const fullName = user.displayName || '';
-      const email = user.email || '';
-
-      // Save to database
-      addUser(userID, fullName, email, ''); // Empty password since it's Google sign-in
+      await store.dispatch(
+        addUserAsync({
+          Uid: userID,
+          firstName: fullName.split(' ')[0],
+          lastName: fullName.split(' ')[1],
+          email,
+          password: '',
+        }),
+      );
     }
 
     console.log('You are signed in successfully');
+    return true;
   } catch (error) {
     console.log('Google sign-in error:', error);
     showToast('Google sign-in failed.');
+    return false;
   }
 }
 
@@ -58,8 +61,15 @@ export const createAccountWithEmail = async (
 
     const userID = getUserID();
     if (userID) {
-      const fullName = data.strFirstName + data.strLastName;
-      addUser(userID, fullName, data.strEmail, data.strPassword);
+      store.dispatch(
+        addUserAsync({
+          Uid: userID,
+          firstName: data.strFirstName,
+          lastName: data.strLastName,
+          email: data.strEmail,
+          password: data.strPassword, // or provide actual password
+        }),
+      );
     }
 
     onSuccess();
@@ -89,14 +99,7 @@ export const signInWithEmail = async (
 
     const userID = getUserID();
     if (userID) {
-      const user = await getUserInfo(userID);
       callbacks.onSuccess(userID);
-
-      // Optional comparison logic
-      if (callbacks.comparePassword && user.password !== data.strPassword) {
-        await updateUserPassword(userID, data.strPassword);
-        callbacks.comparePassword(data.strPassword);
-      }
     }
   } catch (error: any) {
     callbacks.onError();
@@ -126,7 +129,8 @@ export function getUserID() {
   return auth().currentUser?.uid;
 }
 
-export function logOut() {
+export async function logOut() {
+  await GoogleSignin.signOut();
   auth()
     .signOut()
     .then(() => console.log('User signed out!'));

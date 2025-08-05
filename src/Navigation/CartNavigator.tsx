@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Cart} from '../screens/Cart/Cart';
-import CheckOut from '../screens/CheckOut';
+import CheckOut from '../screens/checkOut/CheckOut';
 import {Payment} from '../screens/Payment';
 
 const Stack = createStackNavigator();
