@@ -54,4 +54,5 @@ export const images = {
   CartWallIcon1: require('../assets/images/CartWallIcon1.png'),
   CartWallIcon2: require('../assets/images/CartWallIcon2.png'),
   FrameContainer: require('../assets/images/FrameContainer.png'),
+  ConfirmedIcon: require('../assets/images/ConfirmedIcon.png'),
 };

@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import {Styles} from '../styles/Favourite';
 import {Product} from '../Components/Product';
-import {getUserID} from '../Content/Authentication';
 import {ArrowBack} from '../Components/ArrowBack';
 import {RootState, useAppDispatch} from '../redux/store';
 import {useSelector} from 'react-redux';
@@ -16,6 +15,7 @@ import database from '@react-native-firebase/database';
 import {typProduct} from '../Content/Types';
 import {useGetProductsQuery} from '../services/firebaseApi';
 import {strSecondColor} from '../styles/responsive';
+import {getUserID} from '../services/Authentication';
 
 export function Favourite() {
   const dispatch = useAppDispatch();

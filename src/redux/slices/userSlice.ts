@@ -1,13 +1,13 @@
 // redux/slices/userSlice.ts
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {typUser} from '../../Content/Types';
+import {enmRole} from '../../Content/Enums';
+import {createUser} from '../../services/cartServices';
 import {
-  createUser,
   getUserById,
   changeUserPassword,
   addUserDetailsToFirebase,
-} from '../../Content/Database';
-import {enmRole} from '../../Content/Enums';
+} from '../../services/userServices';
 
 type UserState = {
   user: typUser | null;

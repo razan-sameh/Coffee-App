@@ -1,9 +1,9 @@
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {ToastAndroid} from 'react-native';
-import {typLogin, typSignUp} from './Types';
 import {addUserAsync, fetchUserInfo} from '../redux/slices/userSlice';
 import {store} from '../redux/store';
+import {typLogin, typSignUp} from '../Content/Types';
 
 GoogleSignin.configure({
   webClientId:

@@ -1,7 +1,7 @@
 import database from '@react-native-firebase/database';
-import {typCart, typUser} from './Types';
-import {enmRole, enmSize} from './Enums';
-import {fetchProductById} from './Utils';
+import {enmSize, enmRole} from '../Content/Enums';
+import {typCart} from '../Content/Types';
+import {fetchProductById} from '../Content/Utils';
 
 export const addItemInCart = async (
   Uid: string,
@@ -231,48 +231,13 @@ export const createUser = async (
     role: enmRole.customer,
   });
 };
-
-// Fetch user data
-export const getUserById = async (Uid: string): Promise<typUser> => {
-  const snapshot = await database().ref(`/user/${Uid}`).once('value');
-  return snapshot.val();
-};
-
-// Update user password
-export const changeUserPassword = async (
-  Uid: string,
-  newPassword: string,
-): Promise<void> => {
-  const reference = database().ref(`/user/${Uid}`);
-  await reference.update({password: newPassword});
-};
-
-// Add address and phone number
-export const addUserDetailsToFirebase = async (
-  Uid: string,
-  address?: string,
-  phoneNumber?: string,
-): Promise<void> => {
-  const userRef = database().ref(`user/${Uid}`);
-  const snapshot = await userRef.once('value');
-
-  if (snapshot.exists()) {
-    const userData = snapshot.val();
-    const addresses = userData.address ?? [];
-    const phoneNumbers = userData.phoneNumber ?? [];
-
-    if (!addresses.includes(address)) {
-      addresses.push(address);
-    }
-    if (!phoneNumbers.includes(phoneNumber)) {
-      phoneNumbers.push(phoneNumber);
-    }
-
-    await userRef.update({address: addresses, phoneNumber: phoneNumbers});
-  } else {
-    await userRef.set({
-      address: [address],
-      phoneNumber: [phoneNumber],
-    });
+export const clearUserCart = async (Uid: string): Promise<void> => {
+  const userCartRef = database().ref(`cart/${Uid}`);
+  try {
+    await userCartRef.remove(); // removes all items under this user's cart
+    console.log(`Cart for user ${Uid} cleared successfully`);
+  } catch (error) {
+    console.error('Error clearing user cart:', error);
+    throw error;
   }
 };

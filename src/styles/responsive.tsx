@@ -1,4 +1,4 @@
-import {Dimensions, NativeModules, StatusBar} from 'react-native';
+import {Dimensions, NativeModules} from 'react-native';
 
 export const {width: mdblScreenWidth, height: mbdlScreenHeight} =
   Dimensions.get('window');

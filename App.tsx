@@ -13,20 +13,23 @@ import OTPVerification from './src/screens/OTPVerification';
 import ResetPassword from './src/screens/ResetPassword';
 import DrawerNavigator from './src/Navigation/DrawerNavigator';
 import {Provider} from 'react-redux';
-import {store, persistor} from './src/redux/store';
+import {store} from './src/redux/store';
 import {FavouriteProvider} from './src/provider/FavouriteProvider';
 import AuthProvider from './src/provider/AuthProvider';
-import {PersistGate} from 'redux-persist/integration/react';
+import {StripeProvider} from '@stripe/stripe-react-native';
 
 export const navigationRef: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
+// export const serverURL = 'http://localhost:3000';
+export const serverURL = 'http://192.168.1.5:3000';
 
 const App = () => {
   const [routeName, setRouteName] = useState<string>('');
-
+  const publishableKey =
+    'pk_test_51NCM93L3kg8UzIW5XyFsKYQA1zGQK1nxXsMcZLPM6lU2584BYmXtq9eNONB05bVPoH0BK0osdEruluXRUEY3ey2t00KFECBVTc';
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <StripeProvider publishableKey={publishableKey}>
         <AuthProvider>
           <FavouriteProvider>
             <NavigationContainer
@@ -65,7 +68,7 @@ const App = () => {
             </NavigationContainer>
           </FavouriteProvider>
         </AuthProvider>
-      </PersistGate>
+      </StripeProvider>
     </Provider>
   );
 };

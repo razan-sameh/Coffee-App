@@ -7,7 +7,6 @@ import {Rating} from 'react-native-ratings';
 import {strSecondColor, widthScale} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import {enmSize} from '../Content/Enums';
-import {getUserID} from '../Content/Authentication';
 import {ArrowBack} from '../Components/ArrowBack';
 import {
   NavigationProp,
@@ -22,6 +21,7 @@ import {
 import {RootState, useAppDispatch} from '../redux/store';
 import {useSelector} from 'react-redux';
 import {addFavourite, removeFavourite} from '../redux/slices/favouriteSlice';
+import {getUserID} from '../services/Authentication';
 
 export function ProductDetails(navigation: any) {
   const ProductId: string = navigation.navigation.route.params.ProductId;

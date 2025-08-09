@@ -19,9 +19,9 @@ import {
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import {signInWithEmail, signinWithGoogle} from '../Content/Authentication';
 import {useAppDispatch} from '../redux/store';
 import {fetchUserInfo} from '../redux/slices/userSlice';
+import {signInWithEmail, signinWithGoogle} from '../services/Authentication';
 
 const Login = () => {
   const {

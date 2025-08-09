@@ -1,5 +1,5 @@
 import {createApi, fakeBaseQuery} from '@reduxjs/toolkit/query/react';
-import {typCategory, typProduct} from '../Content/Types';
+import {typCategory, typOrder, typProduct} from '../Content/Types';
 import database from '@react-native-firebase/database';
 import {
   setDefaultPrice,
@@ -112,6 +112,20 @@ export const firebaseApi = createApi({
       },
       providesTags: (_result, _error, id) => [{type: 'product', id}],
     }),
+    getOrderById: build.query<typOrder, string>({
+      async queryFn(orderId) {
+        try {
+          const snap = await database().ref(`order/${orderId}`).once('value');
+          const raw = snap.val();
+          if (!raw) {
+            throw new Error('Order not found');
+          }
+          return {data: {id: orderId, ...(raw as Omit<typOrder, 'id'>)}};
+        } catch (error) {
+          return {error};
+        }
+      },
+    }),
 
     getCategories: build.query<typCategory[], void>({
       async queryFn() {
@@ -145,4 +159,5 @@ export const {
   useGetProductsQuery,
   useGetProductByIdQuery,
   useGetCategoriesQuery,
+  useGetOrderByIdQuery,
 } = firebaseApi;

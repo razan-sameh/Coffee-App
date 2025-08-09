@@ -1,13 +1,14 @@
 import {createSlice, PayloadAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {typCart} from '../../Content/Types';
+import {enmSize} from '../../Content/Enums';
 import {
   getCartItems,
-  addItemInCart,
-  removeItemFromCart,
   updateItemInCart,
+  addItemInCart,
   decreaseCountItemInCart,
-} from '../../Content/Database';
-import {enmSize} from '../../Content/Enums';
+  removeItemFromCart,
+  clearUserCart,
+} from '../../services/cartServices';
 
 type CartState = {
   items: typCart[];
@@ -129,6 +130,18 @@ export const removeFromCartFirebase = createAsyncThunk(
   },
 );
 
+export const clearCartFirebase = createAsyncThunk(
+  'cart/clearCartFirebase',
+  async (Uid: string, {rejectWithValue}) => {
+    try {
+      await clearUserCart(Uid);
+      return Uid;
+    } catch (err: any) {
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
@@ -209,6 +222,9 @@ const cartSlice = createSlice({
         existing.count = count;
         existing.price = price;
       }
+    });
+    builder.addCase(clearCartFirebase.fulfilled, state => {
+      state.items = [];
     });
   },
 });

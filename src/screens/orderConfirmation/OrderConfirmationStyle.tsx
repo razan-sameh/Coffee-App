@@ -1,0 +1,106 @@
+import {StyleSheet} from 'react-native';
+import {
+  moderateScale,
+  mdblBAR_HEIGHT,
+  strSecondColor,
+  strINTER_SEMIBOLD600_Font,
+  strPrimaryColor,
+  mdblScreenWidth,
+  heightScale,
+  widthScale,
+  strTextColor,
+  strWhiteColor,
+} from '../../styles/responsive';
+
+export const Styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    paddingLeft: moderateScale(16),
+    paddingRight: moderateScale(16),
+    paddingTop: mdblBAR_HEIGHT,
+    backgroundColor: strSecondColor,
+  },
+  backArrowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: moderateScale(20),
+  },
+  txtTitle: {
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    fontSize: moderateScale(24),
+    color: strPrimaryColor,
+  },
+  txtDes: {
+    color: strWhiteColor,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  wave: {
+    width: mdblScreenWidth,
+    height: heightScale(200),
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+  },
+  wallCoffeeImage1: {
+    width: widthScale(90),
+    height: heightScale(90),
+    position: 'absolute',
+    top: '55%',
+    left: -17,
+  },
+  wallCoffeeImage2: {
+    width: widthScale(58),
+    height: heightScale(58),
+    position: 'absolute',
+    top: '80%',
+    right: -5,
+  },
+  summaryCard: {
+    backgroundColor: strPrimaryColor,
+    borderRadius: 10,
+    padding: 16,
+    marginTop: 20,
+    marginBottom: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  summaryLabel: {
+    fontWeight: 'bold',
+    color: strTextColor,
+  },
+  btnOutline: {
+    backgroundColor: strSecondColor,
+    borderWidth: 1,
+    borderColor: strPrimaryColor,
+    borderRadius: 25,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginBottom: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  btnOutlineText: {
+    color: strTextColor,
+    fontWeight: 'bold',
+  },
+  btnFilled: {
+    backgroundColor: '#ff3b30',
+    borderRadius: 25,
+    paddingVertical: 12,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  btnFilledText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});

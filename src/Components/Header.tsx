@@ -9,7 +9,6 @@ import {Styles} from '../styles/Header';
 import {strInpitColor} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import {images} from '../Content/resources';
-import {getUserName} from '../Content/Authentication';
 import {
   NavigationProp,
   ParamListBase,
@@ -17,6 +16,7 @@ import {
 } from '@react-navigation/native';
 import {resetFilters, setSearch} from '../redux/slices/filterSlice';
 import {useDispatch} from 'react-redux';
+import {getUserName} from '../services/Authentication';
 
 export function Header({navigation, searchQuery, setSearchQuery}: any) {
   const navigationTo: NavigationProp<ParamListBase> = useNavigation();

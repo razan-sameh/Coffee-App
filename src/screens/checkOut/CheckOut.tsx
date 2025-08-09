@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -19,33 +19,65 @@ import {
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import {getUserID} from '../../Content/Authentication';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {addUserDetails} from '../../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
-import CheckOutField from './CheckOutField';
+import CheckOutField from './component/CheckOutField';
+import {setDeliveryInfo} from '../../redux/slices/deliveryInfoSlice';
+import {getUserID, getUserName} from '../../services/Authentication';
 
 const CheckOut = () => {
+  const {user} = useSelector((state: RootState) => state.user);
   const {
     control,
     handleSubmit: handleCheckOut,
+    setValue,
     formState: {errors},
   } = useForm<typCheckout>({
     defaultValues: {
-      strFullName: '',
-      strPhoneNumber: '',
-      strAddress: '',
+      strFullName: getUserName()!,
+      strPhoneNumber: user?.phoneNumber?.[0] || '',
+      strAddress: user?.address?.[0] || '',
     },
   });
   const [blnIsCheckOut, setIsCheckOut] = useState<boolean>(false);
   const navigation: NavigationProp<ParamListBase> = useNavigation();
-  const {user} = useSelector((state: RootState) => state.user);
   const [blnIsAddingAddress, setIsAddingAddress] = useState<boolean>(false);
   const [blnIsAddingPhoneNumber, setIsAddingPhoneNumber] =
     useState<boolean>(false);
   const [blnSavePhone, setSavePhone] = useState<boolean>(false);
   const [blnSaveAddress, setSaveAddress] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (
+      !blnIsAddingPhoneNumber &&
+      user?.phoneNumber?.length &&
+      !control._formValues.strPhoneNumber
+    ) {
+      setValue('strPhoneNumber', user.phoneNumber[0]);
+    }
+  }, [
+    user?.phoneNumber,
+    blnIsAddingPhoneNumber,
+    control._formValues.strPhoneNumber,
+    setValue,
+  ]);
+
+  useEffect(() => {
+    if (
+      !blnIsAddingAddress &&
+      user?.address?.length &&
+      !control._formValues.strAddress
+    ) {
+      setValue('strAddress', user.address[0]);
+    }
+  }, [
+    user?.address,
+    blnIsAddingAddress,
+    control._formValues.strAddress,
+    setValue,
+  ]);
 
   const onCheckOut = async (data: typCheckout) => {
     console.log('Submitted Data:', data);
@@ -63,6 +95,13 @@ const CheckOut = () => {
           );
         }
       }
+      dispatch(
+        setDeliveryInfo({
+          name: data.strFullName,
+          address: data.strAddress,
+          phone: data.strPhoneNumber,
+        }),
+      );
       navigation.navigate('CartNavigator', {
         screen: 'Payment',
       });
@@ -78,11 +117,11 @@ const CheckOut = () => {
         <ArrowBack />
         <Text style={Styles.txtTitle}>CheckOut</Text>
       </View>
-      <FastImage
+      {/* <FastImage
         style={Styles.wave}
         resizeMode="contain"
         source={images.WallWave}
-      />
+      /> */}
       <FastImage
         style={Styles.wallCoffeeImage1}
         resizeMode="contain"

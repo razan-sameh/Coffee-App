@@ -14,15 +14,16 @@ import {TextInput} from 'react-native-paper';
 import {strPrimaryColor, strSecondColor} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';
 import {typSignUp} from '../Content/Types';
-import {
-  createAccountWithEmail,
-  signinWithGoogle,
-} from '../Content/Authentication';
+
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
+import {
+  createAccountWithEmail,
+  signinWithGoogle,
+} from '../services/Authentication';
 
 const SignUp = () => {
   const {

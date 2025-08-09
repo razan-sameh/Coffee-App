@@ -4,7 +4,6 @@ import {Styles} from '../styles/Product';
 import {typCart, typProduct} from '../Content/Types';
 import {images} from '../Content/resources';
 import FastImage from 'react-native-fast-image';
-import {getUserID} from '../Content/Authentication';
 import {enmSize} from '../Content/Enums';
 import {
   NavigationProp,
@@ -18,6 +17,7 @@ import {
   addToCartFirebase,
   updateCartItemFirebase,
 } from '../redux/slices/cartSlice';
+import {getUserID} from '../services/Authentication';
 
 export function Product({product}: {product: typProduct}) {
   const strUserID = getUserID();

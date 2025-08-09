@@ -12,15 +12,15 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import {RootState, useAppDispatch} from '../../redux/store';
-import {getUserID} from '../../Content/Authentication';
 import {CartItem} from './component/CartItem';
+import {getUserID} from '../../services/Authentication';
 
 export function Cart() {
   const navigation: NavigationProp<ParamListBase> = useNavigation();
   const dispatch = useAppDispatch();
   const strUserID = getUserID();
-
   const {items: atpvCartItems} = useSelector((state: RootState) => state.cart);
+  const isCartEmpty = atpvCartItems?.length === 0; // ✅ check if empty
 
   useEffect(() => {
     if (strUserID) {
@@ -60,25 +60,18 @@ export function Cart() {
           resizeMode="contain"
           style={Styles.frameContainer}
           source={images.FrameContainer}>
-          <Text style={Styles.txtTitlePrice}>Subtotal</Text>
-          <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
-        </FastImage>
-
-        <FastImage
-          resizeMode="contain"
-          style={Styles.frameContainer}
-          source={images.FrameContainer}>
           <Text style={Styles.txtTitlePrice}>Total</Text>
           <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
         </FastImage>
 
         <TouchableWithoutFeedback
+          disabled={isCartEmpty}
           onPress={() => {
             navigation.navigate('CartNavigator', {
               screen: 'CheckOut',
             });
           }}>
-          <View style={Styles.checkOutButton}>
+          <View style={[Styles.checkOutButton, isCartEmpty && {opacity: 0.5}]}>
             <Text style={Styles.txtCheckOut}>CheckOut</Text>
           </View>
         </TouchableWithoutFeedback>

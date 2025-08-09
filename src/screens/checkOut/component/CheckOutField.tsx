@@ -3,8 +3,8 @@ import {View, Text, TouchableWithoutFeedback} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {TextInput} from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
-import {Styles} from '../../styles/CheckOut';
-import {strPrimaryColor} from '../../styles/responsive';
+import {Styles} from '../../../styles/CheckOut';
+import {strPrimaryColor} from '../../../styles/responsive';
 
 interface Props {
   label: string;
@@ -45,9 +45,11 @@ const CheckOutField: React.FC<Props> = ({
       {showPicker ? (
         <View style={Styles.pickerContainer}>
           <Picker
-            selectedValue={value}
-            onValueChange={onChange}
-            onBlur={onBlur}>
+            selectedValue={value || userValues[0]} // default to first item if value is empty
+            onValueChange={val => {
+              onChange(val);
+              if (!value) onBlur(); // trigger onBlur for validation if needed
+            }}>
             {userValues.map((item, idx) => (
               <Picker.Item key={idx} label={item} value={item} />
             ))}
@@ -66,16 +68,6 @@ const CheckOutField: React.FC<Props> = ({
       )}
       {hasError && <Text style={Styles.txtError}>{errorMessage}</Text>}
 
-      {showSaveCheckbox && (
-        <View style={Styles.checkboxContainer}>
-          <CheckBox
-            value={saveValue}
-            onValueChange={setSaveValue}
-            tintColors={{true: strPrimaryColor, false: strPrimaryColor}}
-          />
-          <Text style={Styles.txtRemember}>Save {label}</Text>
-        </View>
-      )}
       {showPicker && (
         <TouchableWithoutFeedback onPress={() => setIsAdding(true)}>
           <View style={Styles.addContainer}>
@@ -84,11 +76,33 @@ const CheckOutField: React.FC<Props> = ({
         </TouchableWithoutFeedback>
       )}
 
-      {isAdding && userValues && userValues?.length > 0 && (
-        <TouchableWithoutFeedback onPress={() => setIsAdding(false)}>
-          <Text style={Styles.txtAdd}>Cancel</Text>
-        </TouchableWithoutFeedback>
-      )}
+      {isAdding || !userValues?.length ? (
+        <View
+          style={[
+            Styles.checkboxContainer,
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            },
+          ]}>
+          {showSaveCheckbox && (
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <CheckBox
+                value={saveValue}
+                onValueChange={setSaveValue}
+                tintColors={{true: strPrimaryColor, false: strPrimaryColor}}
+              />
+              <Text style={Styles.txtRemember}>Save {label}</Text>
+            </View>
+          )}
+          {userValues && userValues?.length > 0 && (
+            <TouchableWithoutFeedback onPress={() => setIsAdding(false)}>
+              <Text style={Styles.txtAdd}>Cancel</Text>
+            </TouchableWithoutFeedback>
+          )}
+        </View>
+      ) : null}
     </>
   );
 };

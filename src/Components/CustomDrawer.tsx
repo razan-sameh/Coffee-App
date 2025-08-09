@@ -14,7 +14,7 @@ import {
   widthScale,
 } from '../styles/responsive';
 import {images} from '../Content/resources';
-import {getUserName, logOut} from '../Content/Authentication';
+import {logOut, getUserName} from '../services/Authentication';
 
 const CustomDrawer = (props: any) => {
   const {state, navigation} = props;

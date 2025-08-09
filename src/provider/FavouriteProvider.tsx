@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useAppDispatch} from '../redux/store';
 import {fetchFavourites} from '../redux/slices/favouriteSlice';
-import {getUserID} from '../Content/Authentication';
+import {getUserID} from '../services/Authentication';
 
 type Props = {
   children: React.ReactNode;
