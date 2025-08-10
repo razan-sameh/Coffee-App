@@ -1,10 +1,10 @@
 import React from 'react';
-import {Shopping} from '../screens/Shopping';
 import {createStackNavigator} from '@react-navigation/stack';
-import {NoResultSearch} from '../screens/NoResultSearch';
-import {Header} from '../Components/Header';
-import {Filter} from '../screens/Filter';
-import {ProductDetails} from '../screens/ProductDetails';
+import {Header} from '../Components/header/Header';
+import {Filter} from '../screens/filter/Filter';
+import {NoResultSearch} from '../screens/noResultSearch/NoResultSearch';
+import {ProductDetails} from '../screens/productDetails/ProductDetails';
+import {Shopping} from '../screens/shopping/Shopping';
 
 const Stack = createStackNavigator();
 
@@ -14,6 +14,7 @@ const ShoppingNavigator = ({searchQuery, setSearchQuery}: any) => {
       initialRouteName="Shopping"
       screenOptions={{
         animationEnabled: false,
+        // eslint-disable-next-line react/no-unstable-nested-components
         header: navigation => (
           <Header
             {...navigation}

@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 import {View, TouchableWithoutFeedback, StyleSheet} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {images} from '../Content/resources';

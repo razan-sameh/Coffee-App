@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import {Header} from '../Components/Header';
+import {Header} from '../Components/header/Header';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {images} from '../Content/resources';
-import {Home} from '../screens/Home';
 import ShoppingNavigator from './ShoppingNavigator';
 import {
   heightScale,
@@ -12,13 +11,14 @@ import {
   strSecondColor,
   widthScale,
 } from '../styles/responsive';
-import {Favourite} from '../screens/Favourite';
+import {Favourite} from '../screens/favourite/Favourite';
 import CartNavigator from './CartNavigator';
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
+import {Home} from '../screens/home/Home';
 
 const Tab = createBottomTabNavigator();
 

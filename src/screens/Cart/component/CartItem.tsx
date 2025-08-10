@@ -16,7 +16,7 @@ import {
 } from '../../../redux/slices/cartSlice';
 import {useAppDispatch} from '../../../redux/store';
 import {useGetProductByIdQuery} from '../../../services/firebaseApi';
-import {Styles} from '../../../styles/Cart';
+import {Styles} from '../CartStyle';
 
 interface CartItemProps {
   item: typCart;

@@ -1,0 +1,239 @@
+import React, {useEffect, useState, useMemo} from 'react';
+import {Text, TouchableWithoutFeedback, View} from 'react-native';
+
+import {Rating} from 'react-native-ratings';
+
+import FastImage from 'react-native-fast-image';
+
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/native';
+
+import {useSelector} from 'react-redux';
+import {
+  updateCartItemFirebase,
+  addToCartFirebase,
+} from '../../redux/slices/cartSlice';
+import {removeFavourite, addFavourite} from '../../redux/slices/favouriteSlice';
+import {RootState, useAppDispatch} from '../../redux/store';
+import {getUserID} from '../../services/Authentication';
+import {useGetProductByIdQuery} from '../../services/firebaseApi';
+import {Styles} from './ProductDetailsStyles';
+import {ArrowBack} from '../../Components/ArrowBack';
+import {CustomCarousel} from '../../Components/CustomCarousel';
+import {enmSize} from '../../Content/Enums';
+import {images} from '../../Content/resources';
+import {widthScale, strSecondColor} from '../../styles/responsive';
+
+export function ProductDetails(navigation: any) {
+  const ProductId: string = navigation.navigation.route.params.ProductId;
+  const strUserID = getUserID();
+  const appDispatch = useAppDispatch();
+  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
+  const {data: tpvProduct, isLoading} = useGetProductByIdQuery(ProductId);
+
+  const favouriteItems = useSelector(
+    (state: RootState) => state.favourite.items,
+  );
+  const isFavourite = useMemo(
+    () => favouriteItems.includes(ProductId),
+    [favouriteItems, ProductId],
+  );
+
+  const cartItem = useSelector((state: RootState) =>
+    state.cart.items.find(item => item.productID === tpvProduct?.ID),
+  );
+  const [blnIsInCart, setIsInCart] = useState<boolean>(false);
+  const oldsize = cartItem?.size;
+  const [enmSelectedSize, setSelectedSize] = useState<enmSize>(enmSize.small);
+  const [intProductCount, setProductCount] = useState<number>(1);
+
+  useEffect(() => {
+    if (cartItem) {
+      setProductCount(cartItem.count);
+      setIsInCart(true);
+      setSelectedSize(cartItem.size);
+    } else {
+      setSelectedSize(enmSize.small);
+      setProductCount(1);
+      setIsInCart(false);
+    }
+  }, [cartItem, ProductId]);
+
+  const toggleFavourite = () => {
+    if (!tpvProduct || !strUserID) {
+      return;
+    }
+    if (isFavourite) {
+      appDispatch(
+        removeFavourite({userId: strUserID, productId: tpvProduct.ID}),
+      );
+    } else {
+      appDispatch(addFavourite({userId: strUserID, productId: tpvProduct.ID}));
+    }
+  };
+
+  const handleCartAction = async () => {
+    if (!strUserID || !tpvProduct) {
+      return;
+    }
+    let result;
+    if (blnIsInCart) {
+      result = await appDispatch(
+        updateCartItemFirebase({
+          Uid: strUserID,
+          productID: tpvProduct.ID,
+          oldSize: oldsize || enmSize.small,
+          newSize: enmSelectedSize,
+          newCount: intProductCount,
+        }),
+      );
+    } else {
+      result = await appDispatch(
+        addToCartFirebase({
+          Uid: strUserID,
+          productID: tpvProduct.ID,
+          size: enmSelectedSize,
+          count: intProductCount,
+          price: tpvProduct.price,
+        }),
+      );
+    }
+    if (
+      addToCartFirebase.fulfilled.match(result) ||
+      updateCartItemFirebase.fulfilled.match(result)
+    ) {
+      navigationTo.navigate('CartNavigator', {
+        screen: 'Cart',
+      });
+    } else {
+      console.warn('Cart update failed:', result.payload);
+    }
+  };
+
+  if (isLoading || !tpvProduct) {
+    return (
+      <View style={Styles.wall}>
+        <Text style={{color: '#fff', textAlign: 'center'}}>Loading...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={Styles.wall}>
+      <FastImage
+        resizeMode="contain"
+        style={Styles.wallCoffeeImage1}
+        source={images.ProDetailsWallCoffee1}
+      />
+      <FastImage
+        resizeMode="contain"
+        style={Styles.wallCoffeeImage2}
+        source={images.ProDetailsWallCoffee2}
+      />
+      <View style={Styles.headerContainer}>
+        <ArrowBack />
+        <TouchableWithoutFeedback onPress={toggleFavourite}>
+          <FastImage
+            resizeMode="contain"
+            style={Styles.favouriteListButton}
+            source={
+              isFavourite ? images.inFavouriteList : images.outFavouriteList
+            }
+          />
+        </TouchableWithoutFeedback>
+      </View>
+      <View style={Styles.carouselContainer}>
+        <CustomCarousel productImages={tpvProduct.image} />
+      </View>
+      <View style={Styles.contentContainer}>
+        <View style={Styles.NameAndPriceContainer}>
+          <Text style={Styles.txtTitles}>{tpvProduct.title}</Text>
+          <Text style={Styles.txtProductPrice}>${tpvProduct.price}</Text>
+        </View>
+        <Rating
+          type="custom"
+          ratingBackgroundColor="#A19D9D"
+          ratingCount={5}
+          imageSize={widthScale(19)}
+          startingValue={tpvProduct.rate}
+          tintColor="#251919"
+          readonly
+          style={Styles.rating}
+        />
+        <View style={Styles.ProductDesContainer}>
+          <Text style={Styles.txtTitles}>Product Details</Text>
+          <Text style={Styles.txtproductDes}>{tpvProduct.description}</Text>
+        </View>
+        <View style={Styles.productSizeContainer}>
+          <Text style={Styles.txtTitles}>Select Size</Text>
+          <View style={Styles.productSizeBtnContainer}>
+            {[enmSize.small, enmSize.medium, enmSize.large, enmSize.xLarge].map(
+              sizeVal => (
+                <TouchableWithoutFeedback
+                  key={sizeVal}
+                  onPress={() => setSelectedSize(sizeVal)}>
+                  <View
+                    style={
+                      enmSelectedSize === sizeVal
+                        ? Styles.productSizeBtnSelected
+                        : Styles.productSizeBtn
+                    }>
+                    <Text
+                      style={
+                        enmSelectedSize === sizeVal
+                          ? Styles.txtProductSizeSelected
+                          : Styles.txtProductSize
+                      }>
+                      {sizeVal.charAt(0).toUpperCase()}
+                    </Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              ),
+            )}
+          </View>
+        </View>
+        <View style={Styles.productCountContainer}>
+          <View style={Styles.txtProductCountTitle}>
+            <Text style={Styles.txtTitles}>Select Drink: </Text>
+            <Text style={Styles.txtProductNameCount}>{tpvProduct.title}</Text>
+          </View>
+          <View style={Styles.productCountBtnContainer}>
+            <TouchableWithoutFeedback
+              onPress={() => setProductCount(intProductCount + 1)}>
+              <View style={Styles.plusContainer}>
+                <Text style={Styles.txtProductCountBtn}>+</Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <View style={Styles.productCount}>
+              <Text style={Styles.txtProductCount}>{intProductCount}</Text>
+            </View>
+            <TouchableWithoutFeedback
+              onPress={() =>
+                intProductCount > 1 && setProductCount(intProductCount - 1)
+              }>
+              <View style={Styles.plusContainer}>
+                <Text style={Styles.txtProductCountBtn}>-</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+        <TouchableWithoutFeedback onPress={handleCartAction}>
+          <View style={Styles.addToCartButton}>
+            <Text style={Styles.txtAddToCart}>
+              {blnIsInCart ? 'Update Cart' : 'Add to Cart'}
+            </Text>
+            <FastImage
+              style={Styles.cartIcon}
+              resizeMode="contain"
+              tintColor={strSecondColor}
+              source={images.CartIcon}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    </View>
+  );
+}

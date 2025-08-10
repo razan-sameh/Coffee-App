@@ -1,7 +1,8 @@
+/* eslint-disable react/react-in-jsx-scope */
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import TapNavigator from './TapNavigator';
 import CustomDrawer, {Styles} from '../Components/CustomDrawer';
-import Login from '../screens/Login';
+import Login from '../screens/login/Login';
 
 const Drawer = createDrawerNavigator();
 
@@ -9,6 +10,7 @@ const DrawerNavigator = ({routeName}: any) => {
   return (
     <Drawer.Navigator
       initialRouteName="TapNavigator"
+      // eslint-disable-next-line react/no-unstable-nested-components
       drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={{
         headerShown: false,

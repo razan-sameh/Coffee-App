@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 import {ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native';
-import {Styles} from '../../styles/Cart';
+import {Styles} from './CartStyle';
 import {images} from '../../Content/resources';
 import FastImage from 'react-native-fast-image';
 import {ArrowBack} from '../../Components/ArrowBack';
