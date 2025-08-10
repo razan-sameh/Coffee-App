@@ -58,6 +58,17 @@ export const Styles = StyleSheet.create({
     height:
       mbdlScreenHeight - ArrowBackStyles.arrowBackIcon.height - heightScale(36),
   },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    fontSize: moderateScale(20),
+    color: strPrimaryColor,
+    textAlign: 'center',
+  },
   cartItemsContainer: {
     height: '70%',
   },

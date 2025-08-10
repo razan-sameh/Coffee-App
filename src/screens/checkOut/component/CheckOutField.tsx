@@ -3,7 +3,7 @@ import {View, Text, TouchableWithoutFeedback} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {TextInput} from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
-import {Styles} from '../../../styles/CheckOut';
+import {Styles} from '../CheckOutStyle';
 import {strPrimaryColor} from '../../../styles/responsive';
 
 interface Props {

@@ -18,7 +18,6 @@ export const addOrderToFirebase = async (
 
   try {
     await database().ref(`order/${orderId}`).set(orderWithId);
-    console.log('Order added successfully');
     return orderWithId;
   } catch (error) {
     console.error('Error adding order:', error);

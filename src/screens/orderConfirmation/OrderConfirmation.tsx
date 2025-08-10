@@ -7,19 +7,13 @@ import {
   useGetOrderByIdQuery,
   useGetProductsQuery,
 } from '../../services/firebaseApi';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {OrderConfirmationBackground} from './component/OrderConfirmationBackground';
 import {OrderConfirmationButtons} from './component/OrderConfirmationButtons';
 import {OrderConfirmationHeader} from './component/OrderConfirmationHeader';
 import {OrderConfirmationSummary} from './component/OrderConfirmationSummary';
 
 const OrderConfirmation = () => {
-  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
   const route = useRoute();
   const {orderID} = route.params as {orderID: string};
 
@@ -64,7 +58,7 @@ const OrderConfirmation = () => {
         <OrderConfirmationSummary order={order} products={products!} />
 
         {/* Buttons */}
-        <OrderConfirmationButtons navigationTo={navigationTo} />
+        <OrderConfirmationButtons />
       </ScrollView>
 
       {/* Background */}

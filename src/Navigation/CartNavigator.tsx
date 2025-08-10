@@ -2,7 +2,6 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Cart} from '../screens/Cart/Cart';
 import CheckOut from '../screens/checkOut/CheckOut';
-import {Payment} from '../screens/payment/Payment';
 import OrderConfirmation from '../screens/orderConfirmation/OrderConfirmation';
 
 const Stack = createStackNavigator();
@@ -23,11 +22,6 @@ const CartNavigator = () => {
         name="CheckOut"
         options={{headerShown: false}}
         children={() => <CheckOut />}
-      />
-      <Stack.Screen
-        name="Payment"
-        options={{headerShown: false}}
-        children={() => <Payment />}
       />
       <Stack.Screen
         name="OrderConfirmation"

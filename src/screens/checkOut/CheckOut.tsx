@@ -1,37 +1,46 @@
-import React, {useEffect, useState} from 'react';
+import React, {useMemo, useReducer} from 'react';
 import {
   View,
   Text,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   ActivityIndicator,
+  Alert,
+  ScrollView,
 } from 'react-native';
 import {images} from '../../Content/resources';
-import {Styles} from '../../styles/CheckOut';
+import {Styles} from './CheckOutStyle';
 import {ArrowBack} from '../../Components/ArrowBack';
 import {Controller, useForm} from 'react-hook-form';
 import {TextInput} from 'react-native-paper';
-import {strSecondColor} from '../../styles/responsive';
 import FastImage from 'react-native-fast-image';
-import {typCheckout} from '../../Content/Types';
+import {typCheckout, typDeliveryInfo, typOrder} from '../../Content/Types';
+import {RootState, useAppDispatch} from '../../redux/store';
+import {addUserDetails} from '../../redux/slices/userSlice';
+import {useSelector} from 'react-redux';
+import CheckOutField from './component/CheckOutField';
+import {getUserID, getUserName} from '../../services/Authentication';
+import {enmPaymentMethod} from '../../Content/Enums';
+import {CardDetails} from './component/CardDetails';
+import {PaymentMethodSelector} from './component/PaymentMethodSelector';
+import {OrderSummary} from './component/OrderSummary';
+import {useStripe} from '@stripe/stripe-react-native';
+import {serverURL} from '../../../App';
+import {clearCartFirebase} from '../../redux/slices/cartSlice';
+import {addOrder} from '../../redux/slices/ordersSlice';
+import {useGetProductsQuery} from '../../services/firebaseApi';
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import {RootState, useAppDispatch} from '../../redux/store';
-import {addUserDetails} from '../../redux/slices/userSlice';
-import {useSelector} from 'react-redux';
-import CheckOutField from './component/CheckOutField';
-import {setDeliveryInfo} from '../../redux/slices/deliveryInfoSlice';
-import {getUserID, getUserName} from '../../services/Authentication';
+import {checkoutInitialState, checkoutReducer} from './checkoutReducer';
+import {PlaceOrderButton} from './component/PlaceOrderButton';
 
 const CheckOut = () => {
   const {user} = useSelector((state: RootState) => state.user);
   const {
     control,
-    handleSubmit: handleCheckOut,
-    setValue,
+    handleSubmit,
     formState: {errors},
   } = useForm<typCheckout>({
     defaultValues: {
@@ -40,88 +49,123 @@ const CheckOut = () => {
       strAddress: user?.address?.[0] || '',
     },
   });
-  const [blnIsCheckOut, setIsCheckOut] = useState<boolean>(false);
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
-  const [blnIsAddingAddress, setIsAddingAddress] = useState<boolean>(false);
-  const [blnIsAddingPhoneNumber, setIsAddingPhoneNumber] =
-    useState<boolean>(false);
-  const [blnSavePhone, setSavePhone] = useState<boolean>(false);
-  const [blnSaveAddress, setSaveAddress] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (
-      !blnIsAddingPhoneNumber &&
-      user?.phoneNumber?.length &&
-      !control._formValues.strPhoneNumber
-    ) {
-      setValue('strPhoneNumber', user.phoneNumber[0]);
-    }
-  }, [
-    user?.phoneNumber,
-    blnIsAddingPhoneNumber,
-    control._formValues.strPhoneNumber,
-    setValue,
-  ]);
+  const [state, dispatch] = useReducer(checkoutReducer, checkoutInitialState);
+  const {confirmPayment} = useStripe();
+  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
+  const appDispatch = useAppDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
-  useEffect(() => {
-    if (
-      !blnIsAddingAddress &&
-      user?.address?.length &&
-      !control._formValues.strAddress
-    ) {
-      setValue('strAddress', user.address[0]);
-    }
-  }, [
-    user?.address,
-    blnIsAddingAddress,
-    control._formValues.strAddress,
-    setValue,
-  ]);
+  const totalPrice = useMemo(() => {
+    return cartItems.reduce((sum, item) => sum + item.price * item.count, 0);
+  }, [cartItems]);
 
-  const onCheckOut = async (data: typCheckout) => {
-    console.log('Submitted Data:', data);
-    setIsCheckOut(true);
+  const {data: products, isLoading: loadingProducts} = useGetProductsQuery();
+  const productMap = useMemo(() => {
+    const map = new Map();
+    products?.forEach(p => map.set(p.ID, p));
+    return map;
+  }, [products]);
+
+  // ---------------- Handlers ----------------
+  const handlePlaceOrder = async (formData: typCheckout) => {
+    const deliveryInfo: typDeliveryInfo = {
+      name: formData.strFullName,
+      phone: formData.strPhoneNumber,
+      address: formData.strAddress,
+    };
+
+    const order = {
+      items: cartItems.map(item => ({
+        productID: item.productID,
+        size: item.size,
+        count: item.count,
+        price: item.price,
+      })),
+      total: totalPrice,
+      paymentMethod: state.paymentType,
+      deliveryInfo,
+      userId: user?.Uid!,
+    };
+
+    const ordered: typOrder = await appDispatch(addOrder(order)).unwrap();
+    await appDispatch(clearCartFirebase(user?.Uid!));
+
+    navigationTo.navigate('CartNavigator', {
+      screen: 'OrderConfirmation',
+      params: {orderID: ordered.id},
+    });
+  };
+
+  const handlePay = async (formData: typCheckout) => {
+    dispatch({type: 'SET_CHECKOUT_LOADING', payload: true});
     try {
       const userID = getUserID();
       if (userID) {
-        if (blnSavePhone || blnSaveAddress) {
-          dispatch(
+        if (state.savePhone || state.saveAddress) {
+          await appDispatch(
             addUserDetails({
               Uid: userID,
-              ...(blnSavePhone && {phoneNumber: data.strPhoneNumber}),
-              ...(blnSaveAddress && {address: data.strAddress}),
+              ...(state.savePhone && {phoneNumber: formData.strPhoneNumber}),
+              ...(state.saveAddress && {address: formData.strAddress}),
             }),
           );
         }
       }
-      dispatch(
-        setDeliveryInfo({
-          name: data.strFullName,
-          address: data.strAddress,
-          phone: data.strPhoneNumber,
-        }),
+
+      if (state.paymentType === enmPaymentMethod.cash) {
+        await handlePlaceOrder(formData);
+        return;
+      }
+
+      if (!state.cardDetails?.complete) {
+        Alert.alert('Please enter complete card details');
+        return;
+      }
+
+      const response = await fetch(
+        `${serverURL}/api/payment/create-payment-intent`,
+        {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({amount: Math.round(totalPrice * 100)}),
+        },
       );
-      navigation.navigate('CartNavigator', {
-        screen: 'Payment',
+
+      const {clientSecret} = await response.json();
+      const {error, paymentIntent} = await confirmPayment(clientSecret, {
+        paymentMethodType: 'Card',
+        paymentMethodData: {billingDetails: {email: user?.email}},
       });
-    } catch (error) {
-      console.log('Error', error);
+
+      if (error) {
+        Alert.alert('Payment failed', error.message);
+      } else if (paymentIntent) {
+        await handlePlaceOrder(formData);
+      }
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'Something went wrong');
+    } finally {
+      dispatch({type: 'SET_CHECKOUT_LOADING', payload: false});
     }
-    setIsCheckOut(false);
   };
 
+  if (loadingProducts) {
+    return (
+      <View style={Styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
+
+  // ---------------- UI ----------------
   return (
     <View style={Styles.mainContainer}>
       <View style={Styles.backArrowContainer}>
         <ArrowBack />
         <Text style={Styles.txtTitle}>CheckOut</Text>
       </View>
-      {/* <FastImage
-        style={Styles.wave}
-        resizeMode="contain"
-        source={images.WallWave}
-      /> */}
+
       <FastImage
         style={Styles.wallCoffeeImage1}
         resizeMode="contain"
@@ -132,94 +176,134 @@ const CheckOut = () => {
         resizeMode="contain"
         source={images.LoginWallIcon2}
       />
-      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={0}>
-        <Controller
-          control={control}
-          name="strFullName"
-          rules={{
-            required: true,
-          }}
-          render={({field: {onChange, onBlur, value}}) => (
-            <View>
-              <Text style={Styles.txtInputTitle}>Full Name</Text>
-              <TextInput
-                style={Styles.input}
-                textContentType="name"
-                placeholderTextColor={'#A19D9D'}
-                placeholder="Your Full Name"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                underlineStyle={{display: 'none'}}
-              />
-            </View>
+
+      <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Full Name */}
+          <Controller
+            control={control}
+            name="strFullName"
+            rules={{required: true}}
+            render={({field: {onChange, onBlur, value}}) => (
+              <View>
+                <Text style={Styles.txtInputTitle}>Full Name</Text>
+                <TextInput
+                  style={Styles.input}
+                  placeholderTextColor={'#A19D9D'}
+                  placeholder="Your Full Name"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  underlineStyle={{display: 'none'}}
+                />
+              </View>
+            )}
+          />
+          {errors.strFullName && (
+            <Text style={Styles.txtError}>This is required.</Text>
           )}
-        />
-        {errors.strFullName && errors.strFullName.type === 'required' && (
-          <Text style={Styles.txtError}>This is required.</Text>
-        )}
-        <Controller
-          control={control}
-          name="strPhoneNumber"
-          rules={{
-            pattern: /^(01[0125][0-9]{8}|0[2-9][0-9]{8})$/,
-            required: true,
-          }}
-          render={({field: {onChange, onBlur, value}}) => (
-            <CheckOutField
-              label="Phone Number"
-              placeholder="Phone Number"
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              userValues={user?.phoneNumber}
-              isAdding={blnIsAddingPhoneNumber}
-              setIsAdding={setIsAddingPhoneNumber}
-              saveValue={blnSavePhone}
-              setSaveValue={setSavePhone}
-              hasError={!!errors.strPhoneNumber}
-              errorMessage={
-                errors.strPhoneNumber?.type === 'pattern'
-                  ? 'The Phone Number must be 11 digits.'
-                  : 'This is required.'
+
+          {/* Phone Number */}
+          <Controller
+            control={control}
+            name="strPhoneNumber"
+            rules={{
+              pattern: /^(01[0125][0-9]{8}|0[2-9][0-9]{8})$/,
+              required: true,
+            }}
+            render={({field}) => (
+              <CheckOutField
+                label="Phone Number"
+                placeholder="Phone Number"
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                userValues={user?.phoneNumber}
+                isAdding={state.isAddingPhoneNumber}
+                setIsAdding={v =>
+                  dispatch({type: 'TOGGLE_ADD_PHONE', payload: v})
+                }
+                saveValue={state.savePhone}
+                setSaveValue={v =>
+                  dispatch({type: 'SET_SAVE_PHONE', payload: v})
+                }
+                hasError={!!errors.strPhoneNumber}
+                errorMessage={
+                  errors.strPhoneNumber?.type === 'pattern'
+                    ? 'The Phone Number must be 11 digits.'
+                    : 'This is required.'
+                }
+              />
+            )}
+          />
+
+          {/* Address */}
+          <Controller
+            control={control}
+            name="strAddress"
+            rules={{required: true}}
+            render={({field}) => (
+              <CheckOutField
+                label="Address"
+                placeholder="Address"
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                userValues={user?.address}
+                isAdding={state.isAddingAddress}
+                setIsAdding={v =>
+                  dispatch({type: 'TOGGLE_ADD_ADDRESS', payload: v})
+                }
+                saveValue={state.saveAddress}
+                setSaveValue={v =>
+                  dispatch({type: 'SET_SAVE_ADDRESS', payload: v})
+                }
+                hasError={!!errors.strAddress}
+                errorMessage="This is required."
+              />
+            )}
+          />
+
+          {/* Order Summary */}
+          <OrderSummary
+            cartItems={cartItems}
+            productMap={productMap}
+            total={totalPrice}
+          />
+
+          {/* Payment Method */}
+          <PaymentMethodSelector
+            paymentType={state.paymentType}
+            setPaymentType={v =>
+              dispatch({type: 'SET_PAYMENT_TYPE', payload: v})
+            }
+          />
+
+          {/* Card Details */}
+          {state.paymentType === enmPaymentMethod.CreditCard && (
+            <CardDetails
+              setCardDetails={d =>
+                dispatch({type: 'SET_CARD_DETAILS', payload: d})
               }
             />
           )}
-        />
-
-        <Controller
-          control={control}
-          name="strAddress"
-          rules={{required: true}}
-          render={({field: {onChange, onBlur, value}}) => (
-            <CheckOutField
-              label="Address"
-              placeholder="Address"
-              value={value}
-              onChange={onChange}
-              onBlur={onBlur}
-              userValues={user?.address}
-              isAdding={blnIsAddingAddress}
-              setIsAdding={setIsAddingAddress}
-              saveValue={blnSaveAddress}
-              setSaveValue={setSaveAddress}
-              hasError={!!errors.strAddress}
-              errorMessage="This is required."
-            />
-          )}
-        />
-
-        <TouchableWithoutFeedback onPress={handleCheckOut(onCheckOut)}>
-          <View style={Styles.btnSubmitContainer}>
-            {blnIsCheckOut ? (
-              <ActivityIndicator size={20} color={strSecondColor} />
-            ) : (
-              <Text style={Styles.txtButtonSubmit}>Payment</Text>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
+        </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Submit Button */}
+      <View style={Styles.fixedButtonContainer}>
+        <PlaceOrderButton
+          onPress={handleSubmit(handlePay)}
+          disabled={
+            state.isCheckOut ||
+            (state.paymentType === enmPaymentMethod.CreditCard &&
+              !state.cardDetails?.complete)
+          }
+          loading={state.isCheckOut}
+        />
+      </View>
     </View>
   );
 };
+
 export default CheckOut;

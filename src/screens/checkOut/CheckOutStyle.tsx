@@ -1,17 +1,17 @@
 import {StyleSheet} from 'react-native';
 import {
   moderateScale,
+  mdblBAR_HEIGHT,
   strSecondColor,
   mbdlScreenHeight,
-  mdblBAR_HEIGHT,
   strINTER_SEMIBOLD600_Font,
   strPrimaryColor,
-  heightScale,
-  widthScale,
-  strWhiteColor,
   mdblScreenWidth,
+  widthScale,
+  heightScale,
+  strWhiteColor,
   strINTER_MEDIUM500_Font,
-} from './responsive';
+} from '../../styles/responsive';
 
 export const Styles = StyleSheet.create({
   mainContainer: {
@@ -63,15 +63,15 @@ export const Styles = StyleSheet.create({
     fontSize: moderateScale(13),
     color: strPrimaryColor,
   },
-  btnSubmitContainer: {
-    width: widthScale(343),
-    height: heightScale(44),
-    marginTop: moderateScale(100),
-    borderRadius: moderateScale(150),
-    backgroundColor: strPrimaryColor,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  // btnSubmitContainer: {
+  //   width: widthScale(343),
+  //   height: heightScale(44),
+  //   marginTop: moderateScale(100),
+  //   borderRadius: moderateScale(150),
+  //   backgroundColor: strPrimaryColor,
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  // },
   txtButtonSubmit: {
     fontFamily: strINTER_SEMIBOLD600_Font,
     fontSize: moderateScale(20),
@@ -194,5 +194,149 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     marginTop: moderateScale(10),
+  },
+  btnSubmitContainer: {
+    width: widthScale(343),
+    height: heightScale(44),
+    alignSelf: 'center',
+    borderRadius: moderateScale(150),
+    backgroundColor: strPrimaryColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fixedButtonContainer: {
+    marginBottom: 20,
+    backgroundColor: strPrimaryColor,
+  },
+  btnSubmitText: {
+    color: 'white',
+    fontSize: moderateScale(16),
+    fontWeight: 'bold',
+  },
+  cardInputContainer: {
+    marginVertical: 10,
+    paddingHorizontal: 20,
+  },
+  cardRowContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    justifyContent: 'space-between',
+  },
+  cardInputHalf: {
+    flex: 0.48, // Takes up slightly less than half to allow for spacing
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 8,
+    color: strPrimaryColor,
+  },
+  cardInput: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+    fontSize: 16,
+  },
+  btnSubmitDisabled: {
+    opacity: 0.6,
+  },
+  // For Option 2 - Styled CardField
+  cardFieldContainer: {
+    marginVertical: 20,
+    paddingHorizontal: 20,
+  },
+  cardFieldInput: {
+    height: 50,
+    marginTop: 5,
+  },
+  summaryContainer: {
+    backgroundColor: strPrimaryColor,
+    borderRadius: 10,
+    padding: 16,
+    marginVertical: 20,
+    elevation: 3,
+  },
+  summaryTitle: {
+    color: strSecondColor,
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  summaryItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+  },
+  itemName: {
+    color: strSecondColor,
+    fontSize: 14,
+  },
+  itemPrice: {
+    color: strSecondColor,
+    fontSize: 14,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginVertical: 8,
+  },
+  summaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 4,
+  },
+  totalLabel: {
+    color: strSecondColor,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  totalValue: {
+    color: strSecondColor,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.8)', // optional
+  },
+  paymentTypeContainer: {
+    marginTop: 20,
+  },
+  radioGroup: {
+    flexDirection: 'column',
+    marginTop: 10,
+  },
+  radioOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  radioCircle: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: strWhiteColor,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+
+  radioDot: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+    backgroundColor: strWhiteColor,
+  },
+
+  radioLabel: {
+    fontSize: 16,
+    color: strWhiteColor,
   },
 });

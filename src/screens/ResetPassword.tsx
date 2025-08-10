@@ -6,12 +6,11 @@ import {
   TouchableWithoutFeedback,
   ToastAndroid,
   ActivityIndicator,
-  Alert,
 } from 'react-native';
 import {images} from '../Content/resources';
 import {Styles} from '../styles/ResetPassword';
 import {ArrowBack} from '../Components/ArrowBack';
-import {Control, Controller, useForm} from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import {TextInput} from 'react-native-paper';
 import {strPrimaryColor, strSecondColor} from '../styles/responsive';
 import FastImage from 'react-native-fast-image';

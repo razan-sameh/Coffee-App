@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {CardField} from '@stripe/stripe-react-native';
-import {Styles} from '../PaymentStyle';
+import {Styles} from '../CheckOutStyle';
 type Props = {
   setCardDetails: (details: any) => void; // ideally replace `any` with correct type
 };

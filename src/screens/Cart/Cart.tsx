@@ -45,36 +45,45 @@ export function Cart() {
       </View>
 
       <View style={Styles.mainContainer}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={Styles.cartItemsContainer}>
-          {atpvCartItems.map((item, index) => (
-            <CartItem
-              key={`${item.productID}_${item.size}_${index}`}
-              item={item}
-            />
-          ))}
-        </ScrollView>
-
-        <FastImage
-          resizeMode="contain"
-          style={Styles.frameContainer}
-          source={images.FrameContainer}>
-          <Text style={Styles.txtTitlePrice}>Total</Text>
-          <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
-        </FastImage>
-
-        <TouchableWithoutFeedback
-          disabled={isCartEmpty}
-          onPress={() => {
-            navigation.navigate('CartNavigator', {
-              screen: 'CheckOut',
-            });
-          }}>
-          <View style={[Styles.checkOutButton, isCartEmpty && {opacity: 0.5}]}>
-            <Text style={Styles.txtCheckOut}>CheckOut</Text>
+        {isCartEmpty ? (
+          <View style={Styles.emptyContainer}>
+            <Text style={Styles.emptyText}>
+              There are no items in your cart
+            </Text>
           </View>
-        </TouchableWithoutFeedback>
+        ) : (
+          <>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={Styles.cartItemsContainer}>
+              {atpvCartItems.map((item, index) => (
+                <CartItem
+                  key={`${item.productID}_${item.size}_${index}`}
+                  item={item}
+                />
+              ))}
+            </ScrollView>
+
+            <FastImage
+              resizeMode="contain"
+              style={Styles.frameContainer}
+              source={images.FrameContainer}>
+              <Text style={Styles.txtTitlePrice}>Total</Text>
+              <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
+            </FastImage>
+
+            <TouchableWithoutFeedback
+              onPress={() => {
+                navigation.navigate('CartNavigator', {
+                  screen: 'CheckOut',
+                });
+              }}>
+              <View style={Styles.checkOutButton}>
+                <Text style={Styles.txtCheckOut}>CheckOut</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </>
+        )}
       </View>
     </View>
   );

@@ -1,15 +1,15 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {typCart} from '../../../Content/Types';
-import {Styles} from '../PaymentStyle';
+import {Styles} from '../CheckOutStyle';
 type Props = {
   productMap: Record<string, any>; // or a more specific type if you have it
   cartItems: typCart[];
   total: number;
 };
-export const PaymentSummary = ({cartItems, productMap, total}: Props) => (
+export const OrderSummary = ({cartItems, productMap, total}: Props) => (
   <View style={Styles.summaryContainer}>
-    <Text style={Styles.summaryTitle}>Summary</Text>
+    <Text style={Styles.summaryTitle}>Order Summary</Text>
     {cartItems.map((item: typCart, index: number) => {
       const product = productMap.get(item.productID);
       const productTitle = product?.title || 'Unknown';

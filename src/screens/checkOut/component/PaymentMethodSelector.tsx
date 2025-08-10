@@ -1,7 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, View, Text} from 'react-native';
-import {Styles} from '../PaymentStyle';
 import {enmPaymentMethod} from '../../../Content/Enums';
+import {Styles} from '../CheckOutStyle';
 type Props = {
   paymentType: enmPaymentMethod; // or a more specific type if you have it
   setPaymentType: (arg0: enmPaymentMethod) => void;

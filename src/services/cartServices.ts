@@ -36,7 +36,6 @@ export const addItemInCart = async (
     }
 
     await userCartRef.set(cartItems);
-    console.log('Cart updated successfully');
   } catch (error) {
     console.error('Error updating cart:', error);
     throw error;
@@ -82,7 +81,6 @@ export const updateItemInCart = async (
       };
 
       await userCartRef.set(cartItems);
-      console.log('Cart updated successfully');
 
       return {
         productID,
@@ -235,7 +233,6 @@ export const clearUserCart = async (Uid: string): Promise<void> => {
   const userCartRef = database().ref(`cart/${Uid}`);
   try {
     await userCartRef.remove(); // removes all items under this user's cart
-    console.log(`Cart for user ${Uid} cleared successfully`);
   } catch (error) {
     console.error('Error clearing user cart:', error);
     throw error;
