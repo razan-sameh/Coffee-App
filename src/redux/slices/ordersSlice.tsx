@@ -21,7 +21,12 @@ const initialState: OrderState = {
 // ✅ Add order
 export const addOrder = createAsyncThunk(
   'orders/addOrder',
-  async (order: Omit<typOrder, 'id' | 'platform' | 'orderType' | 'date'>) => {
+  async (
+    order: Omit<
+      typOrder,
+      'id' | 'platform' | 'orderType' | 'date' | 'estimatedTime' | 'status'
+    >,
+  ) => {
     return await addOrderToFirebase(order);
   },
 );

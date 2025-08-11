@@ -4,8 +4,8 @@ import {
   Text,
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert,
   ScrollView,
+  ToastAndroid,
 } from 'react-native';
 import {images} from '../../Content/resources';
 import {Styles} from './CheckOutStyle';
@@ -68,6 +68,7 @@ const CheckOut = () => {
   }, [products]);
 
   // ---------------- Handlers ----------------
+
   const handlePlaceOrder = async (formData: typCheckout) => {
     const deliveryInfo: typDeliveryInfo = {
       name: formData.strFullName,
@@ -119,7 +120,10 @@ const CheckOut = () => {
       }
 
       if (!state.cardDetails?.complete) {
-        Alert.alert('Please enter complete card details');
+        ToastAndroid.show(
+          'Please enter complete card details.',
+          ToastAndroid.SHORT,
+        );
         return;
       }
 
@@ -139,12 +143,18 @@ const CheckOut = () => {
       });
 
       if (error) {
-        Alert.alert('Payment failed', error.message);
+        ToastAndroid.show(
+          `Payment failed: ${error.message}`,
+          ToastAndroid.SHORT,
+        );
       } else if (paymentIntent) {
         await handlePlaceOrder(formData);
       }
     } catch (err: any) {
-      Alert.alert('Error', err.message || 'Something went wrong');
+      ToastAndroid.show(
+        `Error: ${err.message || 'Something went wrong'}`,
+        ToastAndroid.SHORT,
+      );
     } finally {
       dispatch({type: 'SET_CHECKOUT_LOADING', payload: false});
     }

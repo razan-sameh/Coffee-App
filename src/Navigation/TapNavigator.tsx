@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {useState} from 'react';
 import {Header} from '../Components/header/Header';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -8,7 +9,9 @@ import ShoppingNavigator from './ShoppingNavigator';
 import {
   heightScale,
   moderateScale,
+  strPrimaryColor,
   strSecondColor,
+  strWhiteColor,
   widthScale,
 } from '../styles/responsive';
 import {Favourite} from '../screens/favourite/Favourite';
@@ -19,6 +22,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import {Home} from '../screens/home/Home';
+import {useSelector} from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,7 +31,6 @@ const TapNavigator = ({routeName}: any) => {
   const blnIsTabBarHide =
     routeName == 'ProductDetails' || routeName == 'Filter';
   const navigation: NavigationProp<ParamListBase> = useNavigation();
-
   return (
     <Tab.Navigator
       screenOptions={{
@@ -64,18 +67,25 @@ const TapNavigator = ({routeName}: any) => {
         name="CartNavigator"
         options={{
           headerShown: false,
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={Styles.screenContainer}>
-                <FastImage
-                  style={Styles.tabBarIcons}
-                  resizeMode="contain"
-                  tintColor={focused ? '#C08F54' : '#ffffff'}
-                  source={images.CartIcon}
-                />
-              </View>
-            );
+          tabBarBadge:
+            useSelector((state: any) =>
+              state.cart.items.reduce(
+                (total: number, item: any) => total + item.count,
+                0,
+              ),
+            ) || undefined,
+          tabBarBadgeStyle: {
+            backgroundColor: strPrimaryColor,
+            color: strWhiteColor,
           },
+          tabBarIcon: ({focused}) => (
+            <FastImage
+              style={Styles.tabBarIcons}
+              resizeMode="contain"
+              tintColor={focused ? '#C08F54' : '#ffffff'}
+              source={images.CartIcon}
+            />
+          ),
           tabBarStyle: {display: 'none'},
         }}
         children={() => <CartNavigator />}

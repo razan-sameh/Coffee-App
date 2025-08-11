@@ -65,7 +65,6 @@ const SignUp = () => {
   );
 
   const onSubmit = (data: typSignUp) => {
-    console.log('Submitted Data:', data);
     setIsSign(true);
     createAccountWithEmail(
       data,

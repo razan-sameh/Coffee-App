@@ -2,12 +2,7 @@ export enum enmExportType {
   excel = 'Excel',
   csv = 'CSV',
 }
-export enum enmOrderStatus {
-  today = 'Today',
-  month = 'Month',
-  year = 'Year',
-  all = 'All',
-}
+
 export enum enmPlatform {
   mobile = 'Mobile App',
   web = 'Website',
@@ -44,4 +39,11 @@ export enum enmToastSeverity {
 export enum enmAddToCartMode {
   set = 'Set',
   increment = 'Increment',
+}
+export enum enmOrderStatus {
+  Placed = 'placed',
+  Brewing = 'brewing',
+  Ready = 'ready',
+  OutForDelivery = 'out_for_delivery',
+  Delivered = 'delivered',
 }

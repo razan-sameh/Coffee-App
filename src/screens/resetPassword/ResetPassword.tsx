@@ -53,18 +53,14 @@ const ResetPassword = () => {
   );
   const navigation: NavigationProp<ParamListBase> = useNavigation();
 
-  const onSubmit = (data: any) => {
-    console.log('Submitted Data:', data);
+  const onSubmit = () => {
     setResetPassword(true);
     auth()
       .confirmPasswordReset('1234', 'Ra@1235678')
-      .then(res => {
-        console.log(res);
-        console.log('User logged-in successfully!');
+      .then(() => {
         navigation.navigate('DrawerNavigator');
       })
       .catch(error => {
-        console.log(error.code);
         setResetPassword(false);
         if (error.code === 'auth/invalid-credential') {
           ToastAndroid.showWithGravityAndOffset(

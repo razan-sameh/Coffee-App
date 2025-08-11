@@ -17,56 +17,66 @@ import Login from './src/screens/login/Login';
 import OTPVerification from './src/screens/otpVerification/OTPVerification';
 import SignUp from './src/screens/signUp/SignUp';
 import ResetPassword from './src/screens/resetPassword/ResetPassword';
+import {NotificationProvider} from './src/provider/NotificationProvider';
 
 export const navigationRef: any = createNavigationContainerRef();
 const Stack = createStackNavigator();
 // export const serverURL = 'http://localhost:3000';
-export const serverURL = 'http://192.168.1.5:3000';
+export const serverURL = 'http://192.168.1.4:3000';
 
 const App = () => {
   const [routeName, setRouteName] = useState<string>('');
   const publishableKey =
     'pk_test_51NCM93L3kg8UzIW5XyFsKYQA1zGQK1nxXsMcZLPM6lU2584BYmXtq9eNONB05bVPoH0BK0osdEruluXRUEY3ey2t00KFECBVTc';
+
   return (
     <Provider store={store}>
       <StripeProvider publishableKey={publishableKey}>
         <AuthProvider>
-          <FavouriteProvider>
-            <NavigationContainer
-              ref={navigationRef}
-              onReady={() => {
-                setRouteName(navigationRef.getCurrentRoute().name);
-              }}
-              onStateChange={async () => {
-                const currentRouteName = navigationRef.getCurrentRoute().name;
-                setRouteName(currentRouteName);
-              }}>
-              <Stack.Navigator
-                initialRouteName={'Splash'}
-                screenOptions={{
-                  animationEnabled: false,
-                  headerShown: false,
+          <NotificationProvider>
+            <FavouriteProvider>
+              <NavigationContainer
+                ref={navigationRef}
+                onReady={() => {
+                  setRouteName(navigationRef.getCurrentRoute().name);
+                }}
+                onStateChange={async () => {
+                  const currentRouteName = navigationRef.getCurrentRoute().name;
+                  setRouteName(currentRouteName);
                 }}>
-                <Stack.Screen name="Splash" component={Splash} />
-                <Stack.Screen name="Onboarding" component={CustomOnboarding} />
-                <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen
-                  name="ForgetPassword"
-                  component={ForgetPassword}
-                />
-                <Stack.Screen
-                  name="OTPVerification"
-                  component={OTPVerification}
-                />
-                <Stack.Screen name="ResetPassword" component={ResetPassword} />
-                <Stack.Screen name="SignUp" component={SignUp} />
-                <Stack.Screen
-                  name="DrawerNavigator"
-                  children={() => <DrawerNavigator routeName={routeName} />}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </FavouriteProvider>
+                <Stack.Navigator
+                  initialRouteName={'Splash'}
+                  screenOptions={{
+                    animationEnabled: false,
+                    headerShown: false,
+                  }}>
+                  <Stack.Screen name="Splash" component={Splash} />
+                  <Stack.Screen
+                    name="Onboarding"
+                    component={CustomOnboarding}
+                  />
+                  <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen
+                    name="ForgetPassword"
+                    component={ForgetPassword}
+                  />
+                  <Stack.Screen
+                    name="OTPVerification"
+                    component={OTPVerification}
+                  />
+                  <Stack.Screen
+                    name="ResetPassword"
+                    component={ResetPassword}
+                  />
+                  <Stack.Screen name="SignUp" component={SignUp} />
+                  <Stack.Screen
+                    name="DrawerNavigator"
+                    children={() => <DrawerNavigator routeName={routeName} />}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </FavouriteProvider>
+          </NotificationProvider>
         </AuthProvider>
       </StripeProvider>
     </Provider>

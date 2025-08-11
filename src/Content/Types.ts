@@ -4,6 +4,7 @@ import {
   enmPaymentMethod,
   enmOrderType,
   enmPlatform,
+  enmOrderStatus,
 } from './Enums';
 
 export type typCategory = {
@@ -57,6 +58,7 @@ export type typUser = {
   password: string;
   role: enmRole;
   isActive: boolean;
+  fcmToken?: string;
 };
 
 export type typDeliveryInfo = {
@@ -81,4 +83,6 @@ export type typOrder = {
   userId: string;
   date: string;
   platform: enmPlatform;
+  status: enmOrderStatus;
+  estimatedTime: string;
 };

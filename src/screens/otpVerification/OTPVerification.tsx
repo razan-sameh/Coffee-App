@@ -52,7 +52,6 @@ const OTPVerification = ({...props}: any) => {
       );
       setVerified(false);
     }
-    console.log('props', strOtpParam);
   }
 
   return (

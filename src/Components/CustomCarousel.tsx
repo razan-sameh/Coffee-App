@@ -1,6 +1,7 @@
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View} from 'react-native';
-import {images} from '../Content/resources';
 import Carousel from 'react-native-reanimated-carousel';
 import {
   heightScale,
@@ -28,7 +29,7 @@ export function CustomCarousel({productImages}: {productImages: string[]}) {
     animValue: Animated.SharedValue<number>;
     isRotate?: boolean;
   }> = props => {
-    const {animValue, index, length, isRotate} = props;
+    const {animValue, index, length} = props;
     const width = 10;
 
     const animStyle = useAnimatedStyle(() => {
@@ -83,8 +84,7 @@ export function CustomCarousel({productImages}: {productImages: string[]}) {
         autoPlay={false}
         data={imageSources} // Pass the array of image sources
         scrollAnimationDuration={1000}
-        onSnapToItem={index => console.log('current index:', index)}
-        renderItem={({item, index}) => (
+        renderItem={({item}) => (
           <View
             style={{
               height: heightScale(290),

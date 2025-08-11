@@ -35,11 +35,8 @@ export async function signinWithGoogle(): Promise<boolean> {
         }),
       );
     }
-
-    console.log('You are signed in successfully');
     return true;
   } catch (error) {
-    console.log('Google sign-in error:', error);
     showToast('Google sign-in failed.');
     return false;
   }
@@ -131,7 +128,5 @@ export function getUserID() {
 
 export async function logOut() {
   await GoogleSignin.signOut();
-  auth()
-    .signOut()
-    .then(() => console.log('User signed out!'));
+  auth().signOut();
 }

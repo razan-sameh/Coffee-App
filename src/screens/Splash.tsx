@@ -33,7 +33,6 @@ const Splash = () => {
         navigation.navigate('Onboarding');
       } else {
         auth().onAuthStateChanged(user => {
-          console.log('user', user);
           if (user != null) {
             navigation.navigate('DrawerNavigator', {screen: 'TapNavigator'});
           } else {
