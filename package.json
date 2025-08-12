@@ -34,6 +34,7 @@
     "react": "18.2.0",
     "react-hook-form": "^7.51.2",
     "react-native": "0.73.4",
+    "react-native-bootsplash": "^6.3.10",
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.15.0",
     "react-native-get-random-values": "^1.11.0",

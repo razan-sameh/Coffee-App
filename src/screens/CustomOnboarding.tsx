@@ -1,13 +1,6 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
-import {
-  View,
-  Text,
-  ImageBackground,
-  StyleSheet,
-  Image,
-  TouchableWithoutFeedback,
-  StatusBar,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import {images} from '../Content/resources';
 import FastImage from 'react-native-fast-image';
 import {

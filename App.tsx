@@ -3,24 +3,18 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import React, {useState} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import Splash from './src/screens/Splash';
-import CustomOnboarding from './src/screens/CustomOnboarding';
-import ForgetPassword from './src/screens/forgetPassword/ForgetPassword';
-import DrawerNavigator from './src/Navigation/DrawerNavigator';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
 import {FavouriteProvider} from './src/provider/FavouriteProvider';
 import AuthProvider from './src/provider/AuthProvider';
 import {StripeProvider} from '@stripe/stripe-react-native';
-import Login from './src/screens/login/Login';
-import OTPVerification from './src/screens/otpVerification/OTPVerification';
-import SignUp from './src/screens/signUp/SignUp';
-import ResetPassword from './src/screens/resetPassword/ResetPassword';
 import {NotificationProvider} from './src/provider/NotificationProvider';
+import {StartupProvider} from './src/provider/StartupProvider';
+import RootNavigator from './src/Navigation/RootNavigator';
+// Remove this import and call - handle it in StartupProvider instead
+// import SplashScreen from 'react-native-splash-screen';
 
 export const navigationRef: any = createNavigationContainerRef();
-const Stack = createStackNavigator();
 // export const serverURL = 'http://localhost:3000';
 export const serverURL = 'http://192.168.1.4:3000';
 
@@ -29,52 +23,27 @@ const App = () => {
   const publishableKey =
     'pk_test_51NCM93L3kg8UzIW5XyFsKYQA1zGQK1nxXsMcZLPM6lU2584BYmXtq9eNONB05bVPoH0BK0osdEruluXRUEY3ey2t00KFECBVTc';
 
+  // Remove the useEffect that calls SplashScreen.hide()
+
   return (
     <Provider store={store}>
       <StripeProvider publishableKey={publishableKey}>
         <AuthProvider>
           <NotificationProvider>
             <FavouriteProvider>
-              <NavigationContainer
-                ref={navigationRef}
-                onReady={() => {
-                  setRouteName(navigationRef.getCurrentRoute().name);
-                }}
-                onStateChange={async () => {
-                  const currentRouteName = navigationRef.getCurrentRoute().name;
-                  setRouteName(currentRouteName);
-                }}>
-                <Stack.Navigator
-                  initialRouteName={'Splash'}
-                  screenOptions={{
-                    animationEnabled: false,
-                    headerShown: false,
+              <StartupProvider>
+                <NavigationContainer
+                  ref={navigationRef}
+                  onReady={() => {
+                    setRouteName(navigationRef.getCurrentRoute()?.name || '');
+                  }}
+                  onStateChange={() => {
+                    const current = navigationRef.getCurrentRoute()?.name;
+                    setRouteName(current || '');
                   }}>
-                  <Stack.Screen name="Splash" component={Splash} />
-                  <Stack.Screen
-                    name="Onboarding"
-                    component={CustomOnboarding}
-                  />
-                  <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen
-                    name="ForgetPassword"
-                    component={ForgetPassword}
-                  />
-                  <Stack.Screen
-                    name="OTPVerification"
-                    component={OTPVerification}
-                  />
-                  <Stack.Screen
-                    name="ResetPassword"
-                    component={ResetPassword}
-                  />
-                  <Stack.Screen name="SignUp" component={SignUp} />
-                  <Stack.Screen
-                    name="DrawerNavigator"
-                    children={() => <DrawerNavigator routeName={routeName} />}
-                  />
-                </Stack.Navigator>
-              </NavigationContainer>
+                  <RootNavigator routeName={routeName} />
+                </NavigationContainer>
+              </StartupProvider>
             </FavouriteProvider>
           </NotificationProvider>
         </AuthProvider>
