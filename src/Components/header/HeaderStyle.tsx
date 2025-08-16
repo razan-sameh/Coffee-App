@@ -17,7 +17,7 @@ export const Styles = StyleSheet.create({
     height: heightScale(240) - mdblBAR_HEIGHT,
     paddingLeft: moderateScale(16),
     paddingRight: moderateScale(16),
-    paddingTop: moderateScale(40),
+    paddingTop: moderateScale(20),
     backgroundColor: strSecondColor,
   },
   sideBarImage: {

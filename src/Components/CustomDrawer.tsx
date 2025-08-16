@@ -1,7 +1,8 @@
-import {View, Text, Pressable} from 'react-native';
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/no-unstable-nested-components */
+import {View, Text, Pressable, StyleSheet} from 'react-native';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import FastImage from 'react-native-fast-image';
-import {StyleSheet} from 'react-native';
 import {
   heightScale,
   mdblBAR_HEIGHT,
@@ -16,25 +17,50 @@ import {
 import {images} from '../Content/resources';
 import {logOut, getUserName} from '../services/Authentication';
 
+const drawerItems = [
+  {
+    label: 'Home',
+    icon: images.HomeIcon,
+    parent: 'TapNavigator',
+    screen: 'Home',
+  },
+  {
+    label: 'Profile',
+    icon: images.ProfileIcon,
+    parent: 'ProfileNavigator',
+    screen: 'Profile',
+  },
+  {
+    label: 'Favourite',
+    icon: images.FavouriteListIcon,
+    parent: 'TapNavigator',
+    screen: 'Favourite',
+  },
+  {
+    label: 'Orders',
+    icon: images.FavouriteListIcon,
+    parent: 'DrawerNavigator',
+    screen: 'Orders',
+  },
+  {label: 'Log out', icon: images.LogOutIcon, action: 'logout'},
+];
+
 const CustomDrawer = (props: any) => {
   const {state, navigation} = props;
-  const DrawerItem = ({route, label, Icon, isFocused}: any) => {
+  // const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+  const DrawerItem = ({item, isFocused}: any) => {
     const onPress = () => {
-      const event = navigation.emit({
-        type: 'tabPress',
-        target: route.key,
-      });
-      if (!event.defaultPrevented) {
-        if (route.name === 'LogOut') {
-          //     navigation.navigate('MainNavigator', {
-          //         screen: 'Main',
-          //         params: {screen:'Other'}
-          //     });
-          logOut();
-          navigation.navigate('Login');
-        } else {
-          navigation.navigate(route.name, route.params);
-        }
+      if (item.action === 'logout') {
+        logOut();
+        navigation.navigate('Login');
+        return;
+      }
+
+      if (item.parent) {
+        navigation.navigate(item.parent, {
+          screen: item.screen,
+        });
       }
     };
 
@@ -47,7 +73,7 @@ const CustomDrawer = (props: any) => {
             style={Styles.icon}
             resizeMode="contain"
             tintColor={strPrimaryColor}
-            source={Icon}
+            source={item.icon}
           />
         </View>
         <Text
@@ -55,13 +81,15 @@ const CustomDrawer = (props: any) => {
             Styles.txtbtn,
             isFocused ? {color: strWhiteColor} : {color: strSecondColor},
           ]}>
-          {label}
+          {item.label}
         </Text>
       </Pressable>
     );
   };
+
   return (
     <View style={Styles.mainContainer}>
+      {/* Header */}
       <View style={Styles.header}>
         <FastImage
           style={Styles.userImage}
@@ -73,44 +101,17 @@ const CustomDrawer = (props: any) => {
           <Text style={Styles.txtUserType}>Customer</Text>
         </View>
       </View>
+
+      {/* Drawer Items */}
       <DrawerContentScrollView {...props}>
         <View>
-          <DrawerItem
-            isFocused={state.index === 0}
-            route={state.routes[0]}
-            label={'Home'}
-            Icon={images.HomeIcon}
-          />
-          <DrawerItem
-            isFocused={state.index === 1}
-            route={state.routes[1]}
-            label={'Profile'}
-            Icon={images.ProfileIcon}
-          />
-          <DrawerItem
-            isFocused={state.index === 2}
-            route={state.routes[2]}
-            label={'Favourite'}
-            Icon={images.FavouriteListIcon}
-          />
-          <DrawerItem
-            isFocused={state.index === 3}
-            route={state.routes[3]}
-            label={'Setting'}
-            Icon={images.SettingIcon}
-          />
-          <DrawerItem
-            isFocused={state.index === 4}
-            route={state.routes[4]}
-            label={'Help'}
-            Icon={images.HelpIcon}
-          />
-          <DrawerItem
-            isFocused={state.index === 4}
-            route={state.routes[5]}
-            label={'Log out'}
-            Icon={images.LogOutIcon}
-          />
+          {drawerItems.map((item, index) => (
+            <DrawerItem
+              key={index}
+              item={item}
+              isFocused={state.index === index}
+            />
+          ))}
         </View>
       </DrawerContentScrollView>
     </View>
@@ -118,6 +119,7 @@ const CustomDrawer = (props: any) => {
 };
 
 export default CustomDrawer;
+
 export const Styles = StyleSheet.create({
   mainContainer: {
     height: '100%',

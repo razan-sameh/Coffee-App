@@ -23,6 +23,7 @@ import {
 } from '@react-navigation/native';
 import {Home} from '../screens/home/Home';
 import {useSelector} from 'react-redux';
+import ProfileNavigator from './ProfileNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -151,18 +152,10 @@ const TapNavigator = ({routeName}: any) => {
             );
           },
         }}
-        listeners={{
-          tabPress: () => {
-            navigation.navigate('ShoppingNavigator', {
-              screen: 'Favourite',
-              params: {categoryID: undefined},
-            });
-          },
-        }}
         children={() => <Favourite />}
       />
       <Tab.Screen
-        name="Profile"
+        name="ProfileNavigator"
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => {
@@ -177,10 +170,9 @@ const TapNavigator = ({routeName}: any) => {
               </View>
             );
           },
+          tabBarStyle: {display: 'none'},
         }}
-        children={() => (
-          <View style={{backgroundColor: 'lightblue', flex: 1}} />
-        )}
+        children={() => <ProfileNavigator />}
       />
     </Tab.Navigator>
   );

@@ -6,13 +6,10 @@ import React, {useState} from 'react';
 import {Provider} from 'react-redux';
 import {store} from './src/redux/store';
 import {FavouriteProvider} from './src/provider/FavouriteProvider';
-import AuthProvider from './src/provider/AuthProvider';
 import {StripeProvider} from '@stripe/stripe-react-native';
 import {NotificationProvider} from './src/provider/NotificationProvider';
-import {StartupProvider} from './src/provider/StartupProvider';
+import {AuthStartupProvider} from './src/provider/AuthStartupProvider';
 import RootNavigator from './src/Navigation/RootNavigator';
-// Remove this import and call - handle it in StartupProvider instead
-// import SplashScreen from 'react-native-splash-screen';
 
 export const navigationRef: any = createNavigationContainerRef();
 // export const serverURL = 'http://localhost:3000';
@@ -28,25 +25,23 @@ const App = () => {
   return (
     <Provider store={store}>
       <StripeProvider publishableKey={publishableKey}>
-        <AuthProvider>
+        <AuthStartupProvider>
           <NotificationProvider>
             <FavouriteProvider>
-              <StartupProvider>
-                <NavigationContainer
-                  ref={navigationRef}
-                  onReady={() => {
-                    setRouteName(navigationRef.getCurrentRoute()?.name || '');
-                  }}
-                  onStateChange={() => {
-                    const current = navigationRef.getCurrentRoute()?.name;
-                    setRouteName(current || '');
-                  }}>
-                  <RootNavigator routeName={routeName} />
-                </NavigationContainer>
-              </StartupProvider>
+              <NavigationContainer
+                ref={navigationRef}
+                onReady={() => {
+                  setRouteName(navigationRef.getCurrentRoute()?.name || '');
+                }}
+                onStateChange={() => {
+                  const current = navigationRef.getCurrentRoute()?.name;
+                  setRouteName(current || '');
+                }}>
+                <RootNavigator routeName={routeName} />
+              </NavigationContainer>
             </FavouriteProvider>
           </NotificationProvider>
-        </AuthProvider>
+        </AuthStartupProvider>
       </StripeProvider>
     </Provider>
   );

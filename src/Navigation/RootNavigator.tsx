@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import {createStackNavigator} from '@react-navigation/stack';
-import {useStartup} from '../provider/StartupProvider';
+import {useAuthStartup} from '../provider/AuthStartupProvider'; // Match your actual import path
 import CustomOnboarding from '../screens/CustomOnboarding';
 import ForgetPassword from '../screens/forgetPassword/ForgetPassword';
 import Login from '../screens/login/Login';
@@ -8,9 +8,16 @@ import OTPVerification from '../screens/otpVerification/OTPVerification';
 import ResetPassword from '../screens/resetPassword/ResetPassword';
 import SignUp from '../screens/signUp/SignUp';
 import DrawerNavigator from './DrawerNavigator';
+
 const Stack = createStackNavigator();
+
 const RootNavigator = ({routeName}: {routeName: string}) => {
-  const {isFirstLaunch, isAuthenticated} = useStartup();
+  const {isFirstLaunch, isAuthenticated} = useAuthStartup(); // Updated hook
+
+  // Optional: Show loading screen while auth state is being determined
+  // if (isLoading) {
+  //   return <LoadingScreen />; // You can create a loading component if needed
+  // }
 
   return (
     <Stack.Navigator
@@ -35,4 +42,5 @@ const RootNavigator = ({routeName}: {routeName: string}) => {
     </Stack.Navigator>
   );
 };
+
 export default RootNavigator;

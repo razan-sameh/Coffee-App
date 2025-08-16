@@ -1,10 +1,5 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  TextInput,
-} from 'react-native';
+/* eslint-disable react/react-in-jsx-scope */
+import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 import {Styles} from './HeaderStyle';
 import {strInpitColor} from '../../styles/responsive';
 import FastImage from 'react-native-fast-image';
@@ -48,13 +43,13 @@ export function Header({navigation, searchQuery, setSearchQuery}: any) {
         />
         <View style={Styles.listLocationContainer}>
           <Text style={Styles.txtlocation}>Egypt</Text>
-          <TouchableWithoutFeedback>
+          {/* <TouchableWithoutFeedback>
             <FastImage
               resizeMode="contain"
               style={Styles.arrowDownLocation}
               source={images.ArrowDownLocation}
             />
-          </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback> */}
         </View>
       </View>
       <Text style={Styles.txtuserName}>Good Morning, {getUserName()}</Text>

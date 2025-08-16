@@ -1,4 +1,4 @@
-import React, {useMemo, useReducer} from 'react';
+import React, {useMemo, useReducer, useState} from 'react';
 import {
   View,
   Text,
@@ -35,6 +35,7 @@ import {
 } from '@react-navigation/native';
 import {checkoutInitialState, checkoutReducer} from './checkoutReducer';
 import {PlaceOrderButton} from './component/PlaceOrderButton';
+import LocationPicker from '../../Components/LocationPicker';
 
 const CheckOut = () => {
   const {user} = useSelector((state: RootState) => state.user);
@@ -55,6 +56,10 @@ const CheckOut = () => {
   const navigationTo: NavigationProp<ParamListBase> = useNavigation();
   const appDispatch = useAppDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const [deliveryLocation, setDeliveryLocation] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const totalPrice = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + item.price * item.count, 0);
@@ -73,7 +78,7 @@ const CheckOut = () => {
     const deliveryInfo: typDeliveryInfo = {
       name: formData.strFullName,
       phone: formData.strPhoneNumber,
-      address: formData.strAddress,
+      address: `${deliveryLocation?.latitude}, ${deliveryLocation?.longitude}`,
     };
 
     const order = {
@@ -248,7 +253,7 @@ const CheckOut = () => {
           />
 
           {/* Address */}
-          <Controller
+          {/* <Controller
             control={control}
             name="strAddress"
             rules={{required: true}}
@@ -272,8 +277,14 @@ const CheckOut = () => {
                 errorMessage="This is required."
               />
             )}
-          />
-
+          /> */}
+          <View style={{marginVertical: 10}}>
+            <Text style={Styles.txtInputTitle}>Delivery Location</Text>
+            <LocationPicker onLocationSelect={setDeliveryLocation} />
+            {!deliveryLocation && (
+              <Text style={Styles.txtError}>Please select location</Text>
+            )}
+          </View>
           {/* Order Summary */}
           <OrderSummary
             cartItems={cartItems}
