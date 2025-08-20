@@ -9,6 +9,8 @@ import {
   mdblScreenWidth,
   strPrimaryColor,
   strINTER_MEDIUM500_Font,
+  strINTER_SEMIBOLD600_Font,
+  strWhiteColor,
 } from '../../styles/responsive';
 
 export const Styles = StyleSheet.create({
@@ -39,6 +41,11 @@ export const Styles = StyleSheet.create({
     top: '80%',
     right: -5,
   },
+  contantContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   sectionTitle: {
     fontSize: 16,
     fontFamily: strINTER_MEDIUM500_Font,
@@ -59,9 +66,18 @@ export const Styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#aaa',
     borderRadius: 8,
-    padding: 10,
     marginBottom: 10,
-    color: '#fff',
+    backgroundColor: 'transparent',
+    flex: 1,
+  },
+  inputAddress: {
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 8,
+    padding: 20,
+    marginBottom: 10,
+    color: strWhiteColor,
+    flex: 1,
   },
   saveBtn: {
     backgroundColor: strPrimaryColor,
@@ -92,5 +108,10 @@ export const Styles = StyleSheet.create({
     backgroundColor: '#caa472',
     padding: 5,
     borderRadius: 15,
+  },
+  txtError: {
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    fontSize: moderateScale(14),
+    color: strPrimaryColor,
   },
 });

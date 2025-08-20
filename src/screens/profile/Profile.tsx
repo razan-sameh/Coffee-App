@@ -42,8 +42,7 @@ export default function Profile() {
             source={images.User}
           />
           <Text style={Styles.userName}>
-            {user?.firstName}
-            {user?.lastName}
+            {user?.firstName} {user?.lastName}
           </Text>
         </View>
 
@@ -78,11 +77,11 @@ export default function Profile() {
         {/* Phones */}
         <View style={Styles.infoCard}>
           <Text style={Styles.sectionTitle}>Phone Numbers</Text>
-          {user?.phoneNumber?.length ? (
-            user.phoneNumber.map((p, i) => (
+          {user?.phoneNumber && Object.values(user.phoneNumber).length ? (
+            Object.values(user.phoneNumber).map((p: any, i) => (
               <View key={i} style={Styles.listRow}>
                 <Icon name="phone" size={18} color="#fff" />
-                <Text style={Styles.listText}>{p}</Text>
+                <Text style={Styles.listText}>{String(p)}</Text>
               </View>
             ))
           ) : (
@@ -93,8 +92,8 @@ export default function Profile() {
         {/* Addresses */}
         <View style={Styles.infoCard}>
           <Text style={Styles.sectionTitle}>Addresses</Text>
-          {user?.address?.length ? (
-            user.address.map((a, i) => (
+          {user?.address && Object.values(user.address).length ? (
+            Object.values(user.address).map((a: any, i) => (
               <View key={i} style={Styles.listRow}>
                 <Icon name="home" size={18} color="#fff" />
                 <Text style={Styles.listText}>{formatLocation(a)}</Text>

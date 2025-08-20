@@ -81,8 +81,8 @@ export const updateUserProfileAsync = createAsyncThunk(
     Uid: string;
     firstName?: string;
     lastName?: string;
-    address?: typLocation;
-    phoneNumber?: string;
+    address?: typLocation[]; // ✅ make it array
+    phoneNumber?: string[]; // ✅ make it array
   }) => {
     await updateUserProfile({
       Uid,
@@ -140,6 +140,7 @@ const userSlice = createSlice({
       .addCase(updateUserProfileAsync.fulfilled, (state, action) => {
         if (state.user) {
           const {firstName, lastName, address, phoneNumber} = action.payload;
+
           if (firstName) {
             state.user.firstName = firstName;
           }
@@ -147,25 +148,10 @@ const userSlice = createSlice({
             state.user.lastName = lastName;
           }
           if (address) {
-            if (!state.user.address) {
-              state.user.address = [];
-            }
-            const alreadyExists = state.user.address.some(
-              a =>
-                a?.latitude === address.latitude &&
-                a?.longitude === address.longitude,
-            );
-            if (!alreadyExists) {
-              state.user.address.push(address);
-            }
+            state.user.address = address; // ✅ replace with full array
           }
           if (phoneNumber) {
-            if (!state.user.phoneNumber) {
-              state.user.phoneNumber = [];
-            }
-            if (!state.user.phoneNumber.includes(phoneNumber)) {
-              state.user.phoneNumber.push(phoneNumber);
-            }
+            state.user.phoneNumber = phoneNumber; // ✅ replace with full array
           }
         }
       });

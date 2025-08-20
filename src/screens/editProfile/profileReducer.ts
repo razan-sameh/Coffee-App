@@ -12,7 +12,9 @@ type Action =
   | {type: 'UPDATE_PHONE'; index: number; payload: string}
   | {type: 'SET_PHONES'; payload: string[]}
   | {type: 'ADD_ADDRESS'; payload: any}
-  | {type: 'SET_ADDRESSES'; payload: any[]};
+  | {type: 'SET_ADDRESSES'; payload: any[]}
+  | {type: 'REMOVE_PHONE'; index: number}
+  | {type: 'REMOVE_ADDRESS'; index: number}; // added these
 
 export function profileReducer(state: State, action: Action): State {
   switch (action.type) {
@@ -35,6 +37,16 @@ export function profileReducer(state: State, action: Action): State {
       return {...state, addresses: [...state.addresses, action.payload]};
     case 'SET_ADDRESSES':
       return {...state, addresses: action.payload};
+    case 'REMOVE_PHONE':
+      return {
+        ...state,
+        phones: state.phones.filter((_, idx) => idx !== action.index),
+      };
+    case 'REMOVE_ADDRESS':
+      return {
+        ...state,
+        addresses: state.addresses.filter((_, idx) => idx !== action.index),
+      };
     default:
       return state;
   }

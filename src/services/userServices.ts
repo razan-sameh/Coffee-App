@@ -22,8 +22,8 @@ type UpdateUserPayload = {
   Uid: string;
   firstName?: string;
   lastName?: string;
-  address?: typLocation;
-  phoneNumber?: string;
+  address?: typLocation[]; // ✅ now arrays
+  phoneNumber?: string[]; // ✅ now arrays
 };
 
 export const updateUserProfile = async ({
@@ -34,40 +34,27 @@ export const updateUserProfile = async ({
   phoneNumber,
 }: UpdateUserPayload): Promise<void> => {
   const user = auth().currentUser;
-  const updates: any = {};
-
-  // Update Firebase Auth name
-  if (user && (firstName || lastName)) {
-    await user.updateProfile({
-      displayName: `${firstName ?? ''} ${lastName ?? ''}`.trim(),
-    });
-    updates.firstName = firstName;
-    updates.lastName = lastName;
-  }
-
-  // Handle phone/address
   const userRef = database().ref(`user/${Uid}`);
   const snapshot = await userRef.once('value');
-  const userData = snapshot.val() ?? {};
+  const existingUser = snapshot.val();
 
-  const addresses = userData.address ?? [];
-  const phoneNumbers = userData.phoneNumber ?? [];
+  const updates: any = {};
 
-  if (address) {
-    const alreadyExists = addresses.some(
-      (a: typLocation) =>
-        a?.latitude === address.latitude && a?.longitude === address.longitude,
-    );
-    if (!alreadyExists) addresses.push(address);
-    updates.address = addresses;
+  // Merge new values with existing ones for displayName
+  const finalFirstName = firstName ?? existingUser?.firstName ?? '';
+  const finalLastName = lastName ?? existingUser?.lastName ?? '';
+
+  if (user && (firstName || lastName)) {
+    await user.updateProfile({
+      displayName: `${finalFirstName} ${finalLastName}`.trim(),
+    });
   }
 
-  if (phoneNumber) {
-    if (!phoneNumbers.includes(phoneNumber)) {
-      phoneNumbers.push(phoneNumber);
-    }
-    updates.phoneNumber = phoneNumbers;
-  }
+  // Save fields individually if they were changed
+  if (firstName) updates.firstName = firstName;
+  if (lastName) updates.lastName = lastName;
+  if (phoneNumber) updates.phoneNumber = phoneNumber;
+  if (address) updates.address = address;
 
   if (Object.keys(updates).length > 0) {
     await userRef.update(updates);
