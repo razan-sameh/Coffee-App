@@ -39,6 +39,41 @@ export const Styles = StyleSheet.create({
     top: '80%',
     right: -5,
   },
+  sectionTitle: {
+    fontSize: 16,
+    fontFamily: strINTER_MEDIUM500_Font,
+    color: '#ccc',
+    marginBottom: 8,
+  },
+  addBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  addText: {
+    color: '#fff',
+    fontSize: 14,
+    marginLeft: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#aaa',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 10,
+    color: '#fff',
+  },
+  saveBtn: {
+    backgroundColor: strPrimaryColor,
+    padding: 14,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  saveText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: '600',
+  },
   profileContainer: {
     alignItems: 'center',
     marginBottom: 10,
@@ -50,69 +85,12 @@ export const Styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: strPrimaryColor,
   },
-  userName: {
-    marginTop: 10,
-    fontSize: moderateScale(18),
-    color: '#fff',
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontFamily: strINTER_MEDIUM500_Font,
-    color: '#ccc',
-    marginBottom: 8,
-  },
-  editProfileBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: strPrimaryColor,
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 20,
-  },
-  editProfileText: {
-    color: '#fff',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-  infoCard: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  infoLabel: {
-    color: '#ccc',
-    fontSize: 14,
-    marginLeft: 8,
-    marginRight: 5,
-  },
-  infoValue: {
-    color: '#fff',
-    fontSize: 15,
-    flexShrink: 1,
-  },
-  listRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  listText: {
-    color: '#fff',
-    fontSize: 15,
-    marginLeft: 10,
-    flexShrink: 1,
-  },
-  emptyText: {
-    color: '#aaa',
-    fontSize: 14,
-    marginTop: 5,
+  editIcon: {
+    position: 'absolute',
+    bottom: 40,
+    right: widthScale(110), // adjust based on image size
+    backgroundColor: '#caa472',
+    padding: 5,
+    borderRadius: 15,
   },
 });

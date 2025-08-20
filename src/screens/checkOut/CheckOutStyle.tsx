@@ -17,7 +17,7 @@ export const Styles = StyleSheet.create({
   mainContainer: {
     paddingLeft: moderateScale(16),
     paddingRight: moderateScale(16),
-    paddingTop: mdblBAR_HEIGHT,
+    paddingTop: moderateScale(16),
     backgroundColor: strSecondColor,
     height: mbdlScreenHeight + mdblBAR_HEIGHT,
   },
@@ -63,15 +63,14 @@ export const Styles = StyleSheet.create({
     fontSize: moderateScale(13),
     color: strPrimaryColor,
   },
-  // btnSubmitContainer: {
-  //   width: widthScale(343),
-  //   height: heightScale(44),
-  //   marginTop: moderateScale(100),
-  //   borderRadius: moderateScale(150),
-  //   backgroundColor: strPrimaryColor,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
+  btnLocation: {
+    width: widthScale(343),
+    height: heightScale(44),
+    borderRadius: moderateScale(150),
+    backgroundColor: strPrimaryColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   txtButtonSubmit: {
     fontFamily: strINTER_SEMIBOLD600_Font,
     fontSize: moderateScale(20),
@@ -127,16 +126,6 @@ export const Styles = StyleSheet.create({
     position: 'absolute',
     top: '80%',
     right: -5,
-  },
-  navigateContainer: {
-    width: widthScale(375),
-    height: heightScale(100),
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   txtAsk: {
     textAlign: 'center',
@@ -195,6 +184,14 @@ export const Styles = StyleSheet.create({
     justifyContent: 'flex-end',
     marginTop: moderateScale(10),
   },
+  fixedButtonContainer: {
+    width: '100%',
+    height: heightScale(44),
+    marginBottom: moderateScale(44),
+    backgroundColor: strPrimaryColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btnSubmitContainer: {
     width: widthScale(343),
     height: heightScale(44),
@@ -203,10 +200,6 @@ export const Styles = StyleSheet.create({
     backgroundColor: strPrimaryColor,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  fixedButtonContainer: {
-    marginBottom: 20,
-    backgroundColor: strPrimaryColor,
   },
   btnSubmitText: {
     color: 'white',
@@ -254,7 +247,7 @@ export const Styles = StyleSheet.create({
     marginTop: 5,
   },
   summaryContainer: {
-    backgroundColor: strPrimaryColor,
+    backgroundColor: strWhiteColor,
     borderRadius: 10,
     padding: 16,
     marginVertical: 20,

@@ -45,8 +45,20 @@ export type typSignUp = {
 export type typCheckout = {
   strFullName: string;
   strPhoneNumber: string;
-  strAddress: string;
+  strAddress: typLocation;
 };
+export type typAddress = {
+  house_number?: string;
+  road?: string;
+  city?: string;
+  country?: string;
+} | null;
+
+export type typLocation = {
+  latitude: number;
+  longitude: number;
+  address: typAddress;
+} | null;
 
 export type typUser = {
   Uid: string;
@@ -54,7 +66,7 @@ export type typUser = {
   lastName: string;
   email: string;
   phoneNumber?: string[];
-  address?: string[];
+  address?: typLocation[];
   password: string;
   role: enmRole;
   isActive: boolean;
@@ -63,7 +75,7 @@ export type typUser = {
 
 export type typDeliveryInfo = {
   name: string;
-  address: string;
+  address: typLocation;
   phone: string;
 };
 export type typOrderItem = {

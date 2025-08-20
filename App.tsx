@@ -10,6 +10,7 @@ import {StripeProvider} from '@stripe/stripe-react-native';
 import {NotificationProvider} from './src/provider/NotificationProvider';
 import {AuthStartupProvider} from './src/provider/AuthStartupProvider';
 import RootNavigator from './src/Navigation/RootNavigator';
+import {LocationProvider} from './src/provider/LocationProvider';
 
 export const navigationRef: any = createNavigationContainerRef();
 // export const serverURL = 'http://localhost:3000';
@@ -27,19 +28,21 @@ const App = () => {
       <StripeProvider publishableKey={publishableKey}>
         <AuthStartupProvider>
           <NotificationProvider>
-            <FavouriteProvider>
-              <NavigationContainer
-                ref={navigationRef}
-                onReady={() => {
-                  setRouteName(navigationRef.getCurrentRoute()?.name || '');
-                }}
-                onStateChange={() => {
-                  const current = navigationRef.getCurrentRoute()?.name;
-                  setRouteName(current || '');
-                }}>
-                <RootNavigator routeName={routeName} />
-              </NavigationContainer>
-            </FavouriteProvider>
+            <LocationProvider>
+              <FavouriteProvider>
+                <NavigationContainer
+                  ref={navigationRef}
+                  onReady={() => {
+                    setRouteName(navigationRef.getCurrentRoute()?.name || '');
+                  }}
+                  onStateChange={() => {
+                    const current = navigationRef.getCurrentRoute()?.name;
+                    setRouteName(current || '');
+                  }}>
+                  <RootNavigator routeName={routeName} />
+                </NavigationContainer>
+              </FavouriteProvider>
+            </LocationProvider>
           </NotificationProvider>
         </AuthStartupProvider>
       </StripeProvider>

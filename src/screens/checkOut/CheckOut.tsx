@@ -1,4 +1,4 @@
-import React, {useMemo, useReducer, useState} from 'react';
+import React, {useEffect, useMemo, useReducer} from 'react';
 import {
   View,
   Text,
@@ -15,7 +15,7 @@ import {TextInput} from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 import {typCheckout, typDeliveryInfo, typOrder} from '../../Content/Types';
 import {RootState, useAppDispatch} from '../../redux/store';
-import {addUserDetails} from '../../redux/slices/userSlice';
+import {updateUserProfileAsync} from '../../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
 import CheckOutField from './component/CheckOutField';
 import {getUserID, getUserName} from '../../services/Authentication';
@@ -35,19 +35,20 @@ import {
 } from '@react-navigation/native';
 import {checkoutInitialState, checkoutReducer} from './checkoutReducer';
 import {PlaceOrderButton} from './component/PlaceOrderButton';
-import LocationPicker from '../../Components/LocationPicker';
+import {useLocation} from '../../provider/LocationProvider';
 
 const CheckOut = () => {
   const {user} = useSelector((state: RootState) => state.user);
   const {
     control,
     handleSubmit,
+    setValue, // add this 👈
     formState: {errors},
   } = useForm<typCheckout>({
     defaultValues: {
       strFullName: getUserName()!,
       strPhoneNumber: user?.phoneNumber?.[0] || '',
-      strAddress: user?.address?.[0] || '',
+      strAddress: user?.address?.[0] || null,
     },
   });
 
@@ -56,10 +57,7 @@ const CheckOut = () => {
   const navigationTo: NavigationProp<ParamListBase> = useNavigation();
   const appDispatch = useAppDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const [deliveryLocation, setDeliveryLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const {location, isPicked, setIsPicked} = useLocation();
 
   const totalPrice = useMemo(() => {
     return cartItems.reduce((sum, item) => sum + item.price * item.count, 0);
@@ -72,13 +70,18 @@ const CheckOut = () => {
     return map;
   }, [products]);
 
-  // ---------------- Handlers ----------------
+  useEffect(() => {
+    if (location && isPicked) {
+      setValue('strAddress', location); // 👈 same as EditProfile
+      setIsPicked(false); // reset flag
+    }
+  }, [location, isPicked, setValue, setIsPicked]);
 
   const handlePlaceOrder = async (formData: typCheckout) => {
     const deliveryInfo: typDeliveryInfo = {
       name: formData.strFullName,
       phone: formData.strPhoneNumber,
-      address: `${deliveryLocation?.latitude}, ${deliveryLocation?.longitude}`,
+      address: formData.strAddress,
     };
 
     const order = {
@@ -110,10 +113,12 @@ const CheckOut = () => {
       if (userID) {
         if (state.savePhone || state.saveAddress) {
           await appDispatch(
-            addUserDetails({
+            updateUserProfileAsync({
               Uid: userID,
               ...(state.savePhone && {phoneNumber: formData.strPhoneNumber}),
-              ...(state.saveAddress && {address: formData.strAddress}),
+              ...(state.saveAddress && {
+                address: formData.strAddress,
+              }),
             }),
           );
         }
@@ -251,17 +256,15 @@ const CheckOut = () => {
               />
             )}
           />
-
-          {/* Address */}
-          {/* <Controller
+          <Controller
             control={control}
             name="strAddress"
             rules={{required: true}}
             render={({field}) => (
               <CheckOutField
-                label="Address"
-                placeholder="Address"
-                value={field.value}
+                label="Location"
+                placeholder="Location"
+                value={field.value} // ✅ only use strAddress
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 userValues={user?.address}
@@ -274,17 +277,12 @@ const CheckOut = () => {
                   dispatch({type: 'SET_SAVE_ADDRESS', payload: v})
                 }
                 hasError={!!errors.strAddress}
-                errorMessage="This is required."
+                errorMessage="Please select location"
+                isAddress={true}
               />
             )}
-          /> */}
-          <View style={{marginVertical: 10}}>
-            <Text style={Styles.txtInputTitle}>Delivery Location</Text>
-            <LocationPicker onLocationSelect={setDeliveryLocation} />
-            {!deliveryLocation && (
-              <Text style={Styles.txtError}>Please select location</Text>
-            )}
-          </View>
+          />
+
           {/* Order Summary */}
           <OrderSummary
             cartItems={cartItems}

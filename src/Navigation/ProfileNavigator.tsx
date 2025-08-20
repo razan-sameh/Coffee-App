@@ -1,8 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Profile from '../screens/profile/Profile';
-import Phone from '../screens/phone/Phone';
-import Address from '../screens/Address';
+import EditProfile from '../screens/editProfile/EditProfile';
 
 const Stack = createStackNavigator();
 
@@ -19,14 +18,9 @@ const ProfileNavigator = () => {
         children={() => <Profile />}
       />
       <Stack.Screen
-        name="Phone"
+        name="EditProfile"
         options={{headerShown: false}}
-        children={() => <Phone />}
-      />
-      <Stack.Screen
-        name="Address"
-        options={{headerShown: false}}
-        children={() => <Address />}
+        children={() => <EditProfile />}
       />
     </Stack.Navigator>
   );

@@ -10,7 +10,6 @@ import {
 import {useRoute} from '@react-navigation/native';
 import {OrderConfirmationBackground} from './component/OrderConfirmationBackground';
 import {OrderConfirmationButtons} from './component/OrderConfirmationButtons';
-import {OrderConfirmationHeader} from './component/OrderConfirmationHeader';
 import {OrderConfirmationSummary} from './component/OrderConfirmationSummary';
 
 const OrderConfirmation = () => {
@@ -38,8 +37,6 @@ const OrderConfirmation = () => {
 
   return (
     <View style={Styles.mainContainer}>
-      <OrderConfirmationHeader />
-
       <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 30}}>
         {/* Confirmation Icon + Text */}
         <View style={{alignItems: 'center', marginTop: 20}}>

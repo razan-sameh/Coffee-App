@@ -8,6 +8,7 @@ import OTPVerification from '../screens/otpVerification/OTPVerification';
 import ResetPassword from '../screens/resetPassword/ResetPassword';
 import SignUp from '../screens/signUp/SignUp';
 import DrawerNavigator from './DrawerNavigator';
+import LocationPicker from '../Components/LocationPicker';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,14 @@ const RootNavigator = ({routeName}: {routeName: string}) => {
       <Stack.Screen
         name="DrawerNavigator"
         children={() => <DrawerNavigator routeName={routeName} />}
+      />
+      <Stack.Screen
+        name="LocationPicker"
+        component={LocationPicker}
+        options={{
+          presentation: 'modal', // optional: present as modal
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

@@ -1,10 +1,11 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {Styles} from '../OrderConfirmationStyle';
-import {typProduct} from '../../../Content/Types';
+import {typOrder, typProduct} from '../../../Content/Types';
+import {formatLocation} from '../../../Content/Utils';
 
 type Props = {
-  order: any;
+  order: typOrder;
   products: typProduct[];
 };
 
@@ -13,7 +14,7 @@ export const OrderConfirmationSummary = ({order, products}: Props) => {
     const product = products.find(p => p.ID === id);
     return product?.title || 'Unknown Product';
   };
-
+  const address = formatLocation(order.deliveryInfo.address);
   return (
     <View style={Styles.summaryCard}>
       <View style={Styles.summaryRow}>
@@ -40,9 +41,7 @@ export const OrderConfirmationSummary = ({order, products}: Props) => {
       </View>
       <View style={Styles.summaryRow}>
         <Text style={Styles.summaryLabel}>Delivery Address:</Text>
-        <Text style={{flex: 1, textAlign: 'right'}}>
-          {order.deliveryInfo.address}
-        </Text>
+        <Text style={{flex: 1, textAlign: 'right'}}>{address}</Text>
       </View>
       <View style={Styles.summaryRow}>
         <Text style={Styles.summaryLabel}>Payment Method:</Text>

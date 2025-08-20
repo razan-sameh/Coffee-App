@@ -1,54 +1,27 @@
 import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Styles} from './ProfileStyles';
 import FastImage from 'react-native-fast-image';
 import {ArrowBack} from '../../Components/ArrowBack';
 import {images} from '../../Content/resources';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {strSecondColor} from '../../styles/responsive';
 import {RootState} from '../../redux/store';
 import {useSelector} from 'react-redux';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
-import {logOut} from '../../services/Authentication';
+import {useNavigation} from '@react-navigation/native';
+import {formatLocation} from '../../Content/Utils';
 
 export default function Profile() {
-  type typProfileOptions = {icon: string; label: string; screen?: string};
-  const profileOptions: typProfileOptions[] = [
-    {icon: 'phone-outline', label: 'Phone', screen: 'Phone'},
-    {icon: 'map-marker-outline', label: 'Address', screen: 'Address'},
-    {icon: 'lock-outline', label: 'Password', screen: 'ChangePassword'},
-    {icon: 'power', label: 'Log out'},
-  ];
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
-
   const {user} = useSelector((state: RootState) => state.user);
+  const navigation = useNavigation<any>();
 
-  function handleProfileOptionsPress(item: typProfileOptions): void {
-    if (item.screen) {
-      navigation.navigate('ProfileNavigator', {screen: item.screen});
-    }
-    if (item.label === 'Log out') {
-      logOut();
-      navigation.navigate('Login');
-      return;
-    }
-  }
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <View style={Styles.mainContainer}>
-      {/* Top Back Button */}
+      {/* Back Button */}
       <ArrowBack />
 
-      {/* Background Decorations */}
-      <FastImage
-        style={Styles.wave}
-        resizeMode="contain"
-        source={images.WallWave}
-      />
+      {/* Background */}
       <FastImage
         style={Styles.wallCoffeeImage1}
         resizeMode="contain"
@@ -68,39 +41,81 @@ export default function Profile() {
             resizeMode="contain"
             source={images.User}
           />
-          <TouchableOpacity style={Styles.editIcon}>
-            <Icon name="camera-outline" size={20} color="#fff" />
-          </TouchableOpacity>
           <Text style={Styles.userName}>
-            {user?.firstName! + user?.lastName}
+            {user?.firstName}
+            {user?.lastName}
           </Text>
         </View>
 
-        {/* Options List */}
-        <View style={{marginTop: 20}}>
-          {profileOptions.map((item, index) => (
-            <FastImage
-              key={index}
-              resizeMode="contain"
-              style={Styles.frameContainer}
-              source={images.FrameContainer}>
-              <TouchableOpacity
-                style={Styles.optionRow}
-                onPress={() => handleProfileOptionsPress(item)}>
-                <View style={Styles.iconContainer}>
-                  <Icon name={item.icon} size={22} color={strSecondColor} />
-                </View>
-                <Text style={Styles.optionLabel}>{item.label}</Text>
-                <Icon
-                  name="chevron-right"
-                  size={22}
-                  color="#caa472"
-                  style={{marginLeft: 'auto'}}
-                />
-              </TouchableOpacity>
-            </FastImage>
-          ))}
+        {/* Basic Info */}
+        <View style={Styles.infoCard}>
+          <View style={Styles.infoRow}>
+            <Icon name="email-outline" size={20} color="#fff" />
+            <Text style={Styles.infoLabel}>Email:</Text>
+            <Text style={Styles.infoValue}>{user?.email}</Text>
+          </View>
+
+          <View style={Styles.infoRow}>
+            <Icon name="lock-outline" size={20} color="#fff" />
+            <Text style={Styles.infoLabel}>Password:</Text>
+            <Text style={Styles.infoValue}>
+              {showPassword ? user?.password : '••••••••'}
+            </Text>
+
+            {/* Toggle Show/Hide */}
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={{marginLeft: 8}}>
+              <Icon
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={20}
+                color="#fff"
+              />
+            </TouchableOpacity>
+          </View>
         </View>
+
+        {/* Phones */}
+        <View style={Styles.infoCard}>
+          <Text style={Styles.sectionTitle}>Phone Numbers</Text>
+          {user?.phoneNumber?.length ? (
+            user.phoneNumber.map((p, i) => (
+              <View key={i} style={Styles.listRow}>
+                <Icon name="phone" size={18} color="#fff" />
+                <Text style={Styles.listText}>{p}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={Styles.emptyText}>No phone numbers added</Text>
+          )}
+        </View>
+
+        {/* Addresses */}
+        <View style={Styles.infoCard}>
+          <Text style={Styles.sectionTitle}>Addresses</Text>
+          {user?.address?.length ? (
+            user.address.map((a, i) => (
+              <View key={i} style={Styles.listRow}>
+                <Icon name="home" size={18} color="#fff" />
+                <Text style={Styles.listText}>{formatLocation(a)}</Text>
+              </View>
+            ))
+          ) : (
+            <Text style={Styles.emptyText}>No addresses added</Text>
+          )}
+        </View>
+
+        {/* Edit Button */}
+        <TouchableOpacity
+          style={Styles.editProfileBtn}
+          onPress={() =>
+            navigation.navigate('ProfileNavigator', {
+              screen: 'EditProfile',
+            })
+          }>
+          <Icon name="pencil" size={18} color="#fff" />
+          <Text style={Styles.editProfileText}>Edit Profile</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

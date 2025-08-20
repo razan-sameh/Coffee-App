@@ -1,12 +1,12 @@
 // redux/slices/userSlice.ts
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import {typUser} from '../../Content/Types';
+import {typLocation, typUser} from '../../Content/Types';
 import {enmRole} from '../../Content/Enums';
 import {createUser} from '../../services/cartServices';
 import {
   getUserById,
   changeUserPassword,
-  addUserDetailsToFirebase,
+  updateUserProfile,
 } from '../../services/userServices';
 
 type UserState = {
@@ -69,27 +69,29 @@ export const updateUserPassword = createAsyncThunk(
 );
 
 // Add address/phone number
-export const addUserDetails = createAsyncThunk(
-  'user/addUserDetails',
+export const updateUserProfileAsync = createAsyncThunk(
+  'user/updateUserProfile',
   async ({
     Uid,
+    firstName,
+    lastName,
     address,
     phoneNumber,
   }: {
     Uid: string;
-    address?: string;
+    firstName?: string;
+    lastName?: string;
+    address?: typLocation;
     phoneNumber?: string;
   }) => {
-    // Don’t call if both are undefined
-    if (!address && !phoneNumber) {
-      throw new Error(
-        'At least one of address or phoneNumber must be provided',
-      );
-    }
-
-    await addUserDetailsToFirebase(Uid, address, phoneNumber);
-
-    return {address, phoneNumber};
+    await updateUserProfile({
+      Uid,
+      firstName,
+      lastName,
+      address,
+      phoneNumber,
+    });
+    return {firstName, lastName, address, phoneNumber};
   },
 );
 
@@ -135,23 +137,35 @@ const userSlice = createSlice({
           state.user.password = action.payload;
         }
       })
-      .addCase(addUserDetails.fulfilled, (state, action) => {
+      .addCase(updateUserProfileAsync.fulfilled, (state, action) => {
         if (state.user) {
-          const {address, phoneNumber} = action.payload;
-
-          if (!state.user.address) {
-            state.user.address = [];
+          const {firstName, lastName, address, phoneNumber} = action.payload;
+          if (firstName) {
+            state.user.firstName = firstName;
           }
-          if (!state.user.phoneNumber) {
-            state.user.phoneNumber = [];
+          if (lastName) {
+            state.user.lastName = lastName;
           }
-
-          if (address && !state.user.address.includes(address)) {
-            state.user.address.push(address);
+          if (address) {
+            if (!state.user.address) {
+              state.user.address = [];
+            }
+            const alreadyExists = state.user.address.some(
+              a =>
+                a?.latitude === address.latitude &&
+                a?.longitude === address.longitude,
+            );
+            if (!alreadyExists) {
+              state.user.address.push(address);
+            }
           }
-
-          if (phoneNumber && !state.user.phoneNumber.includes(phoneNumber)) {
-            state.user.phoneNumber.push(phoneNumber);
+          if (phoneNumber) {
+            if (!state.user.phoneNumber) {
+              state.user.phoneNumber = [];
+            }
+            if (!state.user.phoneNumber.includes(phoneNumber)) {
+              state.user.phoneNumber.push(phoneNumber);
+            }
           }
         }
       });

@@ -1,5 +1,6 @@
 import database from '@react-native-firebase/database';
-import {typUser} from '../Content/Types';
+import {typLocation, typUser} from '../Content/Types';
+import auth from '@react-native-firebase/auth';
 
 // Fetch user data
 export const getUserById = async (Uid: string): Promise<typUser> => {
@@ -17,31 +18,58 @@ export const changeUserPassword = async (
 };
 
 // Add address and phone number
-export const addUserDetailsToFirebase = async (
-  Uid: string,
-  address?: string,
-  phoneNumber?: string,
-): Promise<void> => {
+type UpdateUserPayload = {
+  Uid: string;
+  firstName?: string;
+  lastName?: string;
+  address?: typLocation;
+  phoneNumber?: string;
+};
+
+export const updateUserProfile = async ({
+  Uid,
+  firstName,
+  lastName,
+  address,
+  phoneNumber,
+}: UpdateUserPayload): Promise<void> => {
+  const user = auth().currentUser;
+  const updates: any = {};
+
+  // Update Firebase Auth name
+  if (user && (firstName || lastName)) {
+    await user.updateProfile({
+      displayName: `${firstName ?? ''} ${lastName ?? ''}`.trim(),
+    });
+    updates.firstName = firstName;
+    updates.lastName = lastName;
+  }
+
+  // Handle phone/address
   const userRef = database().ref(`user/${Uid}`);
   const snapshot = await userRef.once('value');
+  const userData = snapshot.val() ?? {};
 
-  if (snapshot.exists()) {
-    const userData = snapshot.val();
-    const addresses = userData.address ?? [];
-    const phoneNumbers = userData.phoneNumber ?? [];
+  const addresses = userData.address ?? [];
+  const phoneNumbers = userData.phoneNumber ?? [];
 
-    if (!addresses.includes(address)) {
-      addresses.push(address);
-    }
+  if (address) {
+    const alreadyExists = addresses.some(
+      (a: typLocation) =>
+        a?.latitude === address.latitude && a?.longitude === address.longitude,
+    );
+    if (!alreadyExists) addresses.push(address);
+    updates.address = addresses;
+  }
+
+  if (phoneNumber) {
     if (!phoneNumbers.includes(phoneNumber)) {
       phoneNumbers.push(phoneNumber);
     }
+    updates.phoneNumber = phoneNumbers;
+  }
 
-    await userRef.update({address: addresses, phoneNumber: phoneNumbers});
-  } else {
-    await userRef.set({
-      address: [address],
-      phoneNumber: [phoneNumber],
-    });
+  if (Object.keys(updates).length > 0) {
+    await userRef.update(updates);
   }
 };

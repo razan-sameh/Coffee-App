@@ -1,18 +1,26 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, TouchableWithoutFeedback} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {TextInput} from 'react-native-paper';
 import CheckBox from '@react-native-community/checkbox';
 import {Styles} from '../CheckOutStyle';
-import {strPrimaryColor} from '../../../styles/responsive';
+import {strPrimaryColor, strWhiteColor} from '../../../styles/responsive';
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/native';
+import {typLocation} from '../../../Content/Types';
+import {formatLocation} from '../../../Content/Utils';
 
 interface Props {
   label: string;
   placeholder: string;
-  value: string;
-  onChange: (val: string) => void;
-  onBlur: () => void;
-  userValues?: string[];
+  value?: string | typLocation;
+  onChange?: (val: string) => void;
+  onBlur?: () => void;
+  userValues?: (string | typLocation)[];
   isAdding: boolean;
   setIsAdding: (val: boolean) => void;
   saveValue: boolean;
@@ -20,12 +28,13 @@ interface Props {
   hasError: boolean;
   errorMessage: string;
   showSaveCheckbox?: boolean;
+  isAddress?: boolean;
 }
 
 const CheckOutField: React.FC<Props> = ({
   label,
   placeholder,
-  value,
+  value = '',
   onChange,
   onBlur,
   userValues,
@@ -36,38 +45,71 @@ const CheckOutField: React.FC<Props> = ({
   hasError,
   errorMessage,
   showSaveCheckbox = true,
+  isAddress = false,
 }) => {
   const showPicker = userValues && userValues.length > 0 && !isAdding;
+  const navigation: NavigationProp<ParamListBase> = useNavigation();
 
   return (
     <>
       <Text style={Styles.txtInputTitle}>{label}</Text>
+
+      {/* Case 1: Picker when saved values exist */}
       {showPicker ? (
         <View style={Styles.pickerContainer}>
           <Picker
-            selectedValue={value || userValues[0]} // default to first item if value is empty
+            selectedValue={
+              typeof value === 'string' ? value : formatLocation(value) // <-- use formatted address here
+            }
             onValueChange={val => {
-              onChange(val);
-              if (!value) onBlur(); // trigger onBlur for validation if needed
+              onChange?.(val); // <- still passes string back
+              if (!value) onBlur?.();
             }}>
-            {userValues.map((item, idx) => (
-              <Picker.Item key={idx} label={item} value={item} />
-            ))}
+            {userValues!.map((item, idx) => {
+              const label =
+                typeof item === 'string' ? item : formatLocation(item); // <-- formatted address
+              const val =
+                typeof item === 'string' ? item : formatLocation(item); // <-- formatted value for Picker
+              return <Picker.Item key={idx} label={label} value={val} />;
+            })}
           </Picker>
         </View>
+      ) : isAddress ? (
+        <View style={{marginVertical: 10}}>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate('LocationPicker')}>
+            <View style={Styles.btnLocation}>
+              <Text style={{color: 'white', textAlign: 'center'}}>
+                {value ? 'Change Location' : 'Pick Location'}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+
+          {typeof value !== 'string' && value?.address && (
+            <Text style={{marginTop: 5, color: strWhiteColor}}>
+              📍 {formatLocation(value.address)}
+            </Text>
+          )}
+
+          {hasError && <Text style={Styles.txtError}>{errorMessage}</Text>}
+        </View>
       ) : (
+        /* Case 3: Normal text input */
         <TextInput
           style={Styles.input}
           placeholder={placeholder}
           placeholderTextColor="#A19D9D"
           onBlur={onBlur}
-          onChangeText={onChange}
-          value={value}
+          onChangeText={val => onChange?.(val)} // safe call
+          value={typeof value === 'string' ? value : value?.address?.road || ''}
           underlineStyle={{display: 'none'}}
         />
       )}
+
+      {/* Validation error */}
       {hasError && <Text style={Styles.txtError}>{errorMessage}</Text>}
 
+      {/* Show add button if picker */}
       {showPicker && (
         <TouchableWithoutFeedback onPress={() => setIsAdding(true)}>
           <View style={Styles.addContainer}>
@@ -76,6 +118,7 @@ const CheckOutField: React.FC<Props> = ({
         </TouchableWithoutFeedback>
       )}
 
+      {/* Save/Cancel row */}
       {isAdding || !userValues?.length ? (
         <View
           style={[
@@ -96,7 +139,7 @@ const CheckOutField: React.FC<Props> = ({
               <Text style={Styles.txtRemember}>Save {label}</Text>
             </View>
           )}
-          {userValues && userValues?.length > 0 && (
+          {userValues && userValues.length > 0 && (
             <TouchableWithoutFeedback onPress={() => setIsAdding(false)}>
               <Text style={Styles.txtAdd}>Cancel</Text>
             </TouchableWithoutFeedback>
