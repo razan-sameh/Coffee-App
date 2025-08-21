@@ -1,12 +1,4 @@
-import {
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-} from 'react-native';
+import {Text, TouchableOpacity, View, SafeAreaView} from 'react-native';
 import React, {useEffect} from 'react';
 import {
   NavigationProp,
@@ -26,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {updateUserProfileAsync} from '../../redux/slices/userSlice';
 import {Controller, useForm, useFieldArray} from 'react-hook-form';
 import {TextInput} from 'react-native-paper';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 type FormValues = {
   firstName: string;
@@ -111,185 +104,179 @@ export default function EditProfile() {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={0}
-        style={{flex: 1}} // Ensures it takes up available space
-      >
-        <View style={Styles.mainContainer}>
-          {/* Back Button */}
-          <ArrowBack />
+    <SafeAreaView>
+      <View style={Styles.mainContainer}>
+        {/* Back Button */}
+        <ArrowBack />
 
-          {/* Background */}
-          <FastImage
-            style={Styles.wallCoffeeImage1}
-            resizeMode="contain"
-            source={images.LoginWallIcon1}
-          />
-          <FastImage
-            style={Styles.wallCoffeeImage2}
-            resizeMode="contain"
-            source={images.LoginWallIcon2}
-          />
+        {/* Background */}
+        <FastImage
+          style={Styles.wallCoffeeImage1}
+          resizeMode="contain"
+          source={images.LoginWallIcon1}
+        />
+        <FastImage
+          style={Styles.wallCoffeeImage2}
+          resizeMode="contain"
+          source={images.LoginWallIcon2}
+        />
 
-          <ScrollView
-            // style={{flex: 1}}
-            contentContainerStyle={{paddingBottom: 50}} // adjust as needed
-            // keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}>
-            <View style={Styles.profileContainer}>
-              <FastImage
-                style={Styles.profileImage}
-                resizeMode="contain"
-                source={images.User}
+        <KeyboardAwareScrollView
+          contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
+          enableOnAndroid={true}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}>
+          <View style={Styles.profileContainer}>
+            <FastImage
+              style={Styles.profileImage}
+              resizeMode="contain"
+              source={images.User}
+            />
+            <TouchableOpacity style={Styles.editIcon}>
+              <Icon name="camera-outline" size={20} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
+          {/* First Name */}
+          <Text style={Styles.sectionTitle}>First Name</Text>
+          <Controller
+            control={control}
+            name="firstName"
+            rules={{
+              required: true,
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextInput
+                style={[Styles.input]}
+                value={value}
+                onChangeText={onChange}
+                underlineStyle={{display: 'none'}}
+                contentStyle={{color: strWhiteColor}}
               />
-              <TouchableOpacity style={Styles.editIcon}>
-                <Icon name="camera-outline" size={20} color="#fff" />
+            )}
+          />
+          {errors.firstName && (
+            <Text style={Styles.txtError}>This is required.</Text>
+          )}
+
+          {/* Last Name */}
+          <Text style={Styles.sectionTitle}>Last Name</Text>
+          <Controller
+            control={control}
+            name="lastName"
+            rules={{
+              required: true,
+            }}
+            render={({field: {onChange, value}}) => (
+              <TextInput
+                style={[Styles.input]}
+                value={value}
+                onChangeText={onChange}
+                underlineStyle={{display: 'none'}}
+                contentStyle={{color: strWhiteColor}}
+              />
+            )}
+          />
+          {errors.lastName && (
+            <Text style={Styles.txtError}>This is required.</Text>
+          )}
+
+          {/* Phones */}
+          <View style={Styles.contantContainer}>
+            <Text style={Styles.sectionTitle}>Phones</Text>
+            <TouchableOpacity onPress={() => addPhone('')}>
+              <Text style={Styles.addText}>+ Add Phone</Text>
+            </TouchableOpacity>
+          </View>
+          {phoneFields.map((field, i) => (
+            <View key={field.id} style={Styles.contantContainer}>
+              <Controller
+                control={control}
+                name={`phones.${i}.value`}
+                rules={{
+                  pattern:
+                    /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
+                  required: true,
+                }}
+                render={({field: {onChange, value}}) => (
+                  <TextInput
+                    style={[Styles.input]}
+                    value={value}
+                    onChangeText={onChange}
+                    underlineStyle={{display: 'none'}}
+                    contentStyle={{color: strWhiteColor}}
+                  />
+                )}
+              />
+              <TouchableOpacity
+                onPress={() => removePhone(i)}
+                style={{marginLeft: 8}}>
+                <Icon name="delete" size={22} color={strPrimaryColor} />
               </TouchableOpacity>
             </View>
+          ))}
+          {errors.phones && errors.phones.type === 'pattern' && (
+            <Text style={Styles.txtError}>
+              The password must contain digit, lowercase letter, uppercase
+              letter, special character, no space, and it must be 8-16
+              characters long.
+            </Text>
+          )}
+          {errors.phones && errors.phones.type === 'required' && (
+            <Text style={Styles.txtError}>This is required.</Text>
+          )}
 
-            {/* First Name */}
-            <Text style={Styles.sectionTitle}>First Name</Text>
-            <Controller
-              control={control}
-              name="firstName"
-              rules={{
-                required: true,
-              }}
-              render={({field: {onChange, value}}) => (
-                <TextInput
-                  style={[Styles.input]}
-                  value={value}
-                  onChangeText={onChange}
-                  underlineStyle={{display: 'none'}}
-                  contentStyle={{color: strWhiteColor}}
-                />
-              )}
-            />
-            {errors.firstName && (
-              <Text style={Styles.txtError}>This is required.</Text>
-            )}
-
-            {/* Last Name */}
-            <Text style={Styles.sectionTitle}>Last Name</Text>
-            <Controller
-              control={control}
-              name="lastName"
-              rules={{
-                required: true,
-              }}
-              render={({field: {onChange, value}}) => (
-                <TextInput
-                  style={[Styles.input]}
-                  value={value}
-                  onChangeText={onChange}
-                  underlineStyle={{display: 'none'}}
-                  contentStyle={{color: strWhiteColor}}
-                />
-              )}
-            />
-            {errors.lastName && (
-              <Text style={Styles.txtError}>This is required.</Text>
-            )}
-
-            {/* Phones */}
-            <View style={Styles.contantContainer}>
-              <Text style={Styles.sectionTitle}>Phones</Text>
-              <TouchableOpacity onPress={() => addPhone('')}>
-                <Text style={Styles.addText}>+ Add Phone</Text>
-              </TouchableOpacity>
-            </View>
-            {phoneFields.map((field, i) => (
+          {/* Addresses */}
+          <View style={Styles.contantContainer}>
+            <Text style={Styles.sectionTitle}>Addresses</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('LocationPicker')}>
+              <Text style={Styles.addText}>+ Add Address</Text>
+            </TouchableOpacity>
+          </View>
+          {addressFields.map((field, i) => {
+            const formatted = formatLocation(field);
+            return (
               <View key={field.id} style={Styles.contantContainer}>
-                <Controller
-                  control={control}
-                  name={`phones.${i}.value`}
-                  rules={{
-                    pattern:
-                      /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,16}$/,
-                    required: true,
-                  }}
-                  render={({field: {onChange, value}}) => (
-                    <TextInput
-                      style={[Styles.input]}
-                      value={value}
-                      onChangeText={onChange}
-                      underlineStyle={{display: 'none'}}
-                      contentStyle={{color: strWhiteColor}}
-                    />
-                  )}
-                />
                 <TouchableOpacity
-                  onPress={() => removePhone(i)}
+                  style={[Styles.inputAddress]}
+                  onPress={() => {
+                    const loc =
+                      field?.latitude && field?.longitude
+                        ? {
+                            latitude: field.latitude,
+                            longitude: field.longitude,
+                          }
+                        : null;
+
+                    if (loc) {
+                      setLocation(loc);
+                    }
+
+                    navigation.navigate('LocationPicker', {
+                      initialLocation: loc,
+                    });
+                  }}>
+                  <Text style={{color: strWhiteColor}}>{formatted}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => removeAddress(i)}
                   style={{marginLeft: 8}}>
                   <Icon name="delete" size={22} color={strPrimaryColor} />
                 </TouchableOpacity>
               </View>
-            ))}
-            {errors.phones && errors.phones.type === 'pattern' && (
-              <Text style={Styles.txtError}>
-                The password must contain digit, lowercase letter, uppercase
-                letter, special character, no space, and it must be 8-16
-                characters long.
-              </Text>
-            )}
-            {errors.phones && errors.phones.type === 'required' && (
-              <Text style={Styles.txtError}>This is required.</Text>
-            )}
+            );
+          })}
 
-            {/* Addresses */}
-            <View style={Styles.contantContainer}>
-              <Text style={Styles.sectionTitle}>Addresses</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('LocationPicker')}>
-                <Text style={Styles.addText}>+ Add Address</Text>
-              </TouchableOpacity>
-            </View>
-            {addressFields.map((field, i) => {
-              const formatted = formatLocation(field);
-              return (
-                <View key={field.id} style={Styles.contantContainer}>
-                  <TouchableOpacity
-                    style={[Styles.inputAddress]}
-                    onPress={() => {
-                      const loc =
-                        field?.latitude && field?.longitude
-                          ? {
-                              latitude: field.latitude,
-                              longitude: field.longitude,
-                            }
-                          : null;
-
-                      if (loc) {
-                        setLocation(loc);
-                      }
-
-                      navigation.navigate('LocationPicker', {
-                        initialLocation: loc,
-                      });
-                    }}>
-                    <Text style={{color: strWhiteColor}}>{formatted}</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => removeAddress(i)}
-                    style={{marginLeft: 8}}>
-                    <Icon name="delete" size={22} color={strPrimaryColor} />
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-
-            {/* Save button */}
-            <TouchableOpacity
-              style={Styles.saveBtn}
-              onPress={handleSubmit(onSubmit)}>
-              <Text style={Styles.saveText}>Save</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        </View>
-      </KeyboardAvoidingView>
+          {/* Save button */}
+          <TouchableOpacity
+            style={Styles.saveBtn}
+            onPress={handleSubmit(onSubmit)}>
+            <Text style={Styles.saveText}>Save</Text>
+          </TouchableOpacity>
+        </KeyboardAwareScrollView>
+      </View>
     </SafeAreaView>
   );
 }
