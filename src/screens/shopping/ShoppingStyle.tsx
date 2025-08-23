@@ -1,13 +1,10 @@
 import {StyleSheet} from 'react-native';
 import {
   heightScale,
-  mbdlScreenHeight,
-  mdblBAR_HEIGHT,
   moderateScale,
   strSecondColor,
   widthScale,
 } from '../../styles/responsive';
-import {Styles as styleHeader} from '../../Components/header/HeaderStyle';
 
 export const Styles = StyleSheet.create({
   wall: {
@@ -27,8 +24,9 @@ export const Styles = StyleSheet.create({
   },
   mainContainer: {
     backgroundColor: strSecondColor,
-    height:
-      mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT,
+
+    // height:
+    //   mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT,
   },
   productContainer: {
     flexDirection: 'row',

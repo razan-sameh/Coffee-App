@@ -1,7 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {
   heightScale,
-  mbdlScreenHeight,
   moderateScale,
   strCatColor,
   strINTER_BOLD700_Font,
@@ -12,10 +11,9 @@ import {
   strTextColor,
   widthScale,
 } from '../../styles/responsive';
-import {Styles as styleHeader} from '../../Components/header/HeaderStyle';
 
 export const Styles = StyleSheet.create({
-  wall: {
+  indicatorContainer: {
     flex: 1, // ensures full screen height
     backgroundColor: strSecondColor,
     justifyContent: 'center', // vertical centering
@@ -25,7 +23,8 @@ export const Styles = StyleSheet.create({
     paddingLeft: moderateScale(16),
     paddingRight: moderateScale(16),
     backgroundColor: strSecondColor,
-    height: mbdlScreenHeight - styleHeader.mainContainer.height,
+    flexGrow: 1,
+    paddingBottom: 30,
   },
   catTitle: {
     color: strPrimaryColor,
@@ -33,6 +32,7 @@ export const Styles = StyleSheet.create({
     fontSize: moderateScale(20),
     marginTop: moderateScale(10),
     marginBottom: moderateScale(10),
+    textAlign: 'left',
   },
   catContainer: {
     height: heightScale(60),

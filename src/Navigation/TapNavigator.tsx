@@ -5,6 +5,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {StyleSheet, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {images} from '../Content/resources';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ShoppingNavigator from './ShoppingNavigator';
 import {
   heightScale,
@@ -23,7 +24,7 @@ import {
 } from '@react-navigation/native';
 import {Home} from '../screens/home/Home';
 import {useSelector} from 'react-redux';
-import ProfileNavigator from './ProfileNavigator';
+import Orders from '../screens/orders/Orders';
 
 const Tab = createBottomTabNavigator();
 
@@ -50,20 +51,16 @@ const TapNavigator = ({routeName}: any) => {
         name="Home"
         children={() => <Home />}
         options={{
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={Styles.screenContainer}>
-                <FastImage
-                  style={Styles.tabBarIcons}
-                  resizeMode="contain"
-                  tintColor={focused ? '#C08F54' : '#ffffff'}
-                  source={images.HomeIcon}
-                />
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <MaterialCommunityIcons
+              name="home" // choose appropriate icon name
+              size={moderateScale(24)}
+              color={focused ? '#C08F54' : '#ffffff'}
+            />
+          ),
         }}
       />
+
       <Tab.Screen
         name="CartNavigator"
         options={{
@@ -80,17 +77,17 @@ const TapNavigator = ({routeName}: any) => {
             color: strWhiteColor,
           },
           tabBarIcon: ({focused}) => (
-            <FastImage
-              style={Styles.tabBarIcons}
-              resizeMode="contain"
-              tintColor={focused ? '#C08F54' : '#ffffff'}
-              source={images.CartIcon}
+            <MaterialCommunityIcons
+              name="cart-plus"
+              size={moderateScale(24)}
+              color={focused ? '#C08F54' : '#ffffff'}
             />
           ),
           tabBarStyle: {display: 'none'},
         }}
         children={() => <CartNavigator />}
       />
+
       <Tab.Screen
         name="ShoppingNavigator"
         options={{
@@ -135,44 +132,36 @@ const TapNavigator = ({routeName}: any) => {
           />
         )}
       />
+
       <Tab.Screen
         name="Favourite"
         options={{
           headerShown: false,
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={Styles.screenContainer}>
-                <FastImage
-                  style={Styles.tabBarIcons}
-                  resizeMode="contain"
-                  tintColor={focused ? '#C08F54' : '#ffffff'}
-                  source={images.FavouriteListIcon}
-                />
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <MaterialCommunityIcons
+              name="heart"
+              size={moderateScale(24)}
+              color={focused ? '#C08F54' : '#ffffff'}
+            />
+          ),
         }}
         children={() => <Favourite />}
       />
+
       <Tab.Screen
-        name="ProfileNavigator"
+        name="Orders"
         options={{
           headerShown: false,
-          tabBarIcon: ({focused}) => {
-            return (
-              <View style={Styles.screenContainer}>
-                <FastImage
-                  style={Styles.tabBarIcons}
-                  resizeMode="contain"
-                  tintColor={focused ? '#C08F54' : '#ffffff'}
-                  source={images.ProfileIcon}
-                />
-              </View>
-            );
-          },
+          tabBarIcon: ({focused}) => (
+            <MaterialCommunityIcons
+              name="cart-check"
+              size={moderateScale(24)}
+              color={focused ? '#C08F54' : '#ffffff'}
+            />
+          ),
           tabBarStyle: {display: 'none'},
         }}
-        children={() => <ProfileNavigator />}
+        children={() => <Orders />}
       />
     </Tab.Navigator>
   );
@@ -188,6 +177,10 @@ export const Styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: strSecondColor,
     borderColor: strSecondColor,
+    elevation: 3,
+    shadowColor: strPrimaryColor,
+    shadowOpacity: 0.05,
+    shadowRadius: 5,
   },
   screenContainer: {
     alignItems: 'center',

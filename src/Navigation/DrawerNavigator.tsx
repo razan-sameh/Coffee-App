@@ -3,6 +3,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import TapNavigator from './TapNavigator';
 import CustomDrawer, {Styles} from '../Components/CustomDrawer';
 import Orders from '../screens/orders/Orders';
+import ProfileNavigator from './ProfileNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,6 +31,7 @@ const DrawerNavigator = ({routeName}: any) => {
         )}
       />
       <Drawer.Screen name="Orders" component={Orders} />
+      <Drawer.Screen name="ProfileNavigator" component={ProfileNavigator} />
     </Drawer.Navigator>
   );
 };

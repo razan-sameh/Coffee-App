@@ -2,7 +2,6 @@ import {StyleSheet} from 'react-native';
 import {
   heightScale,
   mbdlScreenHeight,
-  mdblBAR_HEIGHT,
   moderateScale,
   strINTER_SEMIBOLD600_Font,
   strPrimaryColor,
@@ -22,7 +21,6 @@ export const Styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: moderateScale(15),
     paddingRight: moderateScale(15),
-    paddingTop: mdblBAR_HEIGHT,
   },
   filterIcon: {
     width: widthScale(22),

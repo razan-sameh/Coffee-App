@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
@@ -22,9 +23,10 @@ import {
   useGetCategoriesQuery,
   useGetProductsQuery,
 } from '../../services/firebaseApi';
-import {strPrimaryColor} from '../../styles/responsive';
+import {strPrimaryColor, strSecondColor} from '../../styles/responsive';
 import ErrorScreen from '../ErrorScreen';
 import {Styles} from './HomeStyle';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 export function Home() {
   const navigation = useNavigation<StackNavigationProp<ParamListBase>>();
@@ -50,7 +52,7 @@ export function Home() {
 
   if (loadingProducts || loadingCategories) {
     return (
-      <View style={Styles.wall}>
+      <View style={Styles.indicatorContainer}>
         <ActivityIndicator size="large" color={strPrimaryColor} />
       </View>
     );
@@ -72,11 +74,12 @@ export function Home() {
   }
 
   return (
-    <View style={Styles.wall}>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        scrollEnabled={true}
-        style={Styles.mainContainer}>
+    <SafeAreaView style={{flex: 1, backgroundColor: strSecondColor}}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={Styles.mainContainer}
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}>
         {/* Categories */}
         <Text style={Styles.catTitle}>Category</Text>
         <View style={Styles.catContainer}>
@@ -144,7 +147,9 @@ export function Home() {
             </View>
           </View>
         ))}
-      </ScrollView>
-    </View>
+        {/* </ScrollView> */}
+        {/* </View> */}
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 }

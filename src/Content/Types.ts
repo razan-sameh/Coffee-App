@@ -60,12 +60,19 @@ export type typLocation = {
   address: typAddress;
 } | null;
 
+export type typPhone = {
+  countryCode: string;
+  countryISO: string;
+  number: string;
+};
+
 export type typUser = {
+  profilePicture?: string;
   Uid: string;
   firstName: string;
   lastName: string;
   email: string;
-  phoneNumber?: string[];
+  phoneNumber?: typPhone[];
   address?: typLocation[];
   password: string;
   role: enmRole;

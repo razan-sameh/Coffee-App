@@ -40,7 +40,6 @@ export const Styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: moderateScale(15),
     paddingRight: moderateScale(15),
-    paddingTop: mdblBAR_HEIGHT,
   },
   TitleContainer: {
     width: mdblScreenWidth / 2 - 30,

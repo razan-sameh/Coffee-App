@@ -1,13 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 // src/screens/LocationPicker.tsx
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  Button,
-  Platform,
-  PermissionsAndroid,
-} from 'react-native';
+import {View, StyleSheet, Button} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import Geolocation from 'react-native-geolocation-service';
 import {
@@ -43,16 +37,7 @@ const LocationPicker = () => {
     }
 
     // 2️⃣ Else get current device location
-    const getPermissionAndLocation = async () => {
-      if (Platform.OS === 'android') {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          return;
-        }
-      }
-
+    const getLocation = async () => {
       Geolocation.getCurrentPosition(
         pos => {
           setInitialLocation({
@@ -65,7 +50,7 @@ const LocationPicker = () => {
       );
     };
 
-    getPermissionAndLocation();
+    getLocation();
   }, [route.params]);
 
   if (!initialLocation) {

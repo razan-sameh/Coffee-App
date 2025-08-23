@@ -33,13 +33,18 @@ export default function Profile() {
         source={images.LoginWallIcon2}
       />
 
-      <ScrollView contentContainerStyle={{paddingTop: 30, paddingBottom: 50}}>
+      <ScrollView
+        contentContainerStyle={{paddingTop: 30, paddingBottom: 50, flex: 1}}>
         {/* Profile Picture */}
         <View style={Styles.profileContainer}>
           <FastImage
             style={Styles.profileImage}
-            resizeMode="contain"
-            source={images.User}
+            resizeMode="cover" // or contain, depending on style
+            source={
+              user?.profilePicture
+                ? {uri: user.profilePicture} // wrap string in { uri }
+                : images.User // fallback local image
+            }
           />
           <Text style={Styles.userName}>
             {user?.firstName} {user?.lastName}
@@ -77,11 +82,13 @@ export default function Profile() {
         {/* Phones */}
         <View style={Styles.infoCard}>
           <Text style={Styles.sectionTitle}>Phone Numbers</Text>
-          {user?.phoneNumber && Object.values(user.phoneNumber).length ? (
-            Object.values(user.phoneNumber).map((p: any, i) => (
+          {user?.phoneNumber && user.phoneNumber.length ? (
+            user.phoneNumber.map((p: any, i: number) => (
               <View key={i} style={Styles.listRow}>
                 <Icon name="phone" size={18} color="#fff" />
-                <Text style={Styles.listText}>{String(p)}</Text>
+                <Text style={Styles.listText}>
+                  {p.countryCode} {p.number}
+                </Text>
               </View>
             ))
           ) : (

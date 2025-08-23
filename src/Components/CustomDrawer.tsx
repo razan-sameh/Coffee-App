@@ -16,38 +16,44 @@ import {
 } from '../styles/responsive';
 import {images} from '../Content/resources';
 import {logOut, getUserName} from '../services/Authentication';
+import {RootState} from '../redux/store';
+import {useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {getActiveRouteName} from '../Content/Utils';
 
 const drawerItems = [
-  {
-    label: 'Home',
-    icon: images.HomeIcon,
-    parent: 'TapNavigator',
-    screen: 'Home',
-  },
+  {label: 'Home', icon: 'home-outline', parent: 'TapNavigator', screen: 'Home'},
   {
     label: 'Profile',
-    icon: images.ProfileIcon,
+    icon: 'account',
     parent: 'ProfileNavigator',
     screen: 'Profile',
   },
   {
+    label: 'Change Password',
+    icon: 'lock-reset',
+    parent: 'TapNavigator',
+    screen: 'ChangePassword',
+  },
+  {
     label: 'Favourite',
-    icon: images.FavouriteListIcon,
+    icon: 'heart',
     parent: 'TapNavigator',
     screen: 'Favourite',
   },
   {
     label: 'Orders',
-    icon: images.FavouriteListIcon,
-    parent: 'DrawerNavigator',
+    icon: 'cart',
+    parent: 'TapNavigator',
     screen: 'Orders',
   },
-  {label: 'Log out', icon: images.LogOutIcon, action: 'logout'},
+  {label: 'Log out', icon: 'logout', action: 'logout'},
 ];
 
 const CustomDrawer = (props: any) => {
   const {state, navigation} = props;
-  // const navigation: NavigationProp<ParamListBase> = useNavigation();
+  const {user} = useSelector((state: RootState) => state.user);
+  const currentRouteName = getActiveRouteName(state);
 
   const DrawerItem = ({item, isFocused}: any) => {
     const onPress = () => {
@@ -69,11 +75,10 @@ const CustomDrawer = (props: any) => {
         onPress={onPress}
         style={[Styles.btnContainer, isFocused && Styles.activeBtnContainer]}>
         <View style={Styles.iconContainer}>
-          <FastImage
-            style={Styles.icon}
-            resizeMode="contain"
-            tintColor={strPrimaryColor}
-            source={item.icon}
+          <Icon
+            name={item.icon}
+            size={20}
+            color={isFocused ? strWhiteColor : strPrimaryColor}
           />
         </View>
         <Text
@@ -93,8 +98,12 @@ const CustomDrawer = (props: any) => {
       <View style={Styles.header}>
         <FastImage
           style={Styles.userImage}
-          resizeMode="contain"
-          source={images.User}
+          resizeMode="cover" // or contain, depending on style
+          source={
+            user?.profilePicture
+              ? {uri: user.profilePicture} // wrap string in { uri }
+              : images.User // fallback local image
+          }
         />
         <View>
           <Text style={Styles.txtUserName}>{getUserName()}</Text>
@@ -109,7 +118,10 @@ const CustomDrawer = (props: any) => {
             <DrawerItem
               key={index}
               item={item}
-              isFocused={state.index === index}
+              isFocused={
+                item.screen === currentRouteName ||
+                item.parent === currentRouteName
+              }
             />
           ))}
         </View>

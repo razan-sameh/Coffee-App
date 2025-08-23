@@ -1,5 +1,5 @@
 import database from '@react-native-firebase/database';
-import {typLocation, typUser} from '../Content/Types';
+import {typLocation, typPhone, typUser} from '../Content/Types';
 import auth from '@react-native-firebase/auth';
 
 // Fetch user data
@@ -22,8 +22,9 @@ type UpdateUserPayload = {
   Uid: string;
   firstName?: string;
   lastName?: string;
-  address?: typLocation[]; // ✅ now arrays
-  phoneNumber?: string[]; // ✅ now arrays
+  address?: typLocation[];
+  phoneNumber?: typPhone[];
+  profilePicture?: string;
 };
 
 export const updateUserProfile = async ({
@@ -32,6 +33,7 @@ export const updateUserProfile = async ({
   lastName,
   address,
   phoneNumber,
+  profilePicture,
 }: UpdateUserPayload): Promise<void> => {
   const user = auth().currentUser;
   const userRef = database().ref(`user/${Uid}`);
@@ -40,21 +42,29 @@ export const updateUserProfile = async ({
 
   const updates: any = {};
 
-  // Merge new values with existing ones for displayName
   const finalFirstName = firstName ?? existingUser?.firstName ?? '';
   const finalLastName = lastName ?? existingUser?.lastName ?? '';
 
+  // update firebase auth profile
   if (user && (firstName || lastName)) {
     await user.updateProfile({
       displayName: `${finalFirstName} ${finalLastName}`.trim(),
     });
   }
 
-  // Save fields individually if they were changed
   if (firstName) updates.firstName = firstName;
   if (lastName) updates.lastName = lastName;
-  if (phoneNumber) updates.phoneNumber = phoneNumber;
+
+  if (phoneNumber) {
+    updates.phoneNumber = phoneNumber.map(p => ({
+      countryCode: p.countryCode,
+      number: p.number,
+      countryISO: p.countryISO,
+    }));
+  }
+
   if (address) updates.address = address;
+  if (profilePicture) updates.profilePicture = profilePicture;
 
   if (Object.keys(updates).length > 0) {
     await userRef.update(updates);

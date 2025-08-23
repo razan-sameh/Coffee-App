@@ -1,3 +1,4 @@
+// src/provider/LocationProvider.tsx
 import React, {
   createContext,
   useContext,
@@ -6,6 +7,7 @@ import React, {
   useEffect,
 } from 'react';
 import Geolocation from 'react-native-geolocation-service';
+import {PermissionsAndroid, Platform, ToastAndroid} from 'react-native';
 import {typAddress, typLocation} from '../Content/Types';
 
 type LocationContextType = {
@@ -15,14 +17,14 @@ type LocationContextType = {
     picked?: boolean,
   ) => void;
   isPicked: boolean;
-  setIsPicked: (value: boolean) => void; // add this
+  setIsPicked: (value: boolean) => void;
 };
 
 const LocationContext = createContext<LocationContextType>({
   location: null,
   setLocation: () => {},
   isPicked: false,
-  setIsPicked: () => {}, // default
+  setIsPicked: () => {},
 });
 
 export const useLocation = () => useContext(LocationContext);
@@ -30,6 +32,17 @@ export const useLocation = () => useContext(LocationContext);
 export const LocationProvider = ({children}: {children: ReactNode}) => {
   const [location, setLocationState] = useState<typLocation>(null);
   const [isPicked, setIsPicked] = useState(false);
+
+  const requestPermission = async (): Promise<boolean> => {
+    if (Platform.OS === 'android') {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    }
+    // On iOS, permission is handled by info.plist
+    return true;
+  };
 
   const setLocation = async (
     loc: {latitude: number; longitude: number},
@@ -55,7 +68,7 @@ export const LocationProvider = ({children}: {children: ReactNode}) => {
       } catch {
         console.log('Reverse geocoding returned non-JSON:', text);
         setLocationState({latitude, longitude, address: null});
-        if (picked) setIsPicked(true); // move here
+        if (picked) setIsPicked(true);
         return;
       }
 
@@ -76,31 +89,53 @@ export const LocationProvider = ({children}: {children: ReactNode}) => {
         address,
       });
 
-      if (picked) setIsPicked(true); // ✅ only mark picked when address is ready
+      if (picked) setIsPicked(true);
     } catch (err) {
       console.log('Reverse geocoding failed:', err);
       setLocationState({...loc, address: null});
-      if (picked) setIsPicked(true); // still resolve
+      if (picked) setIsPicked(true);
     }
   };
 
-  // 🔹 Optional: fetch initial GPS location on mount
   useEffect(() => {
-    Geolocation.getCurrentPosition(
-      pos => {
-        setLocation(
-          {
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-          },
-          false,
+    const init = async () => {
+      const hasPermission = await requestPermission();
+      if (!hasPermission) {
+        ToastAndroid.showWithGravityAndOffset(
+          'Location permission denied',
+          ToastAndroid.LONG,
+          ToastAndroid.BOTTOM,
+          25,
+          50,
         );
-      },
-      error => {
-        console.log('Error getting initial location:', error);
-      },
-      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
-    );
+        return;
+      }
+
+      Geolocation.getCurrentPosition(
+        pos => {
+          setLocation(
+            {
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude,
+            },
+            false,
+          );
+        },
+        error => {
+          console.log('Error getting initial location:', error);
+          ToastAndroid.showWithGravityAndOffset(
+            `Error getting location: ${error.message}`,
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50,
+          );
+        },
+        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+      );
+    };
+
+    init();
   }, []);
 
   return (

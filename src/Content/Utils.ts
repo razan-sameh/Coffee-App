@@ -72,3 +72,17 @@ export const formatLocation = (
     ('latitude' in loc ? `${loc.latitude}, ${loc.longitude}` : '')
   );
 };
+
+export const getActiveRouteName = (state: any): string => {
+  if (!state || !state.routes || state.index === undefined) {
+    return '';
+  }
+  const route = state.routes[state.index];
+
+  // Dive into nested navigators
+  if (route.state) {
+    return getActiveRouteName(route.state);
+  }
+
+  return route.name;
+};

@@ -1,7 +1,6 @@
 import {StyleSheet} from 'react-native';
 import {
   heightScale,
-  mdblBAR_HEIGHT,
   moderateScale,
   strINTER_MEDIUM500_Font,
   strINTER_SEMIBOLD600_Font,
@@ -13,11 +12,7 @@ import {
 
 export const Styles = StyleSheet.create({
   mainContainer: {
-    width: widthScale(375),
-    height: heightScale(240) - mdblBAR_HEIGHT,
-    paddingLeft: moderateScale(16),
-    paddingRight: moderateScale(16),
-    paddingTop: moderateScale(20),
+    padding: moderateScale(16),
     backgroundColor: strSecondColor,
   },
   sideBarImage: {

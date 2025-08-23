@@ -1,6 +1,6 @@
 // redux/slices/userSlice.ts
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import {typLocation, typUser} from '../../Content/Types';
+import {typLocation, typPhone, typUser} from '../../Content/Types';
 import {enmRole} from '../../Content/Enums';
 import {createUser} from '../../services/cartServices';
 import {
@@ -68,7 +68,6 @@ export const updateUserPassword = createAsyncThunk(
   },
 );
 
-// Add address/phone number
 export const updateUserProfileAsync = createAsyncThunk(
   'user/updateUserProfile',
   async ({
@@ -77,12 +76,14 @@ export const updateUserProfileAsync = createAsyncThunk(
     lastName,
     address,
     phoneNumber,
+    profilePicture,
   }: {
     Uid: string;
     firstName?: string;
     lastName?: string;
-    address?: typLocation[]; // ✅ make it array
-    phoneNumber?: string[]; // ✅ make it array
+    address?: typLocation[];
+    phoneNumber?: typPhone[];
+    profilePicture?: string;
   }) => {
     await updateUserProfile({
       Uid,
@@ -90,8 +91,9 @@ export const updateUserProfileAsync = createAsyncThunk(
       lastName,
       address,
       phoneNumber,
+      profilePicture,
     });
-    return {firstName, lastName, address, phoneNumber};
+    return {firstName, lastName, address, phoneNumber, profilePicture};
   },
 );
 
@@ -137,9 +139,13 @@ const userSlice = createSlice({
           state.user.password = action.payload;
         }
       })
+      .addCase(updateUserProfileAsync.pending, state => {
+        state.loading = true;
+      })
       .addCase(updateUserProfileAsync.fulfilled, (state, action) => {
         if (state.user) {
-          const {firstName, lastName, address, phoneNumber} = action.payload;
+          const {firstName, lastName, address, phoneNumber, profilePicture} =
+            action.payload;
 
           if (firstName) {
             state.user.firstName = firstName;
@@ -148,12 +154,20 @@ const userSlice = createSlice({
             state.user.lastName = lastName;
           }
           if (address) {
-            state.user.address = address; // ✅ replace with full array
+            state.user.address = address;
           }
           if (phoneNumber) {
-            state.user.phoneNumber = phoneNumber; // ✅ replace with full array
+            state.user.phoneNumber = phoneNumber;
+          }
+          if (profilePicture) {
+            state.user.profilePicture = profilePicture;
           }
         }
+        state.loading = false;
+      })
+      .addCase(updateUserProfileAsync.rejected, (state, action) => {
+        state.error = action.error.message ?? 'Update failed';
+        state.loading = false;
       });
   },
 });
