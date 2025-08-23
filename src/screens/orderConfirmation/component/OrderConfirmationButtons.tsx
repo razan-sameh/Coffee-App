@@ -1,5 +1,5 @@
-import React from 'react';
-import {TouchableOpacity, Text} from 'react-native';
+import React, {useEffect} from 'react';
+import {TouchableOpacity, Text, BackHandler} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {
   CommonActions,
@@ -11,15 +11,28 @@ import {Styles} from '../OrderConfirmationStyle';
 import {images} from '../../../Content/resources';
 
 export const OrderConfirmationButtons = () => {
-  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
+  const navigation: NavigationProp<ParamListBase> = useNavigation();
+
+  // Handle hardware back button
+  useEffect(() => {
+    const backAction = () => {
+      navigation.navigate('Home'); // Go to Home screen
+      return true; // prevent default behavior
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  }, [navigation]);
 
   return (
     <TouchableOpacity
       style={Styles.btnOutline}
       onPress={() => {
-        navigationTo.navigate('TapNavigator', {screen: 'Home'});
+        navigation.navigate('TapNavigator', {screen: 'Home'});
         // Reset CartNavigator so it starts fresh
-        navigationTo.dispatch(
+        navigation.dispatch(
           CommonActions.reset({
             index: 0,
             routes: [

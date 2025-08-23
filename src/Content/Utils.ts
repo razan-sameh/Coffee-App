@@ -77,11 +77,23 @@ export const getActiveRouteName = (state: any): string => {
   if (!state || !state.routes || state.index === undefined) {
     return '';
   }
-  const route = state.routes[state.index];
 
-  // Dive into nested navigators
+  const route = state.routes[state.index];
+  // console.log({ route });
+
+  // 1. Dive into nested navigators if available
   if (route.state) {
     return getActiveRouteName(route.state);
+  }
+
+  // 2. If screen is passed via params
+  if (route.params?.screen) {
+    return route.params.screen;
+  }
+
+  // 3. Fallback: if it's TapNavigator with no state yet, return initial route
+  if (route.name === 'TapNavigator') {
+    return 'Home'; // match TapNavigator's initialRouteName
   }
 
   return route.name;

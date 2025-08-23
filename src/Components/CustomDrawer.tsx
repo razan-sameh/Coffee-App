@@ -32,7 +32,7 @@ const drawerItems = [
   {
     label: 'Change Password',
     icon: 'lock-reset',
-    parent: 'TapNavigator',
+    parent: 'DrawerNavigator',
     screen: 'ChangePassword',
   },
   {
@@ -43,7 +43,7 @@ const drawerItems = [
   },
   {
     label: 'Orders',
-    icon: 'cart',
+    icon: 'cart-check',
     parent: 'TapNavigator',
     screen: 'Orders',
   },
@@ -118,10 +118,7 @@ const CustomDrawer = (props: any) => {
             <DrawerItem
               key={index}
               item={item}
-              isFocused={
-                item.screen === currentRouteName ||
-                item.parent === currentRouteName
-              }
+              isFocused={item.screen === currentRouteName}
             />
           ))}
         </View>

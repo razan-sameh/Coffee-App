@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useReducer} from 'react';
+import React, {useEffect, useMemo, useReducer, useRef} from 'react';
 import {
   View,
   Text,
@@ -13,11 +13,10 @@ import {ArrowBack} from '../../Components/ArrowBack';
 import {Controller, useForm} from 'react-hook-form';
 import {TextInput} from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
-import {typCheckout, typDeliveryInfo, typOrder} from '../../Content/Types';
+import {typDeliveryInfo, typOrder} from '../../Content/Types';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {updateUserProfileAsync} from '../../redux/slices/userSlice';
 import {useSelector} from 'react-redux';
-import CheckOutField from './component/CheckOutField';
 import {getUserID, getUserName} from '../../services/Authentication';
 import {enmPaymentMethod} from '../../Content/Enums';
 import {CardDetails} from './component/CardDetails';
@@ -36,22 +35,30 @@ import {
 import {checkoutInitialState, checkoutReducer} from './checkoutReducer';
 import {PlaceOrderButton} from './component/PlaceOrderButton';
 import {useLocation} from '../../provider/LocationProvider';
+import PhoneInput from 'react-native-phone-number-input';
+import PhoneField from './component/PhoneField';
+import SaveOptionsRow from './component/SaveOptionsRow';
+import AddressField from './component/AddressField';
 
 const CheckOut = () => {
   const {user} = useSelector((state: RootState) => state.user);
   const {
     control,
     handleSubmit,
-    setValue, // add this 👈
+    setValue,
     formState: {errors},
-  } = useForm<typCheckout>({
+  } = useForm<typDeliveryInfo>({
     defaultValues: {
-      strFullName: getUserName()!,
-      strPhoneNumber: user?.phoneNumber?.[0] || '',
-      strAddress: user?.address?.[0] || null,
+      name: getUserName()!,
+      phone: user?.phoneNumber?.[0] || {
+        countryCode: '',
+        countryISO: '',
+        number: '',
+      },
+      address: user?.address?.[0] || null,
     },
   });
-
+  const phoneInputRef = useRef<PhoneInput>(null);
   const [state, dispatch] = useReducer(checkoutReducer, checkoutInitialState);
   const {confirmPayment} = useStripe();
   const navigationTo: NavigationProp<ParamListBase> = useNavigation();
@@ -72,16 +79,16 @@ const CheckOut = () => {
 
   useEffect(() => {
     if (location && isPicked) {
-      setValue('strAddress', location); // 👈 same as EditProfile
+      setValue('address', location); // 👈 same as EditProfile
       setIsPicked(false); // reset flag
     }
   }, [location, isPicked, setValue, setIsPicked]);
 
-  const handlePlaceOrder = async (formData: typCheckout) => {
+  const handlePlaceOrder = async (formData: typDeliveryInfo) => {
     const deliveryInfo: typDeliveryInfo = {
-      name: formData.strFullName,
-      phone: formData.strPhoneNumber,
-      address: formData.strAddress,
+      name: formData.name,
+      phone: formData.phone,
+      address: formData.address,
     };
 
     const order = {
@@ -106,21 +113,34 @@ const CheckOut = () => {
     });
   };
 
-  const handlePay = async (formData: typCheckout) => {
+  const handlePay = async (formData: typDeliveryInfo) => {
     dispatch({type: 'SET_CHECKOUT_LOADING', payload: true});
     try {
       const userID = getUserID();
       if (userID) {
-        if (state.savePhone || state.saveAddress) {
-          await appDispatch(
-            updateUserProfileAsync({
-              Uid: userID,
-              ...(state.savePhone && {phoneNumber: formData.strPhoneNumber}),
-              ...(state.saveAddress && {
-                address: formData.strAddress,
+        if (state.savePhone) {
+          const rawNumber =
+            phoneInputRef.current?.getNumberAfterPossiblyEliminatingZero()
+              ?.number;
+          const countryCode = `+${phoneInputRef.current?.getCallingCode()}`;
+          const countryISO = phoneInputRef.current?.getCountryCode(); // e.g. "EG"
+
+          if (rawNumber && countryCode && countryISO) {
+            const existingPhones = user?.phoneNumber || [];
+            await appDispatch(
+              updateUserProfileAsync({
+                Uid: userID,
+                phoneNumber: [
+                  ...existingPhones,
+                  {
+                    countryCode,
+                    countryISO,
+                    number: rawNumber,
+                  },
+                ],
               }),
-            }),
-          );
+            );
+          }
         }
       }
 
@@ -202,7 +222,7 @@ const CheckOut = () => {
           {/* Full Name */}
           <Controller
             control={control}
-            name="strFullName"
+            name="name"
             rules={{required: true}}
             render={({field: {onChange, onBlur, value}}) => (
               <View>
@@ -219,67 +239,78 @@ const CheckOut = () => {
               </View>
             )}
           />
-          {errors.strFullName && (
+          {errors.name && (
             <Text style={Styles.txtError}>This is required.</Text>
           )}
 
           {/* Phone Number */}
           <Controller
             control={control}
-            name="strPhoneNumber"
-            rules={{
-              pattern: /^(01[0125][0-9]{8}|0[2-9][0-9]{8})$/,
-              required: true,
-            }}
-            render={({field}) => (
-              <CheckOutField
-                label="Phone Number"
-                placeholder="Phone Number"
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                userValues={user?.phoneNumber}
-                isAdding={state.isAddingPhoneNumber}
-                setIsAdding={v =>
-                  dispatch({type: 'TOGGLE_ADD_PHONE', payload: v})
-                }
-                saveValue={state.savePhone}
-                setSaveValue={v =>
-                  dispatch({type: 'SET_SAVE_PHONE', payload: v})
-                }
-                hasError={!!errors.strPhoneNumber}
-                errorMessage={
-                  errors.strPhoneNumber?.type === 'pattern'
-                    ? 'The Phone Number must be 11 digits.'
-                    : 'This is required.'
-                }
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="strAddress"
+            name="phone"
             rules={{required: true}}
             render={({field}) => (
-              <CheckOutField
-                label="Location"
-                placeholder="Location"
-                value={field.value} // ✅ only use strAddress
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                userValues={user?.address}
-                isAdding={state.isAddingAddress}
-                setIsAdding={v =>
-                  dispatch({type: 'TOGGLE_ADD_ADDRESS', payload: v})
-                }
-                saveValue={state.saveAddress}
-                setSaveValue={v =>
-                  dispatch({type: 'SET_SAVE_ADDRESS', payload: v})
-                }
-                hasError={!!errors.strAddress}
-                errorMessage="Please select location"
-                isAddress={true}
-              />
+              <>
+                <Text style={Styles.txtInputTitle}>Phone Number</Text>
+
+                <PhoneField
+                  ref={phoneInputRef}
+                  value={field.value}
+                  onChange={field.onChange}
+                  savedPhones={user?.phoneNumber} // ✅ pass saved phones
+                  hasError={!!errors.phone}
+                  errorMessage={
+                    errors.phone?.type === 'required' ? 'This is required.' : ''
+                  }
+                  isAdding={state.isAddingPhoneNumber} // ✅ pass the adding flag
+                />
+
+                <SaveOptionsRow
+                  label="Phone Number"
+                  showSaveCheckbox
+                  saveValue={state.savePhone}
+                  setSaveValue={v =>
+                    dispatch({type: 'SET_SAVE_PHONE', payload: v})
+                  }
+                  userValues={user?.phoneNumber}
+                  isAdding={state.isAddingPhoneNumber} // ✅ pass the adding flag
+                  setIsAdding={v =>
+                    dispatch({type: 'TOGGLE_ADD_PHONE', payload: v})
+                  }
+                />
+              </>
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="address"
+            rules={{required: true}}
+            render={({field}) => (
+              <>
+                <Text style={Styles.txtInputTitle}>Location</Text>
+
+                <AddressField
+                  value={field.value}
+                  savedAddresses={user?.address} // ✅ pass saved addresses
+                  hasError={!!errors.address}
+                  errorMessage="Please select location"
+                  isAdding={state.isAddingPhoneNumber} // ✅ pass the adding flag
+                />
+
+                <SaveOptionsRow
+                  label="Location"
+                  showSaveCheckbox
+                  saveValue={state.saveAddress}
+                  setSaveValue={v =>
+                    dispatch({type: 'SET_SAVE_ADDRESS', payload: v})
+                  }
+                  userValues={user?.address}
+                  isAdding={state.isAddingAddress} // ✅ pass the adding flag
+                  setIsAdding={v =>
+                    dispatch({type: 'TOGGLE_ADD_ADDRESS', payload: v})
+                  }
+                />
+              </>
             )}
           />
 

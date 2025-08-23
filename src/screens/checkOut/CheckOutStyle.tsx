@@ -43,7 +43,6 @@ export const Styles = StyleSheet.create({
   },
   input: {
     width: widthScale(343),
-    height: heightScale(44),
     backgroundColor: strWhiteColor,
     borderRadius: moderateScale(20),
     borderTopLeftRadius: moderateScale(20),

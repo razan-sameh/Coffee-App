@@ -1,7 +1,26 @@
 import database from '@react-native-firebase/database';
 import {typLocation, typPhone, typUser} from '../Content/Types';
 import auth from '@react-native-firebase/auth';
-
+import {enmRole} from '../Content/Enums';
+// Create new user
+export const createUser = async (
+  Uid: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+): Promise<void> => {
+  const reference = database().ref(`/user/${Uid}`);
+  await reference.set({
+    Uid,
+    firstName,
+    lastName,
+    email,
+    password,
+    isActive: true,
+    role: enmRole.customer,
+  });
+};
 // Fetch user data
 export const getUserById = async (Uid: string): Promise<typUser> => {
   const snapshot = await database().ref(`/user/${Uid}`).once('value');

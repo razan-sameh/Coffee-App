@@ -42,29 +42,6 @@ export type typSignUp = {
   strLastName: string;
   strPhoneNumber: string;
 };
-export type typCheckout = {
-  strFullName: string;
-  strPhoneNumber: string;
-  strAddress: typLocation;
-};
-export type typAddress = {
-  house_number?: string;
-  road?: string;
-  city?: string;
-  country?: string;
-} | null;
-
-export type typLocation = {
-  latitude: number;
-  longitude: number;
-  address: typAddress;
-} | null;
-
-export type typPhone = {
-  countryCode: string;
-  countryISO: string;
-  number: string;
-};
 
 export type typUser = {
   profilePicture?: string;
@@ -83,7 +60,7 @@ export type typUser = {
 export type typDeliveryInfo = {
   name: string;
   address: typLocation;
-  phone: string;
+  phone: typPhone;
 };
 export type typOrderItem = {
   productID: string;
@@ -104,4 +81,23 @@ export type typOrder = {
   platform: enmPlatform;
   status: enmOrderStatus;
   estimatedTime: string;
+};
+
+export type typAddress = {
+  house_number?: string;
+  road?: string;
+  city?: string;
+  country?: string;
+} | null;
+
+export type typLocation = {
+  latitude: number;
+  longitude: number;
+  address: typAddress;
+} | null;
+
+export type typPhone = {
+  countryCode: string;
+  countryISO: string;
+  number: string;
 };

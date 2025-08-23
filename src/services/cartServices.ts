@@ -1,5 +1,5 @@
 import database from '@react-native-firebase/database';
-import {enmSize, enmRole} from '../Content/Enums';
+import {enmSize} from '../Content/Enums';
 import {typCart} from '../Content/Types';
 import {fetchProductById} from '../Content/Utils';
 import {ToastAndroid} from 'react-native';
@@ -225,25 +225,6 @@ export const getCartItemDetails = (
   });
 };
 
-// Create new user
-export const createUser = async (
-  Uid: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  password: string,
-): Promise<void> => {
-  const reference = database().ref(`/user/${Uid}`);
-  await reference.set({
-    Uid,
-    firstName,
-    lastName,
-    email,
-    password,
-    isActive: true,
-    role: enmRole.customer,
-  });
-};
 export const clearUserCart = async (Uid: string): Promise<void> => {
   const userCartRef = database().ref(`cart/${Uid}`);
   try {

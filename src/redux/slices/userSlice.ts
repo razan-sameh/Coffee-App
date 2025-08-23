@@ -2,11 +2,11 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import {typLocation, typPhone, typUser} from '../../Content/Types';
 import {enmRole} from '../../Content/Enums';
-import {createUser} from '../../services/cartServices';
 import {
   getUserById,
   changeUserPassword,
   updateUserProfile,
+  createUser,
 } from '../../services/userServices';
 
 type UserState = {

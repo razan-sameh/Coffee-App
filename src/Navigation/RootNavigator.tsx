@@ -8,7 +8,7 @@ import OTPVerification from '../screens/otpVerification/OTPVerification';
 import ResetPassword from '../screens/resetPassword/ResetPassword';
 import SignUp from '../screens/signUp/SignUp';
 import DrawerNavigator from './DrawerNavigator';
-import LocationPicker from '../Components/LocationPicker';
+import LocationPicker from '../screens/LocationPicker';
 
 const Stack = createStackNavigator();
 

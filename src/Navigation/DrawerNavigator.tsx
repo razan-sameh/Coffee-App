@@ -2,8 +2,8 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import TapNavigator from './TapNavigator';
 import CustomDrawer, {Styles} from '../Components/CustomDrawer';
-import Orders from '../screens/orders/Orders';
 import ProfileNavigator from './ProfileNavigator';
+import ChangePassword from '../screens/changePassword/ChangePassword';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,8 +30,8 @@ const DrawerNavigator = ({routeName}: any) => {
           <TapNavigator {...navigation} routeName={routeName} />
         )}
       />
-      <Drawer.Screen name="Orders" component={Orders} />
       <Drawer.Screen name="ProfileNavigator" component={ProfileNavigator} />
+      <Drawer.Screen name="ChangePassword" component={ChangePassword} />
     </Drawer.Navigator>
   );
 };
