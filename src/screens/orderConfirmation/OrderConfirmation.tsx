@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import React, {useCallback, useEffect} from 'react';
+import {View, Text, ScrollView, BackHandler} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {images} from '../../Content/resources';
 import {Styles} from './OrderConfirmationStyle';
@@ -7,7 +7,13 @@ import {
   useGetOrderByIdQuery,
   useGetProductsQuery,
 } from '../../services/firebaseApi';
-import {useRoute} from '@react-navigation/native';
+import {
+  CommonActions,
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {OrderConfirmationBackground} from './component/OrderConfirmationBackground';
 import {OrderConfirmationButtons} from './component/OrderConfirmationButtons';
 import {OrderConfirmationSummary} from './component/OrderConfirmationSummary';
@@ -15,9 +21,41 @@ import {OrderConfirmationSummary} from './component/OrderConfirmationSummary';
 const OrderConfirmation = () => {
   const route = useRoute();
   const {orderID} = route.params as {orderID: string};
-
+  const navigation: NavigationProp<ParamListBase> = useNavigation();
   const {data: order, isLoading: loadingOrder} = useGetOrderByIdQuery(orderID);
   const {data: products, isLoading: loadingProducts} = useGetProductsQuery();
+
+  const handleBackToHome = useCallback(() => {
+    // First, reset CartNavigator to start fresh at 'Cart'
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'CartNavigator',
+            state: {
+              routes: [{name: 'Cart'}],
+            },
+          },
+        ],
+      }),
+    );
+
+    // Then navigate to Home in TapNavigator
+    navigation.navigate('TapNavigator', {screen: 'Home'});
+  }, [navigation]);
+
+  useEffect(() => {
+    const backAction = () => {
+      handleBackToHome();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+    return () => backHandler.remove();
+  }, [handleBackToHome]);
 
   if (loadingOrder || loadingProducts) {
     return (
@@ -55,7 +93,7 @@ const OrderConfirmation = () => {
         <OrderConfirmationSummary order={order} products={products!} />
 
         {/* Buttons */}
-        <OrderConfirmationButtons />
+        <OrderConfirmationButtons onBackPress={handleBackToHome} />
       </ScrollView>
 
       {/* Background */}
