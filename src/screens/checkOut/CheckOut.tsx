@@ -98,7 +98,7 @@ const CheckOut = () => {
         count: item.count,
         price: item.price,
       })),
-      total: totalPrice,
+      SubTotal: Number(totalPrice.toFixed(2)),
       paymentMethod: state.paymentType,
       deliveryInfo,
       userId: user?.Uid!,

@@ -36,7 +36,7 @@ export const Styles = StyleSheet.create({
   },
   txtInputTitle: {
     fontFamily: strINTER_SEMIBOLD600_Font,
-    fontSize: moderateScale(14),
+    fontSize: moderateScale(16),
     color: strPrimaryColor,
     marginBottom: moderateScale(10),
     marginTop: moderateScale(10),
@@ -219,7 +219,7 @@ export const Styles = StyleSheet.create({
     flex: 0.48, // Takes up slightly less than half to allow for spacing
   },
   inputLabel: {
-    fontSize: 14,
+    fontSize: moderateScale(16),
     fontWeight: '600',
     marginBottom: 8,
     color: strPrimaryColor,

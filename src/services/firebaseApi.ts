@@ -12,7 +12,7 @@ import {store} from '../redux/store';
 export const firebaseApi = createApi({
   reducerPath: 'firebaseApi',
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['product', 'category'],
+  tagTypes: ['product', 'category', 'order'],
   endpoints: build => ({
     getProducts: build.query<typProduct[], void>({
       async queryFn() {
@@ -112,6 +112,7 @@ export const firebaseApi = createApi({
       },
       providesTags: (_result, _error, id) => [{type: 'product', id}],
     }),
+
     getOrderById: build.query<typOrder, string>({
       async queryFn(orderId) {
         try {
@@ -152,6 +153,39 @@ export const firebaseApi = createApi({
           ? result.map(c => ({type: 'category' as const, id: c.ID}))
           : [{type: 'category', id: 'LIST'}],
     }),
+
+    getOrdersByUserId: build.query<typOrder[], string>({
+      async queryFn() {
+        // empty initial state (RTKQ requires queryFn)
+        return {data: []};
+      },
+      async onCacheEntryAdded(uid, {updateCachedData, cacheEntryRemoved}) {
+        const ref = database().ref('order');
+
+        const listener = (snapshot: any) => {
+          const ordersObject = snapshot.val() || {};
+          const orders: typOrder[] = Object.entries(ordersObject)
+            .map(([id, value]) => ({id, ...(value as Omit<typOrder, 'id'>)}))
+            .filter(order => order.userId === uid);
+
+          // 🔥 update RTKQ cache whenever Firebase pushes
+          updateCachedData(() => orders);
+        };
+
+        ref.on('value', listener);
+
+        // cleanup when query unsubscribes
+        await cacheEntryRemoved;
+        ref.off('value', listener);
+      },
+      providesTags: (result, _error, uid) =>
+        result
+          ? [
+              ...result.map(o => ({type: 'order' as const, id: o.id})),
+              {type: 'order', id: `USER-${uid}`},
+            ]
+          : [{type: 'order', id: `USER-${uid}`}],
+    }),
   }),
 });
 
@@ -160,4 +194,5 @@ export const {
   useGetProductByIdQuery,
   useGetCategoriesQuery,
   useGetOrderByIdQuery,
+  useGetOrdersByUserIdQuery,
 } = firebaseApi;

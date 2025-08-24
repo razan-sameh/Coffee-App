@@ -1,10 +1,12 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 
-export default function Orders() {
+const RateOrder = () => {
   return (
     <View>
-      <Text>Orders</Text>
+      <Text>RateOrder</Text>
     </View>
   );
-}
+};
+
+export default RateOrder;

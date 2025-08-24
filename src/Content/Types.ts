@@ -73,6 +73,8 @@ export type typOrder = {
   id: string;
   items: typOrderItem[];
   total: number;
+  SubTotal: number;
+  delivery: number;
   paymentMethod: enmPaymentMethod;
   orderType: enmOrderType;
   deliveryInfo: typDeliveryInfo;

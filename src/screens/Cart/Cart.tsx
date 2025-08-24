@@ -21,7 +21,7 @@ export function Cart() {
   const strUserID = getUserID();
   const {items: atpvCartItems} = useSelector((state: RootState) => state.cart);
   const isCartEmpty = atpvCartItems?.length === 0; // ✅ check if empty
-
+  const deliveryPrice = 5;
   useEffect(() => {
     if (strUserID) {
       dispatch(fetchCart(strUserID));
@@ -68,8 +68,24 @@ export function Cart() {
               resizeMode="contain"
               style={Styles.frameContainer}
               source={images.FrameContainer}>
-              <Text style={Styles.txtTitlePrice}>Total</Text>
+              <Text style={Styles.txtTitlePrice}>Subtotal</Text>
               <Text style={Styles.txtPrice}>${totalPrice.toFixed(2)}</Text>
+            </FastImage>
+            <FastImage
+              resizeMode="contain"
+              style={Styles.frameContainer}
+              source={images.FrameContainer}>
+              <Text style={Styles.txtTitlePrice}>Delivery</Text>
+              <Text style={Styles.txtPrice}>${deliveryPrice}</Text>
+            </FastImage>
+            <FastImage
+              resizeMode="contain"
+              style={Styles.frameContainer}
+              source={images.FrameContainer}>
+              <Text style={Styles.txtTitlePrice}>Total</Text>
+              <Text style={Styles.txtPrice}>
+                ${(totalPrice + deliveryPrice).toFixed(2)}
+              </Text>
             </FastImage>
 
             <TouchableWithoutFeedback

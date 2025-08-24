@@ -24,7 +24,7 @@ import {
 } from '@react-navigation/native';
 import {Home} from '../screens/home/Home';
 import {useSelector} from 'react-redux';
-import Orders from '../screens/orders/Orders';
+import OrderNavigator from './OrderNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -149,7 +149,7 @@ const TapNavigator = ({routeName}: any) => {
       />
 
       <Tab.Screen
-        name="Orders"
+        name="OrderNavigator"
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => (
@@ -159,9 +159,8 @@ const TapNavigator = ({routeName}: any) => {
               color={focused ? '#C08F54' : '#ffffff'}
             />
           ),
-          tabBarStyle: {display: 'none'},
         }}
-        children={() => <Orders />}
+        children={() => <OrderNavigator />}
       />
     </Tab.Navigator>
   );

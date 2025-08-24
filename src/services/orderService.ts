@@ -10,10 +10,18 @@ import {ToastAndroid} from 'react-native';
 export const addOrderToFirebase = async (
   order: Omit<
     typOrder,
-    'id' | 'platform' | 'orderType' | 'date' | 'estimatedTime' | 'status'
+    | 'id'
+    | 'platform'
+    | 'orderType'
+    | 'date'
+    | 'estimatedTime'
+    | 'status'
+    | 'delivery'
+    | 'total'
   >,
 ): Promise<typOrder> => {
   const orderId = uuidv4();
+  const deliveryPrice = 5;
   const orderWithId: typOrder = {
     ...order,
     id: orderId,
@@ -22,6 +30,8 @@ export const addOrderToFirebase = async (
     date: moment().format('YYYY-MM-DD HH:mm'),
     estimatedTime: '25-30 min',
     status: enmOrderStatus.Placed,
+    delivery: deliveryPrice,
+    total: Number((order.SubTotal + deliveryPrice).toFixed(2)),
   };
 
   try {

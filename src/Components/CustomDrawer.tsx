@@ -42,10 +42,10 @@ const drawerItems = [
     screen: 'Favourite',
   },
   {
-    label: 'Orders',
+    label: 'My Order',
     icon: 'cart-check',
     parent: 'TapNavigator',
-    screen: 'Orders',
+    screen: 'MyOrder',
   },
   {label: 'Log out', icon: 'logout', action: 'logout'},
 ];

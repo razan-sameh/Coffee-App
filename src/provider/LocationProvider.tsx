@@ -68,7 +68,9 @@ export const LocationProvider = ({children}: {children: ReactNode}) => {
       } catch {
         console.log('Reverse geocoding returned non-JSON:', text);
         setLocationState({latitude, longitude, address: null});
-        if (picked) setIsPicked(true);
+        if (picked) {
+          setIsPicked(true);
+        }
         return;
       }
 
@@ -89,11 +91,15 @@ export const LocationProvider = ({children}: {children: ReactNode}) => {
         address,
       });
 
-      if (picked) setIsPicked(true);
+      if (picked) {
+        setIsPicked(true);
+      }
     } catch (err) {
       console.log('Reverse geocoding failed:', err);
       setLocationState({...loc, address: null});
-      if (picked) setIsPicked(true);
+      if (picked) {
+        setIsPicked(true);
+      }
     }
   };
 

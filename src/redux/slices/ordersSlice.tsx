@@ -24,7 +24,14 @@ export const addOrder = createAsyncThunk(
   async (
     order: Omit<
       typOrder,
-      'id' | 'platform' | 'orderType' | 'date' | 'estimatedTime' | 'status'
+      | 'id'
+      | 'platform'
+      | 'orderType'
+      | 'date'
+      | 'estimatedTime'
+      | 'status'
+      | 'delivery'
+      | 'total'
     >,
   ) => {
     return await addOrderToFirebase(order);
