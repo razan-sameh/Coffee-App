@@ -55,4 +55,9 @@ export const images = {
   CartWallIcon2: require('../assets/images/CartWallIcon2.png'),
   FrameContainer: require('../assets/images/FrameContainer.png'),
   ConfirmedIcon: require('../assets/images/ConfirmedIcon.png'),
+  driver: require('../assets/images/driver.png'),
+  chat: require('../assets/images/chat.png'),
+  phone: require('../assets/images/phone.png'),
+  onWay: require('../assets/images/onWay.png'),
+  ready: require('../assets/images/ready.png'),
 };

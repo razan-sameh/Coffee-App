@@ -66,7 +66,9 @@ export function Filter() {
       <View style={Styles.headerContainer}>
         <Text style={Styles.txtTitle}>Filter</Text>
       </View>
-      <ScrollView style={Styles.mainContainer}>
+      <ScrollView
+        style={Styles.mainContainer}
+        contentContainerStyle={{flexGrow: 1}}>
         {/* Price Filter */}
         <View style={Styles.rangeContainer}>
           <Text style={Styles.txtRangeTitle}>Price</Text>

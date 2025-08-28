@@ -111,8 +111,7 @@ export function Shopping() {
             sections={sections}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderRow}
-            contentContainerStyle={{flexGrow: 1, paddingBottom: 100}}
-            style={Styles.mainContainer}
+            contentContainerStyle={{flexGrow: 1, paddingBottom: 60}}
             removeClippedSubviews
             maxToRenderPerBatch={45}
             updateCellsBatchingPeriod={65}

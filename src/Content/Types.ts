@@ -19,6 +19,8 @@ export type typProduct = {
   description: string;
   image: string[];
   rate: number;
+  rateCount: number;
+  rateSum: number;
 };
 export type typCart = {
   Uid: string;
@@ -83,6 +85,7 @@ export type typOrder = {
   platform: enmPlatform;
   status: enmOrderStatus;
   estimatedTime: string;
+  driverLocation?: typLocation;
 };
 
 export type typAddress = {

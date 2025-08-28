@@ -190,6 +190,7 @@ export const Styles = StyleSheet.create({
     backgroundColor: strPrimaryColor,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: moderateScale(150),
   },
   btnSubmitContainer: {
     width: widthScale(343),

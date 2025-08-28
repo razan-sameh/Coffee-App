@@ -34,21 +34,22 @@ export const firebaseApi = createApi({
             {} as Record<string | number, typCategory>,
           );
 
-          const products: typProduct[] = Object.entries(productRaw).map(
-            ([id, value]) => {
+          const products: typProduct[] = Object.entries(productRaw)
+            .filter(([_, value]) => value) // filter out null
+            .map(([id, value]) => {
               const v = value as Omit<typProduct, 'id' | 'category'> & {
-                category: number | string;
+                category?: number | string | null;
               };
+
               return {
                 id,
                 ...v,
-                category: categories[v.category] || {
-                  ID: v.category,
-                  title: 'Unknown',
-                },
+                category:
+                  v.category && categories[v.category]
+                    ? categories[v.category]
+                    : {ID: String(v.category ?? 'unknown'), title: 'Unknown'},
               };
-            },
-          );
+            });
 
           let minPrice = Infinity;
           let maxPrice = -Infinity;
@@ -82,35 +83,76 @@ export const firebaseApi = createApi({
       },
       providesTags: result =>
         result
-          ? result.map(p => ({type: 'product' as const, id: p.ID}))
+          ? [
+              ...result.map(p => ({type: 'product' as const, id: p.ID})), // ✅ use `id`
+              {type: 'product', id: 'LIST'},
+            ]
           : [{type: 'product', id: 'LIST'}],
     }),
 
     getProductById: build.query<typProduct, string>({
-      async queryFn(id, _queryApi) {
-        const cached = (store.getState() as any).firebaseApi.queries?.[
-          'getProducts(undefined)'
-        ]?.data as typProduct[] | undefined;
-
-        if (cached) {
-          const found = cached.find(p => p.ID === id);
-          if (found) {
-            return {data: found};
-          }
-        }
-
+      async queryFn(id) {
         try {
           const snap = await database().ref(`product/${id}`).once('value');
           const raw = snap.val();
-          if (!raw) {
-            throw new Error('Product not found');
-          }
+          if (!raw) throw new Error('Product not found');
           return {data: {id, ...(raw as Omit<typProduct, 'id'>)}};
         } catch (error) {
           return {error};
         }
       },
+
+      // 👇 live updates
+      async onCacheEntryAdded(id, {updateCachedData, cacheEntryRemoved}) {
+        const ref = database().ref(`product/${id}`);
+
+        const listener = (snapshot: any) => {
+          const raw = snapshot.val();
+          if (raw) {
+            updateCachedData(() => ({id, ...raw})); // ✅ update cache when db changes
+          }
+        };
+
+        ref.on('value', listener);
+
+        await cacheEntryRemoved;
+        ref.off('value', listener);
+      },
+
       providesTags: (_result, _error, id) => [{type: 'product', id}],
+    }),
+
+    updateProductRating: build.mutation<
+      {success: boolean}, // 👈 define a return type
+      {productId: string; newRate: number}
+    >({
+      async queryFn({productId, newRate}) {
+        try {
+          const ref = database().ref(`product/${productId}`);
+          const snapshot = await ref.once('value');
+          const product = snapshot.val();
+
+          if (!product) {
+            throw new Error('Product not found');
+          }
+
+          // calculate new rating values
+          const rateSum = (product.rateSum || 0) + newRate;
+          const rateCount = (product.rateCount || 0) + 1;
+          const rate = rateSum / rateCount;
+
+          await ref.update({rateSum, rateCount, rate});
+
+          // ✅ always return something in data
+          return {data: {success: true}};
+        } catch (error: any) {
+          return {error: {message: error.message}};
+        }
+      },
+      invalidatesTags: (_result, _error, {productId}) => [
+        {type: 'product', id: productId},
+        {type: 'product', id: 'LIST'}, // 👈 also invalidate the list
+      ],
     }),
 
     getOrderById: build.query<typOrder, string>({
@@ -126,6 +168,26 @@ export const firebaseApi = createApi({
           return {error};
         }
       },
+      async onCacheEntryAdded(orderId, {updateCachedData, cacheEntryRemoved}) {
+        const ref = database().ref(`order/${orderId}`);
+
+        const listener = (snapshot: any) => {
+          const updatedOrder = snapshot.val();
+          if (updatedOrder) {
+            updateCachedData(() => ({id: orderId, ...updatedOrder}));
+          }
+        };
+
+        // start listening for changes
+        ref.on('value', listener);
+
+        // cleanup when subscription ends
+        await cacheEntryRemoved;
+        ref.off('value', listener);
+      },
+      providesTags: (_result, _error, orderId) => [
+        {type: 'order', id: orderId},
+      ],
     }),
 
     getCategories: build.query<typCategory[], void>({
@@ -195,4 +257,5 @@ export const {
   useGetCategoriesQuery,
   useGetOrderByIdQuery,
   useGetOrdersByUserIdQuery,
+  useUpdateProductRatingMutation,
 } = firebaseApi;

@@ -45,6 +45,13 @@ const OrderConfirmation = () => {
     navigation.navigate('TapNavigator', {screen: 'Home'});
   }, [navigation]);
 
+  const handleTrackOrder = () => {
+    navigation.navigate('OrderNavigator', {
+      screen: 'TrackOrder',
+      params: {orderId: orderID},
+    });
+  };
+
   useEffect(() => {
     const backAction = () => {
       handleBackToHome();
@@ -93,7 +100,10 @@ const OrderConfirmation = () => {
         <OrderConfirmationSummary order={order} products={products!} />
 
         {/* Buttons */}
-        <OrderConfirmationButtons onBackPress={handleBackToHome} />
+        <OrderConfirmationButtons
+          onBackPress={handleBackToHome}
+          onTrackPress={handleTrackOrder}
+        />
       </ScrollView>
 
       {/* Background */}

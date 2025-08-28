@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 // src/screens/LocationPicker.tsx
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Button} from 'react-native';
+import {View, StyleSheet, TouchableWithoutFeedback, Text} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
 import Geolocation from 'react-native-geolocation-service';
 import {
@@ -11,6 +11,11 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import {useLocation} from '../provider/LocationProvider';
+import {
+  strINTER_SEMIBOLD600_Font,
+  strPrimaryColor,
+  strSecondColor,
+} from '../styles/responsive';
 
 const LocationPicker = () => {
   const [localLocation, setLocalLocation] = useState<{
@@ -119,17 +124,17 @@ const LocationPicker = () => {
         onMessage={handleMessage}
         style={{flex: 1}}
       />
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Done"
-          onPress={() => {
-            if (localLocation) {
-              setLocation(localLocation, true);
-            }
-            navigation.goBack();
-          }}
-        />
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          if (localLocation) {
+            setLocation(localLocation, true);
+          }
+          navigation.goBack();
+        }}>
+        <View style={styles.buttonContainer}>
+          <Text style={styles.btnText}>Done</Text>
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -140,6 +145,14 @@ const styles = StyleSheet.create({
     bottom: 20,
     left: 20,
     right: 20,
+    backgroundColor: strPrimaryColor,
+    padding: 16,
+  },
+  btnText: {
+    fontSize: 16,
+    fontFamily: strINTER_SEMIBOLD600_Font,
+    textAlign: 'center',
+    color: strSecondColor,
   },
 });
 

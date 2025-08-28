@@ -104,6 +104,7 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: moderateScale(10),
+    marginBottom: moderateScale(30),
   },
   applyBtn: {
     flex: 1,

@@ -92,7 +92,7 @@ export const Styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   btnFilled: {
-    backgroundColor: '#ff3b30',
+    backgroundColor: strPrimaryColor,
     borderRadius: 25,
     paddingVertical: 12,
     alignItems: 'center',
@@ -100,7 +100,7 @@ export const Styles = StyleSheet.create({
     justifyContent: 'center',
   },
   btnFilledText: {
-    color: '#fff',
+    color: strSecondColor,
     fontWeight: 'bold',
   },
 });

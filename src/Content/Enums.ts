@@ -5,7 +5,7 @@ export enum enmExportType {
 
 export enum enmPlatform {
   mobile = 'Mobile App',
-  web = 'Website',
+  shop = 'Shop',
   all = 'All',
 }
 export enum enmPaymentMethod {

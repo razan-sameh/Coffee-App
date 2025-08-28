@@ -294,7 +294,7 @@ const CheckOut = () => {
                   savedAddresses={user?.address} // ✅ pass saved addresses
                   hasError={!!errors.address}
                   errorMessage="Please select location"
-                  isAdding={state.isAddingPhoneNumber} // ✅ pass the adding flag
+                  isAdding={state.isAddingAddress}
                 />
 
                 <SaveOptionsRow

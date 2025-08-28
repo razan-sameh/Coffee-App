@@ -9,6 +9,7 @@ import {
 export const Styles = StyleSheet.create({
   wall: {
     backgroundColor: strSecondColor,
+    flex: 1,
   },
   filterContainer: {
     width: '100%',
@@ -21,12 +22,6 @@ export const Styles = StyleSheet.create({
   filterIcon: {
     width: widthScale(22),
     height: heightScale(17),
-  },
-  mainContainer: {
-    backgroundColor: strSecondColor,
-
-    // height:
-    //   mbdlScreenHeight - styleHeader.mainContainer.height - mdblBAR_HEIGHT,
   },
   productContainer: {
     flexDirection: 'row',

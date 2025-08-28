@@ -67,7 +67,7 @@ const OrderDetails = () => {
     <View style={Styles.wall}>
       <ArrowBack />
       <Text style={Styles.txtTitle}>Order Details</Text>
-      <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 60}}>
+      <ScrollView contentContainerStyle={{flexGrow: 1, paddingBottom: 70}}>
         {/* ✅ Order Status */}
         <View style={Styles.section}>
           <Text style={Styles.sectionTitle}>Order Status</Text>

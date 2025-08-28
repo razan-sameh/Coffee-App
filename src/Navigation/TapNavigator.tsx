@@ -31,7 +31,9 @@ const Tab = createBottomTabNavigator();
 const TapNavigator = ({routeName}: any) => {
   const [searchQuery, setSearchQuery] = useState('');
   const blnIsTabBarHide =
-    routeName == 'ProductDetails' || routeName == 'Filter';
+    routeName == 'ProductDetails' ||
+    routeName == 'Filter' ||
+    routeName == 'TrackOrder';
   const navigation: NavigationProp<ParamListBase> = useNavigation();
   return (
     <Tab.Navigator
@@ -159,6 +161,10 @@ const TapNavigator = ({routeName}: any) => {
               color={focused ? '#C08F54' : '#ffffff'}
             />
           ),
+          tabBarStyle: [
+            Styles.tabBar,
+            {display: blnIsTabBarHide ? 'none' : 'flex'},
+          ],
         }}
         children={() => <OrderNavigator />}
       />
