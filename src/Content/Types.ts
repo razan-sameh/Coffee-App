@@ -85,6 +85,7 @@ export type typOrder = {
   platform: enmPlatform;
   status: enmOrderStatus;
   estimatedTime: string;
+  driver?: string;
   driverLocation?: typLocation;
 };
 

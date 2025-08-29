@@ -44,7 +44,7 @@ async function saveFcmTokenToRealtimeDB() {
     return;
   }
 
-  await fetch(`${serverURL}/api/notification/update-fcm-token`, {
+  await fetch(`${serverURL}/api/user/update-fcm-token`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({uid, fcmToken: token}),

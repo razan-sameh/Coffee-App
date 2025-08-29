@@ -2,6 +2,7 @@ import {serverURL} from '../../App';
 import {store} from '../redux/store';
 import {firebaseApi} from '../services/firebaseApi';
 import {typAddress, typLocation} from './Types';
+import {Linking, Alert, Platform} from 'react-native';
 
 export const fetchProductById = async (id: string) => {
   try {
@@ -97,4 +98,32 @@ export const getActiveRouteName = (state: any): string => {
   }
 
   return route.name;
+};
+
+export const callPhoneNumber = (
+  countryCode: string,
+  number: string | number,
+) => {
+  if (!number) {
+    Alert.alert('Phone number is not available');
+    return;
+  }
+
+  let phoneNumber = number.toString().trim();
+  let dialString = countryCode
+    ? `${countryCode}${phoneNumber.replace(/^0+/, '')}`
+    : phoneNumber;
+
+  const url =
+    Platform.OS === 'ios' ? `telprompt:${dialString}` : `tel:${dialString}`;
+
+  Linking.canOpenURL(url)
+    .then(supported => {
+      if (!supported) {
+        Alert.alert('Error', `Cannot open dialer for ${dialString}`);
+      } else {
+        return Linking.openURL(url);
+      }
+    })
+    .catch(err => console.error('Error opening dialer', err));
 };

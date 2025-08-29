@@ -29,6 +29,7 @@ export enum enmRole {
   user = 'User',
   manager = 'Manager',
   customer = 'Customer',
+  driver = 'Driver',
 }
 export enum enmToastSeverity {
   success = 'success',

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, Alert} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {Styles} from './TrackOrderStyle';
 import FastImage from 'react-native-fast-image';
@@ -10,15 +10,19 @@ import {useRoute} from '@react-navigation/native';
 import database from '@react-native-firebase/database';
 import moment from 'moment';
 import {enmOrderStatus} from '../../Content/Enums';
+import {typUser} from '../../Content/Types';
+import {getUserById} from '../../services/userServices';
+import {callPhoneNumber} from '../../Content/Utils';
 
 export default function TrackOrder() {
   const route = useRoute<any>();
   const {orderId} = route.params;
   const {data: order, isLoading} = useGetOrderByIdQuery(orderId);
   const [driverLocation, setDriverLocation] = useState({
-    latitude: order?.driverLocation?.latitude ?? 31.233804468506055, // Alexandria default
+    latitude: order?.driverLocation?.latitude ?? 31.233804468506055,
     longitude: order?.driverLocation?.longitude ?? 29.949878491206622,
   });
+  const [driverInfo, setDriverInfo] = useState<typUser | null>(null);
   const webViewRef = useRef<WebView>(null);
   const statusMessages: Record<enmOrderStatus, string> = {
     [enmOrderStatus.Placed]: 'Your order has been placed',
@@ -27,6 +31,18 @@ export default function TrackOrder() {
     [enmOrderStatus.OutForDelivery]: 'Your order is already on its way to you',
     [enmOrderStatus.Delivered]: 'Your order has been delivered',
   };
+
+  useEffect(() => {
+    const fetchDriver = async () => {
+      const driverUid: string = order?.driver!;
+      if (driverUid) {
+        const user = await getUserById(driverUid);
+        setDriverInfo(user);
+      }
+    };
+
+    fetchDriver();
+  }, [order?.driver, orderId]);
 
   // 🔥 Listen to Firebase driver location updates
   useEffect(() => {
@@ -166,14 +182,38 @@ export default function TrackOrder() {
           </View>
 
           <View style={Styles.courierCard}>
-            <FastImage style={Styles.courierImage} source={images.driver} />
+            <FastImage
+              style={Styles.courierImage}
+              source={
+                driverInfo?.profilePicture
+                  ? {uri: driverInfo.profilePicture}
+                  : images.driver
+              }
+            />
             <View style={{flex: 1, marginLeft: 10}}>
-              <Text style={Styles.courierName}>Christina Turner</Text>
-              <Text style={Styles.courierRole}>Courier</Text>
+              <Text style={Styles.courierName}>
+                {driverInfo
+                  ? `${driverInfo.firstName} ${driverInfo.lastName}`
+                  : 'Assigning driver...'}
+              </Text>
+              <Text style={Styles.courierRole}>
+                {driverInfo?.role ?? 'Courier'}
+              </Text>
             </View>
-            <TouchableOpacity style={Styles.iconBtn}>
+            <TouchableOpacity
+              style={Styles.iconBtn}
+              onPress={() => {
+                const phone = driverInfo?.phoneNumber?.[0]; // first element of array
+                console.log({phone});
+                if (phone?.number) {
+                  callPhoneNumber(phone.countryCode, phone.number);
+                } else {
+                  Alert.alert('Driver phone not available');
+                }
+              }}>
               <FastImage style={Styles.courierIcon} source={images.phone} />
             </TouchableOpacity>
+
             <TouchableOpacity style={Styles.iconBtn}>
               <FastImage style={Styles.courierIcon} source={images.chat} />
             </TouchableOpacity>
