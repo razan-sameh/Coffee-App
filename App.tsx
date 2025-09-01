@@ -13,6 +13,7 @@ import RootNavigator from './src/Navigation/RootNavigator';
 import {LocationProvider} from './src/provider/LocationProvider';
 import {StatusBar} from 'react-native';
 import {strSecondColor} from './src/styles/responsive';
+import {OrderProvider} from './src/provider/OrderProvider';
 
 export const navigationRef: any = createNavigationContainerRef();
 // export const serverURL = 'http://localhost:3000';
@@ -32,21 +33,23 @@ const App = () => {
           <NotificationProvider>
             <LocationProvider>
               <FavouriteProvider>
-                <NavigationContainer
-                  ref={navigationRef}
-                  onReady={() => {
-                    setRouteName(navigationRef.getCurrentRoute()?.name || '');
-                  }}
-                  onStateChange={() => {
-                    const current = navigationRef.getCurrentRoute()?.name;
-                    setRouteName(current || '');
-                  }}>
-                  <StatusBar
-                    backgroundColor={strSecondColor} // your theme color
-                    barStyle="light-content" // "light-content" or "dark-content"
-                  />
-                  <RootNavigator routeName={routeName} />
-                </NavigationContainer>
+                <OrderProvider>
+                  <NavigationContainer
+                    ref={navigationRef}
+                    onReady={() => {
+                      setRouteName(navigationRef.getCurrentRoute()?.name || '');
+                    }}
+                    onStateChange={() => {
+                      const current = navigationRef.getCurrentRoute()?.name;
+                      setRouteName(current || '');
+                    }}>
+                    <StatusBar
+                      backgroundColor={strSecondColor} // your theme color
+                      barStyle="light-content" // "light-content" or "dark-content"
+                    />
+                    <RootNavigator routeName={routeName} />
+                  </NavigationContainer>
+                </OrderProvider>
               </FavouriteProvider>
             </LocationProvider>
           </NotificationProvider>

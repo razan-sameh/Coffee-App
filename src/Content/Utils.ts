@@ -1,4 +1,3 @@
-import {serverURL} from '../../App';
 import {store} from '../redux/store';
 import {firebaseApi} from '../services/firebaseApi';
 import {typAddress, typLocation} from './Types';
@@ -21,27 +20,27 @@ export const fetchProductById = async (id: string) => {
   }
 };
 
-export const simulateOrder = async (uid: string, orderId: string) => {
-  try {
-    const response = await fetch(
-      `${serverURL}/simulate-order/${uid}/${orderId}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+// export const simulateOrder = async (uid: string, orderId: string) => {
+//   try {
+//     const response = await fetch(
+//       `${serverURL}/simulate-order/${uid}/${orderId}`,
+//       {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       },
+//     );
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    if (!response.ok) {
-      console.error('Error starting simulation:', data.error);
-    }
-  } catch (error) {
-    console.error('Network error:', error);
-  }
-};
+//     if (!response.ok) {
+//       console.error('Error starting simulation:', data.error);
+//     }
+//   } catch (error) {
+//     console.error('Network error:', error);
+//   }
+// };
 
 export const formatLocation = (
   loc: typLocation | typAddress | null | undefined,

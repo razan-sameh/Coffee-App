@@ -4,20 +4,13 @@ import {v4 as uuidv4} from 'uuid';
 import {enmOrderStatus, enmOrderType, enmPlatform} from '../Content/Enums';
 import moment from 'moment';
 import auth from '@react-native-firebase/auth';
-import {simulateOrder} from '../Content/Utils';
 import {ToastAndroid} from 'react-native';
+import {startOrderSimulation} from '../Content/OrderSimulation';
 
 export const addOrderToFirebase = async (
   order: Omit<
     typOrder,
-    | 'id'
-    | 'platform'
-    | 'orderType'
-    | 'date'
-    | 'estimatedTime'
-    | 'status'
-    | 'delivery'
-    | 'total'
+    'id' | 'platform' | 'orderType' | 'date' | 'status' | 'delivery' | 'total'
   >,
 ): Promise<typOrder> => {
   const orderId = uuidv4();
@@ -28,7 +21,6 @@ export const addOrderToFirebase = async (
     platform: enmPlatform.mobile,
     orderType: enmOrderType.delivery,
     date: moment().format('YYYY-MM-DD HH:mm'),
-    estimatedTime: '25-30 min',
     status: enmOrderStatus.Placed,
     delivery: deliveryPrice,
     total: Number((order.SubTotal + deliveryPrice).toFixed(2)),
@@ -37,7 +29,30 @@ export const addOrderToFirebase = async (
   try {
     await database().ref(`order/${orderId}`).set(orderWithId);
     const uid = auth().currentUser?.uid;
-    await simulateOrder(uid!, orderId);
+    // let simulationStarted = false;
+
+    // Try to start simulation
+    if (uid && order.deliveryInfo.address) {
+      try {
+        const simulationResult = await startOrderSimulation(
+          orderId,
+          uid,
+          order.deliveryInfo.address,
+        );
+
+        // Update the order with real ETA
+        orderWithId.estimatedTime = simulationResult.estimatedArrival;
+        // simulationStarted = true;
+
+        console.log('Order and simulation created successfully:', {
+          orderId,
+          estimatedArrival: simulationResult.estimatedArrival,
+        });
+      } catch (simulationError) {
+        console.warn('Simulation failed:', simulationError);
+      }
+    }
+
     return orderWithId;
   } catch (error) {
     ToastAndroid.show(`Error adding order:${error}`, ToastAndroid.SHORT);
