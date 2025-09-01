@@ -24,7 +24,7 @@ export const fetchProductById = async (id: string) => {
 export const simulateOrder = async (uid: string, orderId: string) => {
   try {
     const response = await fetch(
-      `${serverURL}/api/notification/simulate-order/${uid}/${orderId}`,
+      `${serverURL}/simulate-order/${uid}/${orderId}`,
       {
         method: 'POST',
         headers: {

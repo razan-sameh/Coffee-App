@@ -157,14 +157,11 @@ const CheckOut = () => {
         return;
       }
 
-      const response = await fetch(
-        `${serverURL}/api/payment/create-payment-intent`,
-        {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({amount: Math.round(totalPrice * 100)}),
-        },
-      );
+      const response = await fetch(`${serverURL}/create-payment-intent`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({amount: Math.round(totalPrice * 100)}),
+      });
 
       const {clientSecret} = await response.json();
       const {error, paymentIntent} = await confirmPayment(clientSecret, {

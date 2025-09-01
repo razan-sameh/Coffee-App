@@ -16,7 +16,7 @@ import {strSecondColor} from './src/styles/responsive';
 
 export const navigationRef: any = createNavigationContainerRef();
 // export const serverURL = 'http://localhost:3000';
-export const serverURL = 'http://192.168.1.6:3000';
+export const serverURL = 'https://coffee-server-ivory-omega.vercel.app/api';
 
 const App = () => {
   const [routeName, setRouteName] = useState<string>('');
