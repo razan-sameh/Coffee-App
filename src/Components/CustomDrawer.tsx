@@ -44,7 +44,7 @@ const drawerItems = [
   {
     label: 'My Order',
     icon: 'cart-check',
-    parent: 'TapNavigator',
+    parent: 'OrderNavigator',
     screen: 'MyOrder',
   },
   {label: 'Log out', icon: 'logout', action: 'logout'},

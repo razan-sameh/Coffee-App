@@ -69,11 +69,17 @@ export const updateItemInCart = async (
     const snapshot = await userCartRef.once('value');
     const cartItems = snapshot.val() || {};
 
-    if (cartItems[oldItemKey]) {
-      delete cartItems[oldItemKey];
-
+    // ✅ لو الـ size زي القديم → عدّل بس
+    if (oldSize === newSize) {
+      if (cartItems[oldItemKey]) {
+        cartItems[oldItemKey].count = newCount;
+        cartItems[oldItemKey].price = product.price * newCount;
+      } else {
+        throw new Error('Item does not exist in the cart');
+      }
+    } else {
+      // ✅ لو الـ size اتغير → متحذفش القديمة، ضيف واحدة جديدة
       const price = product.price * newCount;
-
       cartItems[newItemKey] = {
         Uid,
         productID,
@@ -81,18 +87,16 @@ export const updateItemInCart = async (
         count: newCount,
         price,
       };
-
-      await userCartRef.set(cartItems);
-
-      return {
-        productID,
-        size: newSize,
-        count: newCount,
-        price,
-      };
-    } else {
-      throw new Error('Old item does not exist in the cart');
     }
+
+    await userCartRef.set(cartItems);
+
+    return {
+      productID,
+      size: newSize,
+      count: newCount,
+      price: product.price * newCount,
+    };
   } catch (error) {
     ToastAndroid.show(`Error updating cart:${error}`, ToastAndroid.SHORT);
     console.error('Error updating cart:', error);

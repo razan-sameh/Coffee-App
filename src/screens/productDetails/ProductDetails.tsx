@@ -1,16 +1,7 @@
 import React, {useEffect, useState, useMemo} from 'react';
-import {Text, TouchableWithoutFeedback, View} from 'react-native';
-
+import {Text, ToastAndroid, TouchableWithoutFeedback, View} from 'react-native';
 import {Rating} from 'react-native-ratings';
-
 import FastImage from 'react-native-fast-image';
-
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
-
 import {useSelector} from 'react-redux';
 import {
   updateCartItemFirebase,
@@ -31,7 +22,6 @@ export function ProductDetails(navigation: any) {
   const ProductId: string = navigation.navigation.route.params.ProductId;
   const strUserID = getUserID();
   const appDispatch = useAppDispatch();
-  const navigationTo: NavigationProp<ParamListBase> = useNavigation();
   const {data: tpvProduct, isLoading} = useGetProductByIdQuery(ProductId);
 
   const favouriteItems = useSelector(
@@ -49,6 +39,7 @@ export function ProductDetails(navigation: any) {
   const oldsize = cartItem?.size;
   const [enmSelectedSize, setSelectedSize] = useState<enmSize>(enmSize.small);
   const [intProductCount, setProductCount] = useState<number>(1);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   useEffect(() => {
     if (cartItem) {
@@ -105,11 +96,13 @@ export function ProductDetails(navigation: any) {
       addToCartFirebase.fulfilled.match(result) ||
       updateCartItemFirebase.fulfilled.match(result)
     ) {
-      navigationTo.navigate('CartNavigator', {
-        screen: 'Cart',
-      });
+      ToastAndroid.show('Cart updated successfully', ToastAndroid.SHORT);
     } else {
       console.warn('Cart update failed:', result.payload);
+      ToastAndroid.show(
+        `Cart update failed: ${result.payload}`,
+        ToastAndroid.SHORT,
+      );
     }
   };
 
@@ -174,7 +167,24 @@ export function ProductDetails(navigation: any) {
               sizeVal => (
                 <TouchableWithoutFeedback
                   key={sizeVal}
-                  onPress={() => setSelectedSize(sizeVal)}>
+                  onPress={() => {
+                    setSelectedSize(sizeVal);
+
+                    // check if this size exists in cart
+                    const itemForSize = cartItems.find(
+                      item =>
+                        item.productID === tpvProduct?.ID &&
+                        item.size === sizeVal,
+                    );
+
+                    if (itemForSize) {
+                      setProductCount(itemForSize.count); // get count from cart
+                      setIsInCart(true);
+                    } else {
+                      setProductCount(1); // default 1
+                      setIsInCart(false);
+                    }
+                  }}>
                   <View
                     style={
                       enmSelectedSize === sizeVal

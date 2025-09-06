@@ -67,7 +67,7 @@ export const updateUserProfile = async ({
   // update firebase auth profile
   if (user && (firstName || lastName)) {
     await user.updateProfile({
-      displayName: `${finalFirstName} ${finalLastName}`.trim(),
+      displayName: `${finalFirstName} ${finalLastName}`,
     });
   }
 

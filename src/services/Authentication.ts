@@ -53,7 +53,7 @@ export const createAccountWithEmail = async (
       data.strPassword,
     );
     await res.user.updateProfile({
-      displayName: data.strFirstName + data.strLastName,
+      displayName: data.strFirstName + ' ' + data.strLastName,
     });
 
     const userID = getUserID();

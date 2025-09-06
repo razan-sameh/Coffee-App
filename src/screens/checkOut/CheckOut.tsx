@@ -142,6 +142,15 @@ const CheckOut = () => {
             );
           }
         }
+        if (state.saveAddress && formData.address) {
+          const existingAddresses = user?.address || [];
+          await appDispatch(
+            updateUserProfileAsync({
+              Uid: userID,
+              address: [...existingAddresses, formData.address],
+            }),
+          );
+        }
       }
 
       if (state.paymentType === enmPaymentMethod.cash) {

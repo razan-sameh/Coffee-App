@@ -1,10 +1,9 @@
 import React from 'react';
 import {View, Text, TouchableWithoutFeedback} from 'react-native';
 import {Styles} from './ProductStyle';
-import {typCart, typProduct} from '../../Content/Types';
+import {typProduct} from '../../Content/Types';
 import {images} from '../../Content/resources';
 import FastImage from 'react-native-fast-image';
-import {enmSize} from '../../Content/Enums';
 import {
   NavigationProp,
   ParamListBase,
@@ -13,10 +12,6 @@ import {
 import {useSelector} from 'react-redux';
 import {RootState, useAppDispatch} from '../../redux/store';
 import {addFavourite, removeFavourite} from '../../redux/slices/favouriteSlice';
-import {
-  addToCartFirebase,
-  updateCartItemFirebase,
-} from '../../redux/slices/cartSlice';
 import {getUserID} from '../../services/Authentication';
 
 export function Product({product}: {product: typProduct}) {
@@ -25,7 +20,6 @@ export function Product({product}: {product: typProduct}) {
   const dispatch = useAppDispatch();
 
   const favouriteIds = useSelector((state: RootState) => state.favourite.items);
-  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const isFavourite = favouriteIds.includes(product.ID);
 
@@ -41,39 +35,6 @@ export function Product({product}: {product: typProduct}) {
     }
   };
 
-  const isInCart = cartItems.some(
-    item => item.productID === product.ID && item.size === enmSize.small,
-  );
-
-  const handleCartAction = async () => {
-    if (!strUserID || !product) {
-      return;
-    }
-    const existingCartItem: typCart | undefined = cartItems.find(
-      item => item.productID === product.ID && item.size === enmSize.small,
-    );
-    if (isInCart) {
-      await dispatch(
-        updateCartItemFirebase({
-          Uid: strUserID,
-          productID: product.ID,
-          oldSize: enmSize.small,
-          newSize: enmSize.small,
-          newCount: existingCartItem?.count! + 1,
-        }),
-      );
-    } else {
-      await dispatch(
-        addToCartFirebase({
-          Uid: strUserID,
-          productID: product.ID,
-          size: enmSize.small,
-          count: 1,
-          price: product.price, // ✅ pass price here
-        }),
-      );
-    }
-  };
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -109,16 +70,6 @@ export function Product({product}: {product: typProduct}) {
             <Text style={Styles.txtProdDesc}>{product?.description}</Text>
             <Text style={Styles.txtProdPrice}>${product?.price}</Text>
           </View>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              handleCartAction();
-            }}>
-            <FastImage
-              resizeMode="contain"
-              style={Styles.productPlusIcon}
-              source={images.ProductPlus}
-            />
-          </TouchableWithoutFeedback>
         </View>
       </View>
     </TouchableWithoutFeedback>
